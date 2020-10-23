@@ -6,11 +6,11 @@
 lua-scriptum
 
 **Version**:
-1.0
+0.1
 
 **Description**:
 Document generator for Lua based code;
-The output files are in markdown syntax
+The output files are in markdown syntax.
 
 **!Warning!** This is currently a test module that has a dependancy to Love2D.
 Check back later, I will remove this and make ready for common use.
@@ -35,7 +35,6 @@ Generate all documentation from the root directory
 
     local scriptum = require("scriptum")
     scriptum.start()
-
 
 **Example**:
 Create an optional header vignette with a comment block and these tags (all optional):
@@ -72,7 +71,7 @@ and
 
 Such as:
 
-    --[[ My function for documentation
+    --[[My function for documentation
     @param name (typing) <required> [File will be created and overwritten]
     @param verbose (boolean) <default: true> [More output if true]
     @return sucess (boolean) [Fail will be handled gracefully and return false]

@@ -1,8 +1,11 @@
 --[[
 @title lua-scriptum
-@version 1.0
+@version 0.1
 @description Document generator for Lua based code;
-The output files are in markdown syntax
+The output files are in markdown syntax.
+
+**!Warning!** This is currently a test module that has a dependancy to Love2D.
+Check back later, I will remove this and make ready for common use.
 
 @authors Charles Mallah
 @copyright (c) 2020 Charles Mallah
@@ -47,7 +50,7 @@ and
 
 Such as:
 
-`(start) My function for documentation
+`(start)My function for documentation
 `(a)param name (typing) <required> [File will be created and overwritten]
 `(a)param verbose (boolean) <default: true> [More output if true]
 `(a)return sucess (boolean) [Fail will be handled gracefully and return false]
