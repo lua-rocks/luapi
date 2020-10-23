@@ -1,4 +1,4 @@
-# lua-scriptum.lua
+# lua-scriptum
 
 ## Vignette
 
@@ -35,31 +35,58 @@ Generate all documentation from the root directory
 
 **Example**:
 Create an optional header vignette with a comment block and these tags (all optional):
+- **@title** the name of the file/module (once, single line)
+- **@version** the current version (once, single line)
+- **@description** module description (once, multiple lines)
+- **@authors** the authors (once, single line)
+- **@copyright** the copyright line (once, single line)
+- **@license** the license (once, single line)
+- **@sample** provide sample outputs (multiple entries, multiple lines)
+- **@example** provide usage examples (multiple entries, multiple lines)
 
-    @title" the name of the file/module `(once, single line)`
-    @version" the current version `(once, single line)`
-    @description" module description `(once, multiple lines)`
-    @authors" the authors `(once, single line)`
-    @copyright" the copyright line `(once, single line)`
-    @license" the license `(once, single line)`
-    @sample" provide sample outputs `(multiple entries, multiple lines)`
-    @example" provide usage examples `(multiple entries, multiple lines)`
+Such as the following:
+
+    --[[
+    @title Test Module
+    @version 1.0
+    @authors Mr. Munki
+    @example Import and run with start()
+    `local module = require("testmodule")
+    `module.start()
+    ]]
+
+Backtic is used to mark a line as a code block when written in markdown.
+Empty lines can be used if required as to your preference.
 
 **Example**:
-Create an API function entry with a comment block and these tags (all optional):
+Create an API function entry with a comment block and one of more of:
 
-    @param" provide sample outputs `(multiple entries, multiple lines)`
+    @param name (typing) <default> [note]
+Where:
+- **name** is the param
+- **(typing)** such as (boolean), (number), (function), (string)
+- **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
+- **[note]** is any further information
 
-A description in the first line and parameter or return lines should contain:
-    name (typing) <default> [note]
-such as:
+Such as any of the following:
+
+    @param filename (string) <required> [File will be created and overwritten]
     @param filename (string) <default: "profiler.log"> [File will be created and overwritten]
+    @param filename (string)
 
 Return values can be included inside the comment block with:
-    @return" provide usage examples `(multiple entries, multiple lines)`
-    name (typing) [note]
-such as:
+
+    @return name (typing) [note]
+
+Such as:
+
     @return success (boolean) [Fail will be handled gracefully and return false]
+    @return success (boolean)
+
+**Example**:
+The markup used in this file requres escape symbols to generate the outputs properly:
+- Where **()** with **start** or **end** can be used to escape block comments open and close.
+- Angled brackets are escaped with \\< and \\>
 
 ## API
 

@@ -17,29 +17,56 @@ The output files are in markdown syntax
 `scriptum.start()
 
 @example Create an optional header vignette with a comment block and these tags (all optional):
-`(a)title" the name of the file/module `(once, single line)`
-`(a)version" the current version `(once, single line)`
-`(a)description" module description `(once, multiple lines)`
-`(a)authors" the authors `(once, single line)`
-`(a)copyright" the copyright line `(once, single line)`
-`(a)license" the license `(once, single line)`
-`(a)sample" provide sample outputs `(multiple entries, multiple lines)`
-`(a)example" provide usage examples `(multiple entries, multiple lines)`
+- **(a)title** the name of the file/module (once, single line)
+- **(a)version** the current version (once, single line)
+- **(a)description** module description (once, multiple lines)
+- **(a)authors** the authors (once, single line)
+- **(a)copyright** the copyright line (once, single line)
+- **(a)license** the license (once, single line)
+- **(a)sample** provide sample outputs (multiple entries, multiple lines)
+- **(a)example** provide usage examples (multiple entries, multiple lines)
 
-@example Create an API function entry with a comment block and these tags (all optional):
-`(a)param" provide sample outputs `(multiple entries, multiple lines)`
+Such as the following:
 
-A description in the first line and parameter or return lines should contain:
-`name (typing) <default> [note]
-such as:
+`(start)
+`(a)title Test Module
+`(a)version 1.0
+`(a)authors Mr. Munki
+`(a)example Import and run with start()
+``local module = require("testmodule")
+``module.start()
+`(end)
+
+Backtic is used to mark a line as a code block when written in markdown.
+Empty lines can be used if required as to your preference.
+
+@example Create an API function entry with a comment block and one of more of:
+`(a)param name (typing) <default> [note]
+Where:
+- **name** is the param
+- **(typing)** such as (boolean), (number), (function), (string)
+- **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
+- **[note]** is any further information
+
+Such as any of the following:
+
+`(a)param filename (string) <required> [File will be created and overwritten]
 `(a)param filename (string) <default: "profiler.log"> [File will be created and overwritten]
+`(a)param filename (string)
 
 Return values can be included inside the comment block with:
-`(a)return" provide usage examples `(multiple entries, multiple lines)`
-`name (typing) [note]
-such as:
-`(a)return success (boolean) [Fail will be handled gracefully and return false]
 
+`(a)return name (typing) [note]
+
+Such as:
+
+`(a)return success (boolean) [Fail will be handled gracefully and return false]
+`(a)return success (boolean)
+
+@example The markup used in this file requres escape symbols to generate the outputs properly:
+- Where **()** with **start** or **end** can be used to escape block comments open and close.
+- And **()** with **a** is used to escape the @ symbol.
+- Angled brackets are escaped with \\< and \\>
 ]]
 
 --[[ Configuration ]]--
@@ -381,6 +408,8 @@ local function writeVignette(output, set, fields)
         for j = 1, #set[field] do
           local text = set[field][j]
           text = strReplace(text, "%(a%)", "@")
+          text = strReplace(text, "%(start%)", "--[[")
+          text = strReplace(text, "%(end%)", "]]")
           count = count + 1
           if text == "||" then
             output:write("\n")
