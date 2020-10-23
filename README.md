@@ -1,4 +1,4 @@
-# profiler.lua
+# lua-scriptum.lua
 
 ## Vignette
 
