@@ -11,7 +11,8 @@ lua-scriptum
 **Description**:
 Document generator for Lua based code;
 The output files are in markdown syntax
-
+**!Warning!** This is currently a test module that has a dependancy to Love2D.
+Check back later, I will remove this and make ready for common use.
 
 **Authors**:
 Charles Mallah
@@ -27,7 +28,6 @@ Output is in markdown
 
     This document was created with this module, view the source file to see example input
     And see the raw readme.md for example output
-
 
 **Example**:
 Generate all documentation from the root directory
