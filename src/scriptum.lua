@@ -19,7 +19,9 @@ Check back later, I will remove this and make ready for common use.
 `local scriptum = require("scriptum")
 `scriptum.start()
 
-@example Create an optional header vignette with a comment block and these tags (all optional):
+@example Create an optional header vignette with a comment block.
+Start from the first line of the source file, and use these tags (all optional):
+
 - **(a)title** the name of the file/module (once, single line)
 - **(a)version** the current version (once, single line)
 - **(a)description** module description (once, multiple lines)
@@ -53,8 +55,13 @@ Such as:
 `(start)My function for documentation
 `(a)param name (typing) <required> [File will be created and overwritten]
 `(a)param verbose (boolean) <default: true> [More output if true]
-`(a)return sucess (boolean) [Fail will be handled gracefully and return false]
+`(a)return success (boolean) [Fail will be handled gracefully and return false]
 `(end)
+`function module.startModule(name, verbose)
+`  local success = false
+`  -- sample code --
+`  return success
+`end
 
 Where:
 
@@ -189,7 +196,8 @@ end
 
 local function extractRequires(lines, startLine, data)
   local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
-  if search1 then
+  local search2 = searchForPattern(lines, startLine, 1, "scriptum")
+  if search1 and not search2 then
     data.requires[#data.requires + 1] = "/"..result1..".lua"
   end
 end

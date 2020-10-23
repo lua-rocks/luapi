@@ -37,7 +37,9 @@ Generate all documentation from the root directory
     scriptum.start()
 
 **Example**:
-Create an optional header vignette with a comment block and these tags (all optional):
+Create an optional header vignette with a comment block.
+Start from the first line of the source file, and use these tags (all optional):
+
 - **@title** the name of the file/module (once, single line)
 - **@version** the current version (once, single line)
 - **@description** module description (once, multiple lines)
@@ -74,8 +76,13 @@ Such as:
     --[[My function for documentation
     @param name (typing) <required> [File will be created and overwritten]
     @param verbose (boolean) <default: true> [More output if true]
-    @return sucess (boolean) [Fail will be handled gracefully and return false]
+    @return success (boolean) [Fail will be handled gracefully and return false]
     ]]
+    function module.startModule(name, verbose)
+      local success = false
+      -- sample code --
+      return success
+    end
 
 Where:
 
