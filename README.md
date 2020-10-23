@@ -96,5 +96,3 @@ The markup used in this file requres escape symbols to generate the outputs prop
 
 > Start document generation  
 > &rarr; **rootPath** (string) <*required*> `Path that will contain the generated documentation`  
-> &larr; **x1** (boolean) `Testing for output`  
-> &larr; **x2** (number)  

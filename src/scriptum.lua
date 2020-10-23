@@ -653,8 +653,6 @@ end
 
 --[[Start document generation
 @param rootPath (string) <required> [Path that will contain the generated documentation]
-@return x1 (boolean) [Testing for output]
-@return x2 (number)
 ]]
 function module.start(rootPath)
   -- Prep --
