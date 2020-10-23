@@ -1,9 +1,12 @@
-# lua-scriptum
+# profiler.lua
 
 ## Vignette
 
 **Title**:
 lua-scriptum
+
+**Version**:
+1.0
 
 **Description**:
 Document generator for Lua based code;
