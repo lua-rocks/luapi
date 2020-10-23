@@ -24,7 +24,8 @@ MIT license (mit-license.org)
 **Sample**:
 Output is in markdown
 
-    This document was created with this module, view the source to see sample output
+    This document was created with this module, view the source file to see example input
+    And see the raw readme.md for example output
 
 **Example**:
 Generate all documentation from the root directory
