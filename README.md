@@ -19,7 +19,7 @@ Charles Mallah
 MIT license (mit-license.org)
 
 **Sample**:
-Sample output is in markdown
+Output is in markdown
 
     This document was created with this module
 

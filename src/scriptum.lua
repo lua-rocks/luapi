@@ -1,5 +1,6 @@
 --[[
 @title lua-scriptum
+@version 1.0
 @description Document generator for Lua based code;
 The output files are in markdown syntax
 
@@ -7,7 +8,7 @@ The output files are in markdown syntax
 @copyright (c) 2020 Charles Mallah
 @license MIT license (mit-license.org)
 
-@sample Sample output is in markdown
+@sample Output is in markdown
 `This document was created with this module
 
 @example Generate all documentation from the root directory
@@ -47,6 +48,7 @@ local patternTextInAngled = openBracket2..anyText..closeBracket2
 local patternTextInSquare = openBracket3..anyText..closeBracket3
 local patternFunction = "function"..anyText..openBracket
 local patternTitle = "@title"..anyText
+local patternVersion = "@version"..anyText
 local patternDesc = "@description"..anyText
 local patternExample = "@example"..anyText
 local patternSample = "@sample"..anyText
@@ -56,10 +58,9 @@ local patternLicense = "@license"..anyText
 local subpatternCode = "`"..anyText
 local patternAt = "@"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
-
 local toRoot = "Back to root"
-
-local tags = {"title", "description", "authors", "copyright", "license", "sample", "example"}
+local tags = {"title", "version", "description", "authors",
+"copyright", "license", "sample", "example"}
 
 local function recursivelyDelete(item)
   if love.filesystem.getInfo(item, "directory") then
@@ -235,8 +236,10 @@ local function multiLineField(set, field, data)
 end
 
 local function catchMultilineEnd(set, multilines, multilineStarted)
+  print("catchMultilineEnd "..multilineStarted)
   for i = 1, #multilines do
     set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
+    print(multilines[i])
   end
 end
 
@@ -274,6 +277,11 @@ local function searchForTaggedData(line2, set)
     set.title = removeLeadingSpaces(title)
     return "title"
   end
+  local version = string.match(line2, patternVersion)
+  if version then
+    set.version = removeLeadingSpaces(version)
+    return "version"
+  end
   local authors = string.match(line2, patternAuthors)
   if authors then
     set.authors = removeLeadingSpaces(authors)
@@ -295,7 +303,7 @@ end
 local function extractHeaderBlock(lines, startLine, data)
   local search = searchForPattern(lines, startLine, 1, startBlockComment)
   if search then
-    local search3 = searchForPattern(lines, startLine, 50, endBlockComment)
+    local search3 = searchForPattern(lines, startLine, 500, endBlockComment)
     local set = {}
     if search3 then
       set.endHeader = search3
@@ -321,9 +329,9 @@ local function extractHeaderBlock(lines, startLine, data)
           local line = lines[startLine + j + 1]
           if multilineStarted then
             local text = removeLeadingSpaces(line)
-            if text ~= "" then
-              multilines[#multilines + 1] = text
-            end
+            -- if text ~= "" then
+            multilines[#multilines + 1] = text
+            -- end
           end
         end
       end
@@ -337,6 +345,7 @@ end
 
 --[[Will force a repeated header on a line that is '||', as code for a manual new line]]
 local function writeVignette(output, set, fields)
+  local codeBlockOpened = false
   for i = 1, #fields do
     local field = fields[i]
     if set[field] then
@@ -357,7 +366,12 @@ local function writeVignette(output, set, fields)
                 output:write("\n")
               end
               output:write("\n    "..code)
+              codeBlockOpened = true
             else
+              if codeBlockOpened then
+                output:write("\n")
+                codeBlockOpened = false
+              end
               output:write("\n"..text)
             end
           end
@@ -435,9 +449,6 @@ local function printFn(output, v3)
         else
           cat = cat..v4.name
         end
-        -- if v4.default ~= "required" then
-        --   cat = cat.."\\*"
-        -- end
       end
     end
     output:write(cat)
