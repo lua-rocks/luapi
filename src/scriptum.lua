@@ -9,11 +9,37 @@ The output files are in markdown syntax
 @license MIT license (mit-license.org)
 
 @sample Output is in markdown
-`This document was created with this module
+`This document was created with this module, view the source file to see example input
+`And see the raw readme.md for example output
 
 @example Generate all documentation from the root directory
 `local scriptum = require("scriptum")
 `scriptum.start()
+
+@example Create an optional header vignette with a comment block and these tags (all optional):
+`(a)title" the name of the file/module `(once, single line)`
+`(a)version" the current version `(once, single line)`
+`(a)description" module description `(once, multiple lines)`
+`(a)authors" the authors `(once, single line)`
+`(a)copyright" the copyright line `(once, single line)`
+`(a)license" the license `(once, single line)`
+`(a)sample" provide sample outputs `(multiple entries, multiple lines)`
+`(a)example" provide usage examples `(multiple entries, multiple lines)`
+
+@example Create an API function entry with a comment block and these tags (all optional):
+`(a)param" provide sample outputs `(multiple entries, multiple lines)`
+
+A description in the first line and parameter or return lines should contain:
+`name (typing) <default> [note]
+such as:
+`(a)param filename (string) <default: "profiler.log"> [File will be created and overwritten]
+
+Return values can be included inside the comment block with:
+`(a)return" provide usage examples `(multiple entries, multiple lines)`
+`name (typing) [note]
+such as:
+`(a)return success (boolean) [Fail will be handled gracefully and return false]
+
 ]]
 
 --[[ Configuration ]]--
@@ -354,6 +380,7 @@ local function writeVignette(output, set, fields)
         local count = 0
         for j = 1, #set[field] do
           local text = set[field][j]
+          text = strReplace(text, "%(a%)", "@")
           count = count + 1
           if text == "||" then
             output:write("\n")
@@ -369,7 +396,7 @@ local function writeVignette(output, set, fields)
               codeBlockOpened = true
             else
               if codeBlockOpened then
-                output:write("\n")
+                -- output:write("\n")
                 codeBlockOpened = false
               end
               output:write("\n"..text)
