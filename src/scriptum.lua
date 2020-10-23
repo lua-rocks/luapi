@@ -68,7 +68,7 @@ Where:
 
 --[[ Configuration ]]--
 
-local outputDir = "scriptum"
+local outputPath = "scriptum"
 
 --[[ Locals ]]--
 
@@ -448,7 +448,7 @@ local function generateItemLink(file)
 end
 
 local function generateReadme()
-  local outFilename = outputDir.."/readme.md"
+  local outFilename = outputPath.."/readme.md"
   local output = love.filesystem.newFile(outFilename)
   local opened = output:open("w")
   if not opened then
@@ -552,7 +552,7 @@ end
 local function generateDoc(data)
   local out = data.file..".md"
   out = strReplace(out, "/", ".")
-  out = outputDir.."/"..out
+  out = outputPath.."/"..out
   local output = love.filesystem.newFile(out)
   local opened = output:open("w")
   if not opened then
@@ -622,9 +622,9 @@ end
 local function prepareOutput()
   module.fileData = {}
   module.sortSet = {}
-  recursivelyDelete(outputDir)
+  recursivelyDelete(outputPath)
   love.timer.sleep(1)
-  love.filesystem.createDirectory(outputDir)
+  love.filesystem.createDirectory(outputPath)
 end
 
 local function parseFile(file)
@@ -652,10 +652,14 @@ end
 --[[ Functions ]]--
 
 --[[Start document generation
-@param rootPath (string) <required> [Path that will contain the generated documentation]
+@param rootPath (string) <default: ""> [Path to read source code from]
+@param outputPath (string) <default: "scriptum"> [Path to output to]
 ]]
-function module.start(rootPath)
+function module.start(rootPath, output)
   -- Prep --
+  if output then
+    outputPath = output
+  end
   prepareOutput()
 
   -- Parse --

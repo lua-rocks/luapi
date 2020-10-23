@@ -92,7 +92,8 @@ The markup used in this file requres escape symbols to generate the outputs prop
 
 ## API
 
-**start** (rootPath) : x1, x2  
+**start** (rootPath\*, outputPath\*) :   
 
 > Start document generation  
-> &rarr; **rootPath** (string) <*required*> `Path that will contain the generated documentation`  
+> &rarr; **rootPath** (string) <*default: ""*> `Path to read source code from`  
+> &rarr; **outputPath** (string) <*default: "scriptum"*> `Path to output to`  
