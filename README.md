@@ -12,6 +12,7 @@ lua-scriptum
 Document generator for Lua based code;
 The output files are in markdown syntax
 
+
 **Authors**:
 Charles Mallah
 
@@ -27,11 +28,13 @@ Output is in markdown
     This document was created with this module, view the source file to see example input
     And see the raw readme.md for example output
 
+
 **Example**:
 Generate all documentation from the root directory
 
     local scriptum = require("scriptum")
     scriptum.start()
+
 
 **Example**:
 Create an optional header vignette with a comment block and these tags (all optional):
@@ -58,30 +61,29 @@ Such as the following:
 Backtic is used to mark a line as a code block when written in markdown.
 Empty lines can be used if required as to your preference.
 
+
 **Example**:
 Create an API function entry with a comment block and one of more of:
 
     @param name (typing) <default> [note]
-Where:
-- **name** is the param
-- **(typing)** such as (boolean), (number), (function), (string)
-- **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
-- **[note]** is any further information
-
-Such as any of the following:
-
-    @param filename (string) <required> [File will be created and overwritten]
-    @param filename (string) <default: "profiler.log"> [File will be created and overwritten]
-    @param filename (string)
-
-Return values can be included inside the comment block with:
-
+and
     @return name (typing) [note]
 
 Such as:
 
-    @return success (boolean) [Fail will be handled gracefully and return false]
-    @return success (boolean)
+    --[[ My function for documentation
+    @param name (typing) <required> [File will be created and overwritten]
+    @param verbose (boolean) <default: true> [More output if true]
+    @return sucess (boolean) [Fail will be handled gracefully and return false]
+    ]]
+
+Where:
+
+- **name** is the parameter or return value
+- optional **(typing)** such as (boolean), (number), (function), (string)
+- optional **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
+- optional **[note]** is any further information
+
 
 **Example**:
 The markup used in this file requres escape symbols to generate the outputs properly:

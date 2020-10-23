@@ -42,26 +42,23 @@ Empty lines can be used if required as to your preference.
 
 @example Create an API function entry with a comment block and one of more of:
 `(a)param name (typing) <default> [note]
-Where:
-- **name** is the param
-- **(typing)** such as (boolean), (number), (function), (string)
-- **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
-- **[note]** is any further information
-
-Such as any of the following:
-
-`(a)param filename (string) <required> [File will be created and overwritten]
-`(a)param filename (string) <default: "profiler.log"> [File will be created and overwritten]
-`(a)param filename (string)
-
-Return values can be included inside the comment block with:
-
+and
 `(a)return name (typing) [note]
 
 Such as:
 
-`(a)return success (boolean) [Fail will be handled gracefully and return false]
-`(a)return success (boolean)
+`(start) My function for documentation
+`(a)param name (typing) <required> [File will be created and overwritten]
+`(a)param verbose (boolean) <default: true> [More output if true]
+`(a)return sucess (boolean) [Fail will be handled gracefully and return false]
+`(end)
+
+Where:
+
+- **name** is the parameter or return value
+- optional **(typing)** such as (boolean), (number), (function), (string)
+- optional **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
+- optional **[note]** is any further information
 
 @example The markup used in this file requres escape symbols to generate the outputs properly:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
