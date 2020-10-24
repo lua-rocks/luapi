@@ -18,12 +18,14 @@ everything will be handled automatically.
 `This document was created with this module, view the source file to see example input
 `And see the raw readme.md for example output
 
-@example Generate all documentation from the root directory
+@example Generate all documentation from the root directory:
+
 `local scriptum = require("scriptum")
 `scriptum.start()
 
 For non Love2D use make sure you give the absolute path to the source root, and make
 sure the output folder 'scriptum' in this example already exists in the source path, such as:
+
 `local scriptum = require("scriptum")
 `engine.scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
 
