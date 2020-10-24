@@ -119,7 +119,3 @@ The markup used in this file requres escape symbols to generate the outputs prop
 > Start document generation  
 > &rarr; **rootPath** (string) <*default: ""*> `Path to read source code from`  
 > &rarr; **outputPath** (string) <*default: "scriptum"*> `Path to output to`  
-
-# Project
-
-+ [Back to root](readme.md)
