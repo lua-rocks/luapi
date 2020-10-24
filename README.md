@@ -81,7 +81,9 @@ Empty lines can be used if required as to your preference.
 Create an API function entry with a comment block and one of more of:
 
     @param name (typing) <default> [note]
-and
+
+and:
+
     @return name (typing) [note]
 
 Such as:
@@ -117,3 +119,7 @@ The markup used in this file requres escape symbols to generate the outputs prop
 > Start document generation  
 > &rarr; **rootPath** (string) <*default: ""*> `Path to read source code from`  
 > &rarr; **outputPath** (string) <*default: "scriptum"*> `Path to output to`  
+
+# Project
+
++ [Back to root](readme.md)
