@@ -9,7 +9,7 @@ lua-scriptum
 0.1
 
 **Description**:
-Document generator for Lua based code;
+Lua based document generator;
 The output files are in markdown syntax.
 
 **!Warning!** This is currently a test module that has a dependancy to Love2D.
