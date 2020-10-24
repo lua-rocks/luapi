@@ -9,7 +9,7 @@ The output files are in markdown syntax.
 @license MIT license (mit-license.org)
 
 @warning This module will use 'Love2D' for the filesystem if you are using that framework;
-Otherwise the basic Lua file-io will be used for ead/write, and system calls for file scanning.
+Otherwise the basic Lua file-io will be used for read/write, and system calls for file scanning.
 In this case, you must provide an absolute path to the input source code, and the output
 folder must already exist (please create yourself in code or manually). For the Love2D option
 everything will be handled automatically.
