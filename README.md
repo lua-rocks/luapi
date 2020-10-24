@@ -1,19 +1,15 @@
-# lua-scriptum
-
-## Vignette
+# Vignette
 
 **Title**:
 lua-scriptum
 
 **Version**:
-0.1
+1.0
 
 **Description**:
-Document generator for Lua based code;
+Lua based document generator;
 The output files are in markdown syntax.
 
-**!Warning!** This is currently a test module that has a dependancy to Love2D.
-Check back later, I will remove this and make ready for common use.
 
 **Authors**:
 Charles Mallah
@@ -24,17 +20,27 @@ Charles Mallah
 **License**:
 MIT license (mit-license.org)
 
+**Warning**:
+This module will use 'Love2D' for the filesystem if you are using that framework;
+Otherwise the basic Lua file-io will be used for ead/write, and system calls for file scanning.
+In this case, you must provide an absolute path to the input source code, and the output
+folder must already exist (please create yourself in code or manually). For the Love2D option
+everything will be handled automatically.
+
+
 **Sample**:
 Output is in markdown
 
     This document was created with this module, view the source file to see example input
     And see the raw readme.md for example output
 
+
 **Example**:
 Generate all documentation from the root directory
 
     local scriptum = require("scriptum")
     scriptum.start()
+
 
 **Example**:
 Create an optional header vignette with a comment block.
@@ -43,6 +49,7 @@ Start from the first line of the source file, and use these tags (all optional):
 - **@title** the name of the file/module (once, single line)
 - **@version** the current version (once, single line)
 - **@description** module description (once, multiple lines)
+- **@warning** module warning (multiple entries, multiple lines)
 - **@authors** the authors (once, single line)
 - **@copyright** the copyright line (once, single line)
 - **@license** the license (once, single line)
@@ -97,7 +104,7 @@ The markup used in this file requres escape symbols to generate the outputs prop
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - Angled brackets are escaped with \\< and \\>
 
-## API
+# API
 
 **start** (rootPath\*, outputPath\*) :   
 

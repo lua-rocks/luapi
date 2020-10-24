@@ -1,15 +1,18 @@
 --[[
 @title lua-scriptum
-@version 0.1
-@description Document generator for Lua based code;
+@version 1.0
+@description Lua based document generator;
 The output files are in markdown syntax.
-
-**!Warning!** This is currently a test module that has a dependancy to Love2D.
-Check back later, I will remove this and make ready for common use.
 
 @authors Charles Mallah
 @copyright (c) 2020 Charles Mallah
 @license MIT license (mit-license.org)
+
+@warning This module will use 'Love2D' for the filesystem if you are using that framework;
+Otherwise the basic Lua file-io will be used for ead/write, and system calls for file scanning.
+In this case, you must provide an absolute path to the input source code, and the output
+folder must already exist (please create yourself in code or manually). For the Love2D option
+everything will be handled automatically.
 
 @sample Output is in markdown
 `This document was created with this module, view the source file to see example input
@@ -25,6 +28,7 @@ Start from the first line of the source file, and use these tags (all optional):
 - **(a)title** the name of the file/module (once, single line)
 - **(a)version** the current version (once, single line)
 - **(a)description** module description (once, multiple lines)
+- **(a)warning** module warning (multiple entries, multiple lines)
 - **(a)authors** the authors (once, single line)
 - **(a)copyright** the copyright line (once, single line)
 - **(a)license** the license (once, single line)
@@ -78,11 +82,16 @@ Where:
 
 --[[ Configuration ]]--
 
-local outputPath = "scriptum"
+local rootInput = ""
+local outPath = "scriptum"
+local codeSourceType = ".lua"
+local outputType = ".md"
+local allowLoveFilesystem = true
 
 --[[ Locals ]]--
 
 local love = love -- luacheck: ignore
+local string, table = string, table
 local module = {}
 
 local anyText = "(.*)"
@@ -110,6 +119,7 @@ local patternFunction = "function"..anyText..openBracket
 local patternTitle = "@title"..anyText
 local patternVersion = "@version"..anyText
 local patternDesc = "@description"..anyText
+local patternWarning = "@warning"..anyText
 local patternExample = "@example"..anyText
 local patternSample = "@sample"..anyText
 local patternAuthors = "@authors"..anyText
@@ -119,8 +129,22 @@ local subpatternCode = "`"..anyText
 local patternAt = "@"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
 local toRoot = "Back to root"
-local tags = {"title", "version", "description", "authors",
-"copyright", "license", "sample", "example"}
+local tags = {
+  "title", "version", "description", "authors", "copyright", "license",
+  "warning", "sample", "example"
+}
+
+local function systemCheck()
+  local check = package.config:sub(1, 1)
+  if check == "\\" or check == "\\\\" then
+    return "windows"
+  end
+  return "linux"
+end
+
+local function strReplace(stringIn, tag, replace)
+  return stringIn:gsub(tag, replace)
+end
 
 local function recursivelyDelete(item)
   if love.filesystem.getInfo(item, "directory") then
@@ -139,20 +163,67 @@ local function recursiveFileSearch(folder, fileTree)
   if not folder then
     folder = ""
   end
+  if folder:sub(1, 1) == "/" then
+    folder = folder:sub(2, #folder)
+  elseif folder:sub(1, 2) == "\\\\" then
+    folder = folder:sub(3, #folder)
+  end
+  if folder:sub(1, 1) == "." then -- Ignore hidden folder
+    return fileTree
+  end
   local filesTable = love.filesystem.getDirectoryItems(folder)
   for _, v in ipairs(filesTable) do
-    local file = folder.."/"..v
-    local info = love.filesystem.getInfo(file)
+    local fullpath = folder.."/"..v
+    local info = love.filesystem.getInfo(fullpath)
     if info then
       if info.type == "file" then
-        fileTree[#fileTree + 1] = file
+        if fullpath:sub(1, 1) == "/" then
+          fullpath = fullpath:sub(2, #fullpath)
+        end
+        fileTree[#fileTree + 1] = fullpath
       else
         if info.type == "directory" then
-          fileTree = recursiveFileSearch(file, fileTree)
+          fileTree = recursiveFileSearch(fullpath, fileTree)
         end
       end
     end
   end
+  return fileTree
+end
+
+local function scanDir(folder, fileTree)
+  if not fileTree then
+    fileTree = {}
+  end
+  if folder then
+    folder = strReplace(folder, "\\\\", "/")
+    folder = strReplace(folder, "\\", "/")
+  end
+  local pfile
+  -- Files --
+  local command
+  if systemCheck() == "windows" then
+    command = 'dir "'..folder..'" /b /a-d-h'
+  else
+    command = 'ls -p "'..folder..'" | grep -v /'
+  end
+  pfile = io.popen(command)
+  for item in pfile:lines() do
+    fileTree[#fileTree + 1] = folder.."/"..item
+  end
+  pfile:close()
+  -- Folders --
+  if systemCheck() == "windows" then
+    command = 'dir "'..folder..'" /b /ad-h'
+  else
+    command = 'ls -p "'..folder..'" | grep /'
+  end
+  pfile = io.popen(command)
+  for item in pfile:lines() do
+    item = strReplace(item, "\\", "")
+    fileTree = scanDir(folder.."/"..item, fileTree)
+  end
+  pfile:close()
   return fileTree
 end
 
@@ -190,15 +261,11 @@ local function searchForPattern(lines, startLine, forLines, pattern)
   return nil, nil
 end
 
-local function strReplace(stringIn, tag, replace)
-  return stringIn:gsub(tag, replace)
-end
-
 local function extractRequires(lines, startLine, data)
   local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
   local search2 = searchForPattern(lines, startLine, 1, "scriptum")
   if search1 and not search2 then
-    data.requires[#data.requires + 1] = "/"..result1..".lua"
+    data.requires[#data.requires + 1] = "/"..result1..codeSourceType
   end
 end
 
@@ -297,10 +364,8 @@ local function multiLineField(set, field, data)
 end
 
 local function catchMultilineEnd(set, multilines, multilineStarted)
-  print("catchMultilineEnd "..multilineStarted)
   for i = 1, #multilines do
     set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
-    print(multilines[i])
   end
 end
 
@@ -312,6 +377,14 @@ local function searchForMultilineTaggedData(set, line, multilines, multilineStar
     end
     multiLineField(set, "description", description)
     return "description"
+  end
+  local warning = string.match(line, patternWarning)
+  if warning then
+    if multilineStarted then
+      catchMultilineEnd(set, multilines, multilineStarted)
+    end
+    multiLineField(set, "warning", warning)
+    return "warning"
   end
   local sample = string.match(line, patternSample)
   if sample then
@@ -448,42 +521,93 @@ local function writeVignette(output, set, fields)
   end
 end
 
+local function stripOutRoot(text)
+  if rootInput == "" then
+    return text
+  end
+  local cleanRootInput = rootInput
+  cleanRootInput = strReplace(cleanRootInput, "\\\\", "/")
+  cleanRootInput = strReplace(cleanRootInput, "\\", "/")
+  text = strReplace(text, cleanRootInput.."/", "")
+  text = strReplace(text, cleanRootInput, "")
+  return text
+end
+
 local function generateItemName(file)
-  return strReplace(file, "", "")
+  local outFilename = file
+  outFilename = stripOutRoot(outFilename)
+  return outFilename
+end
+
+local function outputMDFile(file)
+  local outFilename = file..outputType
+  outFilename = stripOutRoot(outFilename)
+  outFilename = strReplace(outFilename, "/", ".")
+  outFilename = strReplace(outFilename, codeSourceType, "")
+  return outFilename
 end
 
 local function generateItemLink(file)
-  local out = file..".md"
-  out = strReplace(out, "/", ".")
+  local out = outputMDFile(file)
   return out
 end
 
+local function readFileLines(file)
+  local count = 0
+  local lines = {}
+  if allowLoveFilesystem and love and love.filesystem then
+    for line in love.filesystem.lines(file) do
+      count = count + 1
+      lines[count] = line
+    end
+  else
+    for line in io.lines(file) do
+      count = count + 1
+      lines[count] = line
+    end
+  end
+  return lines, count
+end
+
+local function openFileWriter(outFilename)
+  local fileWriter
+  if allowLoveFilesystem and love and love.filesystem then
+    fileWriter = love.filesystem.newFile(outFilename)
+    local opened = fileWriter:open("w")
+    if not opened then
+      print("error: failed to create '"..outFilename.."'")
+      return nil
+    end
+  else
+    fileWriter = io.open(outFilename, "w+")
+    if not fileWriter then
+      print("error: failed to create '"..outFilename.."'")
+      return
+    end
+  end
+  return fileWriter
+end
+
 local function generateReadme()
-  local outFilename = outputPath.."/readme.md"
-  local output = love.filesystem.newFile(outFilename)
-  local opened = output:open("w")
-  if not opened then
-    print("error: failed to create '"..outFilename.."'")
+  local outFilename = outPath.."/readme.md"
+  local fileWriter = openFileWriter(outFilename)
+  if not fileWriter then
     return
   end
-
-  output:write("# Project Code Documentation")
-  output:write("\n")
-  output:write("\nTest output text.")
-  output:write("\n")
-
-  output:write("\n## Index")
-  output:write("\n")
+  fileWriter:write("# Project Code Documentation")
+  fileWriter:write("\n")
+  fileWriter:write("\n## Index")
+  fileWriter:write("\n")
   for i = 1, #module.sortSet do
     local data = module.fileData[module.sortSet[i]]
     local name = generateItemName(data.file)
     local link = generateItemLink(data.file)
-    output:write("\n+ ["..name.."]("..link..")")
+    fileWriter:write("\n+ ["..name.."]("..link..")")
   end
 end
 
-local function printFn(output, v3)
-  output:write(" (")
+local function printFn(fileWriter, v3)
+  fileWriter:write(" (")
   local cat = ""
   local count = 0
   for _, v4 in pairs(v3.pars) do
@@ -499,10 +623,10 @@ local function printFn(output, v3)
       end
     end
   end
-  output:write(cat)
-  output:write(")")
+  fileWriter:write(cat)
+  fileWriter:write(")")
   if v3.returns then
-    output:write(" : ")
+    fileWriter:write(" : ")
     cat = ""
     count = 0
     for _, v4 in pairs(v3.returns) do
@@ -515,12 +639,12 @@ local function printFn(output, v3)
         end
       end
     end
-    output:write(cat)
+    fileWriter:write(cat)
   end
-  output:write("  \n")
+  fileWriter:write("  \n")
 end
 
-local function printParams(output, v3)
+local function printParams(fileWriter, v3)
   for _, v4 in pairs(v3.pars) do
     local text2 = "> &rarr; "
     if v4.name then
@@ -535,12 +659,12 @@ local function printParams(output, v3)
     if v4.note then
       text2 = text2.." `"..v4.note.."`"
     end
-    output:write(text2)
-    output:write("  \n")
+    fileWriter:write(text2)
+    fileWriter:write("  \n")
   end
 end
 
-local function printReturns(output, v3)
+local function printReturns(fileWriter, v3)
   for _, v4 in pairs(v3.returns) do
     local text2 = "> &larr; "
     if v4.name then
@@ -555,45 +679,49 @@ local function printReturns(output, v3)
     if v4.note then
       text2 = text2.." `"..v4.note.."`"
     end
-    output:write(text2)
-    output:write("  \n")
+    fileWriter:write(text2)
+    fileWriter:write("  \n")
   end
 end
 
 local function generateDoc(data)
-  local out = data.file..".md"
-  out = strReplace(out, "/", ".")
-  out = outputPath.."/"..out
-  local output = love.filesystem.newFile(out)
-  local opened = output:open("w")
-  if not opened then
-    print("error: failed to create '"..out.."'")
+  local outFilename = outputMDFile(data.file)
+  outFilename = outPath.."/"..outFilename
+  local fileWriter = openFileWriter(outFilename)
+  if not fileWriter then
     return
   end
 
-  output:write("# "..data.file)
-  output:write("\n")
-
   if data.header then
-    output:write("\n## Vignette\n")
-    writeVignette(output, data.header, tags)
-    output:write("\n")
+    fileWriter:write("# Vignette\n")
+    writeVignette(fileWriter, data.header, tags)
+    fileWriter:write("\n")
+  else
+    local file = generateItemName(data.file)
+    fileWriter:write("# "..file)
+    fileWriter:write("\n")
   end
 
   -- Requires --
   local hasREQ = false
   for _, v2 in pairs(data.requires) do
     if not hasREQ then
-      output:write("\n## Requires")
-      output:write("\n")
+      fileWriter:write("\n## Requires")
+      fileWriter:write("\n")
       hasREQ = true
     end
-    local name = generateItemName(v2)
-    local link = generateItemLink(v2)
-    output:write("\n+ ["..name.."]("..link..")")
+    local file = v2
+    if file:sub(1, 1) == "/" then
+      file = file:sub(2, #file)
+    elseif file:sub(1, 2) == "\\\\" then
+      file = file:sub(3, #file)
+    end
+    local name = generateItemName(file)
+    local link = generateItemLink(file)
+    fileWriter:write("\n+ ["..name.."]("..link..")")
   end
   if hasREQ then
-    output:write("\n")
+    fileWriter:write("\n")
   end
 
   -- API --
@@ -602,54 +730,49 @@ local function generateDoc(data)
   for _, v3 in pairs(data.api) do
     if v3.name then
       if not hasAPI then
-        output:write("## API")
-        output:write("\n")
+        fileWriter:write("# API")
+        fileWriter:write("\n")
         hasAPI = true
       end
       count = count + 1
       local nameText = strReplace(v3.name, "module.", "")
-      output:write("\n**"..removeLeadingSpaces(nameText).."**")
+      fileWriter:write("\n**"..removeLeadingSpaces(nameText).."**")
       if v3.pars then
-        printFn(output, v3)
+        printFn(fileWriter, v3)
       end
       if v3.desc then
-        output:write("\n")
-        output:write("> "..v3.desc)
-        output:write("  \n")
+        fileWriter:write("\n")
+        fileWriter:write("> "..v3.desc)
+        fileWriter:write("  \n")
       end
       if v3.pars then
-        printParams(output, v3)
+        printParams(fileWriter, v3)
       end
       if v3.returns then
-        printReturns(output, v3)
+        printReturns(fileWriter, v3)
       end
     end
   end
-  output:write("\n## Project\n")
-  output:write("\n+ ["..toRoot.."](readme.md)")
-  output:close()
+  fileWriter:write("\n# Project\n")
+  fileWriter:write("\n+ ["..toRoot.."](readme.md)")
+  fileWriter:close()
 end
 
 local function prepareOutput()
   module.fileData = {}
   module.sortSet = {}
-  recursivelyDelete(outputPath)
-  love.timer.sleep(1)
-  love.filesystem.createDirectory(outputPath)
+  if allowLoveFilesystem and love and love.filesystem then
+    recursivelyDelete(outPath)
+    love.timer.sleep(1)
+    love.filesystem.createDirectory(outPath)
+  end
 end
 
 local function parseFile(file)
-  module.fileData[file] = { file = file, count = 0, requires = {}, api = {} }
+  module.fileData[file] = { file = file, requires = {}, api = {} }
   local data = module.fileData[file]
-  local count = 0
-  local lines = {}
-  for line in love.filesystem.lines(file) do
-    count = count + 1
-    lines[count] = line
-    data.count = count
-  end
-
-  for i = 1, #lines do
+  local lines, count = readFileLines(file)
+  for i = 1, count do
     if i == 1 then
       extractHeaderBlock(lines, 0, data)
     end
@@ -666,20 +789,28 @@ end
 @param rootPath (string) <default: ""> [Path to read source code from]
 @param outputPath (string) <default: "scriptum"> [Path to output to]
 ]]
-function module.start(rootPath, output)
+function module.start(rootPath, outputPath)
   -- Prep --
-  if output then
-    outputPath = output
+  if rootPath then
+    rootInput = rootPath
+  end
+  if outputPath then
+    outPath = outputPath
   end
   prepareOutput()
 
   -- Parse --
-  local fileTree = recursiveFileSearch(rootPath)
-  local files = filterFiles(fileTree, ".lua")
+  local fileTree
+  if allowLoveFilesystem and love and love.filesystem then
+    fileTree = recursiveFileSearch(rootInput)
+  else
+    fileTree = scanDir(rootInput)
+  end
+  local files = filterFiles(fileTree, codeSourceType)
   sortStrings(files)
   local fileCount = #files
   for i = 1, fileCount do
-    local file = files[i]..".lua"
+    local file = files[i]..codeSourceType
     parseFile(file)
   end
 
