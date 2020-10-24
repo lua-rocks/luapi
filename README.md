@@ -41,6 +41,11 @@ Generate all documentation from the root directory
     local scriptum = require("scriptum")
     scriptum.start()
 
+For non Love2D use make sure you give the absolute path to the source root, and make
+sure the output folder 'scriptum' in this example already exists in the source path, such as:
+    local scriptum = require("scriptum")
+    engine.scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
+
 
 **Example**:
 Create an optional header vignette with a comment block.
@@ -111,3 +116,7 @@ The markup used in this file requres escape symbols to generate the outputs prop
 > Start document generation  
 > &rarr; **rootPath** (string) <*default: ""*> `Path to read source code from`  
 > &rarr; **outputPath** (string) <*default: "scriptum"*> `Path to output to`  
+
+# Project
+
++ [Back to root](readme.md)

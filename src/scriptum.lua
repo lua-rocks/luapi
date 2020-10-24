@@ -22,6 +22,11 @@ everything will be handled automatically.
 `local scriptum = require("scriptum")
 `scriptum.start()
 
+For non Love2D use make sure you give the absolute path to the source root, and make
+sure the output folder 'scriptum' in this example already exists in the source path, such as:
+`local scriptum = require("scriptum")
+`engine.scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
+
 @example Create an optional header vignette with a comment block.
 Start from the first line of the source file, and use these tags (all optional):
 
