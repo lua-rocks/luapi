@@ -45,7 +45,7 @@ For non Love2D use make sure you give the absolute path to the source root, and 
 sure the output folder 'scriptum' in this example already exists in the source path, such as:
 
     local scriptum = require("scriptum")
-    engine.scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
+    scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
 
 
 **Example**:
