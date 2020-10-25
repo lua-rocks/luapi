@@ -102,8 +102,8 @@ local allowLoveFilesystem = true
 
 local love = love -- luacheck: ignore
 local string, table = string, table
-local module = {}
 
+local module = {}
 local anyText = "(.*)"
 local spaceChar = "%s"
 local anyQuote = "\""
@@ -585,13 +585,13 @@ local function openFileWriter(outFilename)
     fileWriter = love.filesystem.newFile(outFilename)
     local opened = fileWriter:open("w")
     if not opened then
-      print("error: failed to create '"..outFilename.."'")
+      print("error: failed to create '"..outFilename.."' (openFileWriter)")
       return nil
     end
   else
     fileWriter = io.open(outFilename, "w+")
     if not fileWriter then
-      print("error: failed to create '"..outFilename.."'")
+      print("error: failed to create '"..outFilename.."' (openFileWriter)")
       return
     end
   end
@@ -716,7 +716,7 @@ local function generateDoc(data)
   local hasREQ = false
   for _, v2 in pairs(data.requires) do
     if not hasREQ then
-      fileWriter:write("\n## Requires")
+      fileWriter:write("\n# Requires")
       fileWriter:write("\n")
       hasREQ = true
     end
@@ -728,7 +728,16 @@ local function generateDoc(data)
     end
     local name = generateItemName(file)
     local link = generateItemLink(file)
-    fileWriter:write("\n+ ["..name.."]("..link..")")
+    local isInternal = false
+    if module.fileData[file] then
+      isInternal = true
+    end
+
+    if isInternal then
+      fileWriter:write("\n+ ["..name.."]("..link..")")
+    else
+      fileWriter:write("\n+ "..name.."")
+    end
   end
   if hasREQ then
     fileWriter:write("\n")
@@ -740,7 +749,7 @@ local function generateDoc(data)
   for _, v3 in pairs(data.api) do
     if v3.name then
       if not hasAPI then
-        fileWriter:write("# API")
+        fileWriter:write("\n# API")
         fileWriter:write("\n")
         hasAPI = true
       end

@@ -112,6 +112,7 @@ The markup used in this file requres escape symbols to generate the outputs prop
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - Angled brackets are escaped with \\< and \\>
 
+
 # API
 
 **start** (rootPath\*, outputPath\*) :   
