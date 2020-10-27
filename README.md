@@ -113,6 +113,17 @@ The markup used in this file requres escape symbols to generate the outputs prop
 - Angled brackets are escaped with \\< and \\>
 
 
+**Example**:
+Override a configuration parameter programmatically; insert your override values into a
+new table using the matched key names:
+
+    local overrides = {
+                        allowLoveFilesystem = false
+                      }
+    scriptum.configuration(overrides)
+
+
+
 # API
 
 **start** (rootPath\*, outputPath\*) :   
@@ -120,3 +131,12 @@ The markup used in this file requres escape symbols to generate the outputs prop
 > Start document generation  
 > &rarr; **rootPath** (string) <*default: ""*> `Path to read source code from`  
 > &rarr; **outputPath** (string) <*default: "scriptum"*> `Path to output to`  
+
+**configuration** (overrides) :   
+
+> Modify the configuration of this module programmatically;  
+> &rarr; **overrides** (table) <*required*> `Each key is from a valid name, the value is the override`  
+
+# Project
+
++ [Back to root](README.md)

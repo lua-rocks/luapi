@@ -88,22 +88,33 @@ Where:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - And **()** with **a** is used to escape the @ symbol.
 - Angled brackets are escaped with \\< and \\>
+
+@example Override a configuration parameter programmatically; insert your override values into a
+new table using the matched key names:
+
+`local overrides = {
+`                    allowLoveFilesystem = false
+`                  }
+`scriptum.configuration(overrides)
+
 ]]
 
 --[[ Configuration ]]--
 
-local rootInput = ""
-local outPath = "scriptum"
-local codeSourceType = ".lua"
-local outputType = ".md"
-local allowLoveFilesystem = true
+local config = {
+  codeSourceType = ".lua", -- Looking for these source code files
+  outputType = ".md", -- Output file suffix
+  allowLoveFilesystem = true -- Use Love2D filesystem if it is available
+}
 
 --[[ Locals ]]--
 
 local love = love -- luacheck: ignore
-local string, table = string, table
+local string, table, pairs = string, table, pairs
 
 local module = {}
+local rootInput = ""
+local outPath = "scriptum"
 local anyText = "(.*)"
 local spaceChar = "%s"
 local anyQuote = "\""
@@ -143,6 +154,18 @@ local tags = {
   "title", "version", "description", "authors", "copyright", "license",
   "warning", "sample", "example"
 }
+
+local function deepCopy(input)
+  if type(input) == "table" then
+    local output = {}
+    for i, o in next, input, nil do
+      output[deepCopy(i)] = deepCopy(o)
+    end
+    do return output end
+  else
+    do return input end
+  end
+end
 
 local function systemCheck()
   local check = package.config:sub(1, 1)
@@ -275,55 +298,31 @@ local function extractRequires(lines, startLine, data)
   local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
   local search2 = searchForPattern(lines, startLine, 1, "scriptum")
   if search1 and not search2 then
-    data.requires[#data.requires + 1] = "/"..result1..codeSourceType
+    data.requires[#data.requires + 1] = "/"..result1..config.codeSourceType
   end
 end
 
-local function extractParam(paramset, lines, startLine, j)
+local function extractParam(fnSet, lines, startLine, j)
   local match, line = searchForPattern(lines, startLine + j, 1, patternParam)
   if match then
     local par = {}
-    local name = string.match(line, patternTextToSpace)
-    if name then
-      par.name = name
-    end
-    local typing = string.match(line, patternTextInBrackets)
-    if typing then
-      par.typing = typing
-    end
-    local default = string.match(line, patternTextInAngled)
-    if default then
-      par.default = default
-    end
-    local note = string.match(line, patternTextInSquare)
-    if note then
-      par.note = note
-    end
-    paramset.pars[#paramset.pars + 1] = par
+    par.name = string.match(line, patternTextToSpace)
+    par.typing = string.match(line, patternTextInBrackets)
+    par.default = string.match(line, patternTextInAngled)
+    par.note = string.match(line, patternTextInSquare)
+    fnSet.pars[#fnSet.pars + 1] = par
   end
 end
 
-local function extractReturn(paramset, lines, startLine, j)
+local function extractReturn(fnSet, lines, startLine, j)
   local match, line = searchForPattern(lines, startLine + j, 1, patternReturn)
   if match then
-    local par = {}
-    local name = string.match(line, patternTextToSpace)
-    if name then
-      par.name = name
-    end
-    local typing = string.match(line, patternTextInBrackets)
-    if typing then
-      par.typing = typing
-    end
-    local default = string.match(line, patternTextInAngled)
-    if default then
-      par.default = default
-    end
-    local note = string.match(line, patternTextInSquare)
-    if note then
-      par.note = note
-    end
-    paramset.returns[#paramset.returns + 1] = par
+    local ret = {}
+    ret.name = string.match(line, patternTextToSpace)
+    ret.typing = string.match(line, patternTextInBrackets)
+    ret.default = string.match(line, patternTextInAngled)
+    ret.note = string.match(line, patternTextInSquare)
+    fnSet.returns[#fnSet.returns + 1] = ret
   end
 end
 
@@ -336,19 +335,19 @@ local function extractFunctionBlock(lines, startLine, data)
     if search2b then
       local search3 = searchForPattern(lines, startLine, 10, endBlockComment)
       -- Functions --
-      local paramset = {pars = {}, returns = {}, line = startLine, desc = result2b}
+      local fnSet = {pars = {}, returns = {}, line = startLine, desc = result2b}
       local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
       if fnL then
-        paramset.name = fnLine
+        fnSet.name = fnLine
       end
       -- Function details --
       if search3 then
         for j = 1, search3 do
-          extractParam(paramset, lines, startLine, j)
-          extractReturn(paramset, lines, startLine, j)
+          extractParam(fnSet, lines, startLine, j)
+          extractReturn(fnSet, lines, startLine, j)
         end
       end
-      data.api[#data.api + 1] = paramset
+      data.api[#data.api + 1] = fnSet
     end
   end
 end
@@ -543,29 +542,18 @@ local function stripOutRoot(text)
   return text
 end
 
-local function generateItemName(file)
-  local outFilename = file
-  outFilename = stripOutRoot(outFilename)
-  return outFilename
-end
-
 local function outputMDFile(file)
-  local outFilename = file..outputType
+  local outFilename = file..config.outputType
   outFilename = stripOutRoot(outFilename)
   outFilename = strReplace(outFilename, "/", ".")
-  outFilename = strReplace(outFilename, codeSourceType, "")
+  outFilename = strReplace(outFilename, config.codeSourceType, "")
   return outFilename
-end
-
-local function generateItemLink(file)
-  local out = outputMDFile(file)
-  return out
 end
 
 local function readFileLines(file)
   local count = 0
   local lines = {}
-  if allowLoveFilesystem and love and love.filesystem then
+  if config.allowLoveFilesystem and love and love.filesystem then
     for line in love.filesystem.lines(file) do
       count = count + 1
       lines[count] = line
@@ -581,7 +569,7 @@ end
 
 local function openFileWriter(outFilename)
   local fileWriter
-  if allowLoveFilesystem and love and love.filesystem then
+  if config.allowLoveFilesystem and love and love.filesystem then
     fileWriter = love.filesystem.newFile(outFilename)
     local opened = fileWriter:open("w")
     if not opened then
@@ -599,7 +587,7 @@ local function openFileWriter(outFilename)
 end
 
 local function generateReadme()
-  local outFilename = outPath.."/readme.md"
+  local outFilename = outPath.."/README.md"
   local fileWriter = openFileWriter(outFilename)
   if not fileWriter then
     return
@@ -610,8 +598,8 @@ local function generateReadme()
   fileWriter:write("\n")
   for i = 1, #module.sortSet do
     local data = module.fileData[module.sortSet[i]]
-    local name = generateItemName(data.file)
-    local link = generateItemLink(data.file)
+    local name = stripOutRoot(data.file)
+    local link = outputMDFile(data.file)
     fileWriter:write("\n+ ["..name.."]("..link..")")
   end
 end
@@ -707,7 +695,7 @@ local function generateDoc(data)
     writeVignette(fileWriter, data.header, tags)
     fileWriter:write("\n")
   else
-    local file = generateItemName(data.file)
+    local file = stripOutRoot(data.file)
     fileWriter:write("# "..file)
     fileWriter:write("\n")
   end
@@ -726,13 +714,12 @@ local function generateDoc(data)
     elseif file:sub(1, 2) == "\\\\" then
       file = file:sub(3, #file)
     end
-    local name = generateItemName(file)
-    local link = generateItemLink(file)
+    local name = stripOutRoot(file)
+    local link = outputMDFile(file)
     local isInternal = false
     if module.fileData[file] then
       isInternal = true
     end
-
     if isInternal then
       fileWriter:write("\n+ ["..name.."]("..link..")")
     else
@@ -773,14 +760,14 @@ local function generateDoc(data)
     end
   end
   fileWriter:write("\n# Project\n")
-  fileWriter:write("\n+ ["..toRoot.."](readme.md)")
+  fileWriter:write("\n+ ["..toRoot.."](README.md)")
   fileWriter:close()
 end
 
 local function prepareOutput()
   module.fileData = {}
   module.sortSet = {}
-  if allowLoveFilesystem and love and love.filesystem then
+  if config.allowLoveFilesystem and love and love.filesystem then
     recursivelyDelete(outPath)
     love.timer.sleep(1)
     love.filesystem.createDirectory(outPath)
@@ -820,16 +807,16 @@ function module.start(rootPath, outputPath)
 
   -- Parse --
   local fileTree
-  if allowLoveFilesystem and love and love.filesystem then
+  if config.allowLoveFilesystem and love and love.filesystem then
     fileTree = recursiveFileSearch(rootInput)
   else
     fileTree = scanDir(rootInput)
   end
-  local files = filterFiles(fileTree, codeSourceType)
+  local files = filterFiles(fileTree, config.codeSourceType)
   sortStrings(files)
   local fileCount = #files
   for i = 1, fileCount do
-    local file = files[i]..codeSourceType
+    local file = files[i]..config.codeSourceType
     parseFile(file)
   end
 
@@ -846,6 +833,21 @@ function module.start(rootPath, outputPath)
   for i = 1, count do
     local data = module.fileData[module.sortSet[i]]
     generateDoc(data)
+  end
+end
+
+--[[Modify the configuration of this module programmatically;
+Provide a table with keys that share the same name as the configuration parameters.
+@param overrides (table) <required> [Each key is from a valid name, the value is the override]
+]]
+function module.configuration(overrides)
+  local safe = deepCopy(overrides)
+  for k, v in pairs(safe) do
+    if not config[k] then
+      print("error: override field '"..k.."' not found (configuration)")
+    else
+      config[k] = v
+    end
   end
 end
 
