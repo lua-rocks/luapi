@@ -84,6 +84,12 @@ Where:
 - optional **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
 - optional **[note]** is any further information
 
+Additionally, the (a)unpack tag can be used to automatically unpack a simple table with key/value
+pairs, where each line is one pair ah a comment describing the key. This is used, for example, with
+the module 'config'. The tag in that case is used as:
+
+`(a)unpack config
+
 @example The markup used in this file requres escape symbols to generate the outputs properly:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - And **()** with **a** is used to escape the @ symbol.
@@ -124,6 +130,8 @@ local openBracket2 = "%<"
 local closeBracket2 = "%>"
 local openBracket3 = "%["
 local closeBracket3 = "%]"
+local comment = " --"
+local commaComment = ", --"
 local openBlockComment = "%-%-%[%["
 local closeBlockComment = "%]%]"
 local patternInsideBlockComment = openBlockComment..anyText..closeBlockComment
@@ -132,6 +140,7 @@ local endBlockComment = anyText..closeBlockComment
 local patternRequire = "require"..openBracket..anyQuote..anyText..anyQuote..closeBracket
 local patternParam = "@param"..spaceChar..anyText
 local patternReturn = "@return"..spaceChar..anyText
+local patternUnpack = "@unpack"..spaceChar..anyText
 local patternTextToSpace = anyText..spaceChar..openBracket..anyText..closeBracket
 local patternTextInBrackets = openBracket..anyText..closeBracket
 local patternTextInAngled = openBracket2..anyText..closeBracket2
@@ -146,6 +155,8 @@ local patternSample = "@sample"..anyText
 local patternAuthors = "@authors"..anyText
 local patternCopyright = "@copyright"..anyText
 local patternLicense = "@license"..anyText
+local patternUnpackComment = anyText..commaComment..anyText
+local patternUnpackComment2 = anyText..spaceChar..comment..anyText
 local subpatternCode = "`"..anyText
 local patternAt = "@"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
@@ -177,6 +188,14 @@ end
 
 local function strReplace(stringIn, tag, replace)
   return stringIn:gsub(tag, replace)
+end
+
+local function firstToUpper(text)
+  return (text:gsub("^%l", string.upper))
+end
+
+local function removeLeadingSpaces(text)
+  return string.match(text, patternLeadingSpace)
 end
 
 local function recursivelyDelete(item)
@@ -305,6 +324,9 @@ end
 local function extractParam(fnSet, lines, startLine, j)
   local match, line = searchForPattern(lines, startLine + j, 1, patternParam)
   if match then
+    if not fnSet.pars then
+      fnSet.pars = {}
+    end
     local par = {}
     par.name = string.match(line, patternTextToSpace)
     par.typing = string.match(line, patternTextInBrackets)
@@ -317,12 +339,37 @@ end
 local function extractReturn(fnSet, lines, startLine, j)
   local match, line = searchForPattern(lines, startLine + j, 1, patternReturn)
   if match then
+    if not fnSet.returns then
+      fnSet.returns = {}
+    end
     local ret = {}
     ret.name = string.match(line, patternTextToSpace)
     ret.typing = string.match(line, patternTextInBrackets)
     ret.default = string.match(line, patternTextInAngled)
     ret.note = string.match(line, patternTextInSquare)
     fnSet.returns[#fnSet.returns + 1] = ret
+  end
+end
+
+local function extractUnpack(fnSet, lines, startLine, j)
+  local match, line = searchForPattern(lines, startLine + j, 1, patternUnpack)
+  if match then
+    local ret = {}
+    if not fnSet.unpack then
+      fnSet.unpack = {}
+    end
+    ret.name = removeLeadingSpaces(line)
+    local findUnpack = searchForPattern(lines, 1, 500, "local "..line.." = {")
+    if findUnpack then
+      local endUnpack = searchForPattern(lines, findUnpack + 1, 100, "^}$")
+      if endUnpack then
+        ret.lines = {}
+        for i = findUnpack + 2, findUnpack + endUnpack do
+          ret.lines[#ret.lines + 1] = lines[i]
+        end
+      end
+    end
+    fnSet.unpack[#fnSet.unpack + 1] = ret
   end
 end
 
@@ -335,7 +382,7 @@ local function extractFunctionBlock(lines, startLine, data)
     if search2b then
       local search3 = searchForPattern(lines, startLine, 10, endBlockComment)
       -- Functions --
-      local fnSet = {pars = {}, returns = {}, line = startLine, desc = result2b}
+      local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
       local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
       if fnL then
         fnSet.name = fnLine
@@ -345,19 +392,12 @@ local function extractFunctionBlock(lines, startLine, data)
         for j = 1, search3 do
           extractParam(fnSet, lines, startLine, j)
           extractReturn(fnSet, lines, startLine, j)
+          extractUnpack(fnSet, lines, startLine, j)
         end
       end
       data.api[#data.api + 1] = fnSet
     end
   end
-end
-
-local function firstToUpper(text)
-  return (text:gsub("^%l", string.upper))
-end
-
-local function removeLeadingSpaces(text)
-  return string.match(text, patternLeadingSpace)
 end
 
 local function multiLineField(set, field, data)
@@ -472,9 +512,7 @@ local function extractHeaderBlock(lines, startLine, data)
           local line = lines[startLine + j + 1]
           if multilineStarted then
             local text = removeLeadingSpaces(line)
-            -- if text ~= "" then
             multilines[#multilines + 1] = text
-            -- end
           end
         end
       end
@@ -495,7 +533,8 @@ local function writeVignette(output, set, fields)
       output:write("\n**"..firstToUpper(field).."**:")
       if type(set[field]) == "table" then
         local count = 0
-        for j = 1, #set[field] do
+        local maximum = #set[field]
+        for j = 1, maximum do
           local text = set[field][j]
           text = strReplace(text, "%(a%)", "@")
           text = strReplace(text, "%(start%)", "--[[")
@@ -515,7 +554,6 @@ local function writeVignette(output, set, fields)
               codeBlockOpened = true
             else
               if codeBlockOpened then
-                -- output:write("\n")
                 codeBlockOpened = false
               end
               output:write("\n"..text)
@@ -682,6 +720,36 @@ local function printReturns(fileWriter, v3)
   end
 end
 
+local function printUnpack(fileWriter, v3)
+  for _, v4 in pairs(v3.unpack) do
+    if v4.lines then
+      for i = 1, #v4.lines do
+        local line = v4.lines[i]
+        local comment1 = string.match(line, patternUnpackComment)
+        local comment2 = string.match(line, patternUnpackComment2)
+        if comment1 then
+          fileWriter:write("> - "..removeLeadingSpaces(comment1))
+          local stripped = strReplace(line, comment1, "")
+          stripped = strReplace(stripped, commaComment, "")
+          stripped = removeLeadingSpaces(strReplace(stripped, "-", ""))
+          fileWriter:write(" `"..stripped.."`")
+          fileWriter:write("  \n")
+        elseif comment2 then
+          fileWriter:write("> - "..removeLeadingSpaces(comment2))
+          local stripped = strReplace(line, comment2, "")
+          stripped = strReplace(stripped, comment, "")
+          stripped = removeLeadingSpaces(strReplace(stripped, "-", ""))
+          fileWriter:write(" `"..stripped.."`")
+          fileWriter:write("  \n")
+        else
+          fileWriter:write("> - "..removeLeadingSpaces(strReplace(line, ",", "")))
+          fileWriter:write("  \n")
+        end
+      end
+    end
+  end
+end
+
 local function generateDoc(data)
   local outFilename = outputMDFile(data.file)
   outFilename = outPath.."/"..outFilename
@@ -753,6 +821,9 @@ local function generateDoc(data)
       end
       if v3.pars then
         printParams(fileWriter, v3)
+      end
+      if v3.unpack then
+        printUnpack(fileWriter, v3)
       end
       if v3.returns then
         printReturns(fileWriter, v3)
@@ -837,8 +908,9 @@ function module.start(rootPath, outputPath)
 end
 
 --[[Modify the configuration of this module programmatically;
-Provide a table with keys that share the same name as the configuration parameters.
+Provide a table with keys that share the same name as the configuration parameters:
 @param overrides (table) <required> [Each key is from a valid name, the value is the override]
+@unpack config
 ]]
 function module.configuration(overrides)
   local safe = deepCopy(overrides)

@@ -106,6 +106,12 @@ Where:
 - optional **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
 - optional **[note]** is any further information
 
+Additionally, the @unpack tag can be used to automatically unpack a simple table with key/value
+pairs, where each line is one pair ah a comment describing the key. This is used, for example, with
+the module 'config'. The tag in that case is used as:
+
+    @unpack config
+
 
 **Example**:
 The markup used in this file requres escape symbols to generate the outputs properly:
@@ -126,16 +132,19 @@ new table using the matched key names:
 
 # API
 
-**start** (rootPath\*, outputPath\*) :   
+**start** (rootPath\*, outputPath\*)  
 
 > Start document generation  
 > &rarr; **rootPath** (string) <*default: ""*> `Path to read source code from`  
 > &rarr; **outputPath** (string) <*default: "scriptum"*> `Path to output to`  
 
-**configuration** (overrides) :   
+**configuration** (overrides)  
 
 > Modify the configuration of this module programmatically;  
 > &rarr; **overrides** (table) <*required*> `Each key is from a valid name, the value is the override`  
+> - codeSourceType = ".lua" `Looking for these source code files`  
+> - outputType = ".md" `Output file suffix`  
+> - allowLoveFilesystem = true `Use Love2D filesystem if it is available`  
 
 # Project
 
