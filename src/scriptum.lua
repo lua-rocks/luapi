@@ -172,9 +172,9 @@ local function deepCopy(input)
     for i, o in next, input, nil do
       output[deepCopy(i)] = deepCopy(o)
     end
-    do return output end
+    return output
   else
-    do return input end
+    return input
   end
 end
 
@@ -605,19 +605,19 @@ local function readFileLines(file)
   return lines, count
 end
 
-local function openFileWriter(outFilename)
+local function openFileWriter(filename)
   local fileWriter
   if config.allowLoveFilesystem and love and love.filesystem then
-    fileWriter = love.filesystem.newFile(outFilename)
+    fileWriter = love.filesystem.newFile(filename)
     local opened = fileWriter:open("w")
     if not opened then
-      print("error: failed to create '"..outFilename.."' (openFileWriter)")
+      print("error: failed to create '"..filename.."' (openFileWriter)")
       return nil
     end
   else
-    fileWriter = io.open(outFilename, "w+")
+    fileWriter = io.open(filename, "w+")
     if not fileWriter then
-      print("error: failed to create '"..outFilename.."' (openFileWriter)")
+      print("error: failed to create '"..filename.."' (openFileWriter)")
       return
     end
   end
@@ -915,7 +915,7 @@ Provide a table with keys that share the same name as the configuration paramete
 function module.configuration(overrides)
   local safe = deepCopy(overrides)
   for k, v in pairs(safe) do
-    if not config[k] then
+    if config[k] == nil then
       print("error: override field '"..k.."' not found (configuration)")
     else
       config[k] = v
