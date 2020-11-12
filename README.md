@@ -114,7 +114,7 @@ the module 'config'. The tag in that case is used as:
 
 
 **Example**:
-The markup used in this file requres escape symbols to generate the outputs properly:
+The mark-up used in this file requires escape symbols to generate the outputs properly:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - Angled brackets are escaped with \\< and \\>
 
@@ -145,6 +145,7 @@ new table using the matched key names:
 > - codeSourceType = ".lua" `Looking for these source code files`  
 > - outputType = ".md" `Output file suffix`  
 > - allowLoveFilesystem = true `Use Love2D filesystem if it is available`  
+>  
 
 # Project
 

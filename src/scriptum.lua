@@ -90,7 +90,7 @@ the module 'config'. The tag in that case is used as:
 
 `(a)unpack config
 
-@example The markup used in this file requres escape symbols to generate the outputs properly:
+@example The mark-up used in this file requires escape symbols to generate the outputs properly:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - And **()** with **a** is used to escape the @ symbol.
 - Angled brackets are escaped with \\< and \\>
@@ -748,6 +748,7 @@ local function printUnpack(fileWriter, v3)
       end
     end
   end
+  fileWriter:write(">  \n")
 end
 
 local function generateDoc(data)
