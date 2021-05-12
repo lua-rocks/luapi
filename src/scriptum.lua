@@ -639,7 +639,7 @@ local function generateReadme()
     local data = module.fileData[module.sortSet[i]]
     local name = stripOutRoot(data.file)
     local link = outputMDFile(data.file)
-    fileWriter:write("\n+ ["..name.."]("..link..")")
+    fileWriter:write("\n+ ["..name.."]("..link..")\n")
   end
 end
 
@@ -806,7 +806,7 @@ local function generateDoc(data)
   for _, v3 in pairs(data.api) do
     if v3.name then
       if not hasAPI then
-        fileWriter:write("\n# API")
+        fileWriter:write("\n## API")
         fileWriter:write("\n")
         hasAPI = true
       end
@@ -832,8 +832,8 @@ local function generateDoc(data)
       end
     end
   end
-  fileWriter:write("\n# Project\n")
-  fileWriter:write("\n+ ["..toRoot.."](README.md)")
+  fileWriter:write("\n## Project\n")
+  fileWriter:write("\n+ ["..toRoot.."](README.md)\n")
   fileWriter:close()
 end
 

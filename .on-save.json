@@ -1,0 +1,6 @@
+[
+  {
+    "files": ["src/**", "*.lua"],
+    "command": "lua src/test.lua"
+  }
+]
