@@ -261,7 +261,8 @@ local function scanDir(folder, fileTree)
   end
   pfile = io.popen(command)
   for item in pfile:lines() do
-    fileTree[#fileTree + 1] = folder.."/"..item
+    -- fileTree[#fileTree + 1] = folder.."/"..item
+    fileTree[#fileTree + 1] = strReplace(folder.."/"..item, "//", "/")
   end
   pfile:close()
   -- Folders --
