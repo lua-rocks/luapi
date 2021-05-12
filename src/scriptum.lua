@@ -530,7 +530,7 @@ local function writeVignette(output, set, fields)
   local codeBlockOpened = false
   for i = 1, #fields do
     local field = fields[i]
-    if set[field] then
+    if field ~= "title" and set[field] then
       output:write("\n**"..firstToUpper(field).."**:")
       if type(set[field]) == "table" then
         local count = 0
@@ -761,7 +761,7 @@ local function generateDoc(data)
   end
 
   if data.header then
-    fileWriter:write("# Vignette\n")
+    fileWriter:write("# "..(data.header.title or Vignette).."\n")
     writeVignette(fileWriter, data.header, tags)
     fileWriter:write("\n")
   else
