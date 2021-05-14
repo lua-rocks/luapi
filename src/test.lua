@@ -24,4 +24,4 @@ package.path = package.path .. ';src/?.lua'
 
 local scriptum = require 'scriptum'
 
-scriptum.start('/home/luarocks/repo/scriptum/src', '.')
+scriptum.start('/home/luarocks/repo/scriptum/src', 'doc')
