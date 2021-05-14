@@ -8,22 +8,22 @@ The output files are in markdown syntax.
 @copyright (c) 2020 Charles Mallah
 @license MIT license (mit-license.org)
 
-@warning Love2D is not required anymore.
+@warning `Love2D` is not required anymore.
 
 @sample Output is in markdown
-`This document was created with this module, view the source file to see example input
-`And see the raw readme.md for example output
+~This document was created with this module, view the source file to see example input
+~And see the raw readme.md for example output
 
 @example Generate all documentation from the root directory:
 
-`local scriptum = require("scriptum")
-`scriptum.start()
+~local scriptum = require("scriptum")
+~scriptum.start()
 
 For non Love2D use make sure you give the absolute path to the source root, and make
 sure the output folder 'scriptum' in this example already exists in the source path, such as:
 
-`local scriptum = require("scriptum")
-`scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
+~local scriptum = require("scriptum")
+~scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
 
 @example Create an optional header vignette with a comment block.
 Start from the first line of the source file, and use these tags (all optional):
@@ -40,38 +40,38 @@ Start from the first line of the source file, and use these tags (all optional):
 
 Such as the following:
 
-`(start)
-`(a)title Test Module
-`(a)version 1.0
-`(a)authors Mr. Munki
-`(a)example Import and run with start()
-``local module = require("testmodule")
-``module.start()
-`(end)
+~(start)
+~(a)title Test Module
+~(a)version 1.0
+~(a)authors Mr. Munki
+~(a)example Import and run with start()
+~  local module = require("testmodule")
+~  module.start()
+~(end)
 
 Backtic is used to mark a line as a code block when written in markdown.
 Empty lines can be used if required as to your preference.
 
 @example Create an API function entry with a comment block and one of more of:
 
-`(a)param name (typing) <default> [note]
+~(a)param name (typing) <default> [note]
 
 and:
 
-`(a)return name (typing) [note]
+~(a)return name (typing) [note]
 
 Such as:
 
-`(start)My function for documentation
-`(a)param name (typing) <required> [File will be created and overwritten]
-`(a)param verbose (boolean) <default: true> [More output if true]
-`(a)return success (boolean) [Fail will be handled gracefully and return false]
-`(end)
-`function module.startModule(name, verbose)
-`  local success = false
-`  -- sample code --
-`  return success
-`end
+~(start)My function for documentation
+~(a)param name (typing) <required> [File will be created and overwritten]
+~(a)param verbose (boolean) <default: true> [More output if true]
+~(a)return success (boolean) [Fail will be handled gracefully and return false]
+~(end)
+~function module.startModule(name, verbose)
+~  local success = false
+~  -- sample code --
+~  return success
+~end
 
 Where:
 
@@ -84,7 +84,7 @@ Additionally, the (a)unpack tag can be used to automatically unpack a simple tab
 pairs, where each line is one pair ah a comment describing the key. This is used, for example, with
 the module 'config'. The tag in that case is used as:
 
-`(a)unpack config
+~(a)unpack config
 
 @example The mark-up used in this file requires escape symbols to generate the outputs properly:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
@@ -94,10 +94,10 @@ the module 'config'. The tag in that case is used as:
 @example Override a configuration parameter programmatically; insert your override values into a
 new table using the matched key names:
 
-`local overrides = {
-`                    codeSourceType = ".lua"
-`                  }
-`scriptum.configuration(overrides)
+~local overrides = {
+~                    codeSourceType = ".lua"
+~                  }
+~scriptum.configuration(overrides)
 
 ]]
 
@@ -151,7 +151,7 @@ local patternCopyright = "@copyright"..anyText
 local patternLicense = "@license"..anyText
 local patternUnpackComment = anyText..commaComment..anyText
 local patternUnpackComment2 = anyText..spaceChar..comment..anyText
-local subpatternCode = "`"..anyText
+local subpatternCode = "~"..anyText
 local patternAt = "@"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
 local toRoot = "Back to root"
@@ -210,7 +210,6 @@ local function scanDir(folder, fileTree)
   end
   pfile = io.popen(command)
   for item in pfile:lines() do
-    -- fileTree[#fileTree + 1] = folder.."/"..item
     fileTree[#fileTree + 1] = strReplace(folder.."/"..item, "//", "/")
   end
   pfile:close()

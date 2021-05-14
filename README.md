@@ -17,7 +17,8 @@ can't promise anything but I'll try :)
 - [ ] Replace 4 spaces code indents with **```lua** style to enable syntax.
 - [ ] Show doc only for module fields (maybe its default behavior idk).
 - [ ] Custom comments style.
-  - [ ] Replace **`** (for subpattern code) with something else.
+  - [x] Replace **\`** (for subpattern code) with **~**
+    (because **`** is used for keywords).
   - [ ] Remove useless tags (`copyrights`, `authors`, `version`, etc).
   - [ ] Combine `title` and `description`.
   - [ ] Combine `sample` and `example`.
