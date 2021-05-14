@@ -102,29 +102,16 @@ new table using the matched key names:
 ]]
 
 
---[[ Modules ]]--
-
-
-local projParser = require 'parser.proj'
-local fileParser = require 'parser.file'
-local projWriter = require 'writer.proj'
-local fileWriter = require 'writer.file'
-
-
---[[ Configuration ]]--
-
-
 local config = {
   codeSourceType = ".lua", -- Looking for these source code files
   outputType = ".md", -- Output file suffix
 }
 
 
---[[ Locals ]]--
-
-
-local string, table, pairs = string, table, pairs
-
+local projParser = require 'parser.proj'
+local fileParser = require 'parser.file'
+local projWriter = require 'writer.proj'
+local fileWriter = require 'writer.file'
 local module = {}
 local rootInput = ""
 local outPath = "scriptum"
@@ -174,263 +161,12 @@ local tags = {
 }
 
 
-local function extractRequires(lines, startLine, data)
-  local search1, result1 = fileParser.searchForPattern(lines, startLine, 1, patternRequire)
-  local search2 = fileParser.searchForPattern(lines, startLine, 1, "scriptum")
-  if search1 and not search2 then
-    data.requires[#data.requires + 1] = "/"..result1..config.codeSourceType
-  end
-end
-
-local function extractParam(fnSet, lines, startLine, j)
-  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternParam)
-  if match then
-    if not fnSet.pars then
-      fnSet.pars = {}
-    end
-    local par = {}
-    par.name = string.match(line, patternTextToSpace)
-    par.typing = string.match(line, patternTextInBrackets)
-    par.default = string.match(line, patternTextInAngled)
-    par.note = string.match(line, patternTextInSquare)
-    fnSet.pars[#fnSet.pars + 1] = par
-  end
-end
-
-local function extractReturn(fnSet, lines, startLine, j)
-  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternReturn)
-  if match then
-    if not fnSet.returns then
-      fnSet.returns = {}
-    end
-    local ret = {}
-    ret.name = string.match(line, patternTextToSpace)
-    ret.typing = string.match(line, patternTextInBrackets)
-    ret.default = string.match(line, patternTextInAngled)
-    ret.note = string.match(line, patternTextInSquare)
-    fnSet.returns[#fnSet.returns + 1] = ret
-  end
-end
-
-local function extractUnpack(fnSet, lines, startLine, j)
-  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternUnpack)
-  if match then
-    local ret = {}
-    if not fnSet.unpack then
-      fnSet.unpack = {}
-    end
-    ret.name = line:match(patternLeadingSpace)
-    local findUnpack = fileParser.searchForPattern(lines, 1, 500, "local "..line.." = {")
-    if findUnpack then
-      local endUnpack = fileParser.searchForPattern(lines, findUnpack + 1, 100, "^}$")
-      if endUnpack then
-        ret.lines = {}
-        for i = findUnpack + 2, findUnpack + endUnpack do
-          ret.lines[#ret.lines + 1] = lines[i]
-        end
-      end
-    end
-    fnSet.unpack[#fnSet.unpack + 1] = ret
-  end
-end
-
-local function extractFunctionBlock(lines, startLine, data)
-  local search2 = fileParser.searchForPattern(lines, startLine, 1, patternInsideBlockComment)
-  if search2 then
-    data.api[#data.api + 1] = {line = startLine}
-  else
-    local search2b, result2b = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
-    if search2b then
-      local search3 = fileParser.searchForPattern(lines, startLine, 10, endBlockComment)
-      -- Functions --
-      local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
-      local fnL, fnLine = fileParser.searchForPattern(lines, startLine + search3, 1, patternFunction)
-      if fnL then
-        fnSet.name = fnLine
-      end
-      -- Function details --
-      if search3 then
-        for j = 1, search3 do
-          extractParam(fnSet, lines, startLine, j)
-          extractReturn(fnSet, lines, startLine, j)
-          extractUnpack(fnSet, lines, startLine, j)
-        end
-      end
-      data.api[#data.api + 1] = fnSet
-    end
-  end
-end
-
-local function multiLineField(set, field, data)
-  if not set[field] then
-    set[field] = {}
-  else
-    set[field][#set[field] + 1] = "||"
-  end
-  local text = data:match(patternLeadingSpace)
-  if text ~= "" then
-    set[field][#set[field] + 1] = text
-  end
-end
-
 local function catchMultilineEnd(set, multilines, multilineStarted)
   for i = 1, #multilines do
     set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
   end
 end
 
-local function searchForMultilineTaggedData(set, line, multilines, multilineStarted)
-  local description = string.match(line, patternDesc)
-  if description then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
-    end
-    multiLineField(set, "description", description)
-    return "description"
-  end
-  local warning = string.match(line, patternWarning)
-  if warning then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
-    end
-    multiLineField(set, "warning", warning)
-    return "warning"
-  end
-  local sample = string.match(line, patternSample)
-  if sample then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
-    end
-    multiLineField(set, "sample", sample)
-    return "sample"
-  end
-  local example = string.match(line, patternExample)
-  if example then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
-    end
-    multiLineField(set, "example", example)
-    return "example"
-  end
-  return nil
-end
-
-local function searchForTaggedData(line2, set)
-  local title = string.match(line2, patternTitle)
-  if title then
-    set.title = title:match(patternLeadingSpace)
-    return "title"
-  end
-  local version = string.match(line2, patternVersion)
-  if version then
-    set.version = version:match(patternLeadingSpace)
-    return "version"
-  end
-  local authors = string.match(line2, patternAuthors)
-  if authors then
-    set.authors = authors:match(patternLeadingSpace)
-    return "authors"
-  end
-  local copyright = string.match(line2, patternCopyright)
-  if copyright then
-    set.copyright = copyright:match(patternLeadingSpace)
-    return "copyright"
-  end
-  local license = string.match(line2, patternLicense)
-  if license then
-    set.license = license:match(patternLeadingSpace)
-    return "license"
-  end
-  return nil
-end
-
-local function extractHeaderBlock(lines, startLine, data)
-  local search = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
-  if search then
-    local search3 = fileParser.searchForPattern(lines, startLine, 500, endBlockComment)
-    local set = {}
-    if search3 then
-      set.endHeader = search3
-      local multilineStarted = nil
-      local multilines = {}
-      for j = 1, search3 - 2 do
-        local paramLineN = fileParser.searchForPattern(lines, startLine + j, 1, patternAt)
-        if paramLineN then -- Line is prefixed with '@' --
-          local line = lines[startLine + j + paramLineN]
-          local matched = searchForMultilineTaggedData(set, line, multilines, multilineStarted)
-          if matched then
-            multilineStarted = matched
-            multilines = {}
-          else
-            local otherTagMatch = searchForTaggedData(line, set)
-            if otherTagMatch and multilineStarted then
-              catchMultilineEnd(set, multilines, multilineStarted)
-              multilineStarted = nil
-              multilines = {}
-            end
-          end
-        else -- Line is not prefixed with '@' --
-          local line = lines[startLine + j + 1]
-          if multilineStarted then
-            local text = line:match(patternLeadingSpace)
-            multilines[#multilines + 1] = text
-          end
-        end
-      end
-      if multilineStarted then -- On end block, but check if a multiline catch wasn't done --
-        catchMultilineEnd(set, multilines, multilineStarted)
-      end
-    end
-    data.header = set
-  end
-end
-
---[[Will force a repeated header on a line that is '||', as code for a manual new line]]
-local function writeVignette(output, set, fields)
-  local function firstToUpper(text)
-    return (text:gsub("^%l", string.upper))
-  end
-  local codeBlockOpened = false
-  for i = 1, #fields do
-    local field = fields[i]
-    if field ~= "title" and set[field] then
-      output:write("\n**"..firstToUpper(field).."**:")
-      if type(set[field]) == "table" then
-        local count = 0
-        local maximum = #set[field]
-        for j = 1, maximum do
-          local text = set[field][j]
-          text = text:gsub("%(a%)", "@")
-          text = text:gsub("%(start%)", "--[[")
-          text = text:gsub("%(end%)", "]]")
-          count = count + 1
-          if text == "||" then
-            output:write("\n")
-            output:write("\n**"..firstToUpper(field).."**:")
-            count = 0
-          else
-            local code = string.match(text, subpatternCode)
-            if code then
-              if count == 2 then
-                output:write("\n")
-              end
-              output:write("\n    "..code)
-              codeBlockOpened = true
-            else
-              if codeBlockOpened then
-                codeBlockOpened = false
-              end
-              output:write("\n"..text)
-            end
-          end
-        end
-      else
-        output:write("\n"..set[field])
-      end
-      output:write("\n")
-    end
-  end
-end
 
 local function stripOutRoot(text)
   if rootInput == "" then
@@ -444,6 +180,7 @@ local function stripOutRoot(text)
   return text
 end
 
+
 local function outputMDFile(file)
   local outFilename = file..config.outputType
   outFilename = stripOutRoot(outFilename)
@@ -452,15 +189,6 @@ local function outputMDFile(file)
   return outFilename
 end
 
-local function readFileLines(file)
-  local count = 0
-  local lines = {}
-  for line in io.lines(file) do
-    count = count + 1
-    lines[count] = line
-  end
-  return lines, count
-end
 
 local function openFileWriter(filename)
   local fileWriter = io.open(filename, "w+")
@@ -471,239 +199,6 @@ local function openFileWriter(filename)
   return fileWriter
 end
 
-local function generateReadme()
-  local outFilename = outPath.."/README.md"
-  local fileWriter = openFileWriter(outFilename)
-  if not fileWriter then
-    return
-  end
-  fileWriter:write("# Project Code Documentation")
-  fileWriter:write("\n")
-  fileWriter:write("\n## Index")
-  fileWriter:write("\n")
-  for i = 1, #module.sortSet do
-    local data = module.fileData[module.sortSet[i]]
-    local name = stripOutRoot(data.file)
-    local link = outputMDFile(data.file)
-    fileWriter:write("\n+ ["..name.."]("..link..")\n")
-  end
-end
-
-local function printFn(fileWriter, v3)
-  fileWriter:write(" (")
-  local cat = ""
-  local count = 0
-  for _, v4 in pairs(v3.pars) do
-    if v4.name then
-      count = count + 1
-      if count > 1 then
-        cat = cat..", "..v4.name
-      else
-        cat = cat..v4.name
-      end
-      if v4.default ~= "required" and v4.default ~= "r" then
-        cat = cat.."\\*"
-      end
-    end
-  end
-  fileWriter:write(cat)
-  fileWriter:write(")")
-  if v3.returns then
-    fileWriter:write(" : ")
-    cat = ""
-    count = 0
-    for _, v4 in pairs(v3.returns) do
-      if v4.name then
-        count = count + 1
-        if count > 1 then
-          cat = cat..", "..v4.name
-        else
-          cat = cat..v4.name
-        end
-      end
-    end
-    fileWriter:write(cat)
-  end
-  fileWriter:write("  \n")
-end
-
-local function printParams(fileWriter, v3)
-  for _, v4 in pairs(v3.pars) do
-    local text2 = "> &rarr; "
-    if v4.name then
-      text2 = text2.."**"..v4.name.."**"
-    end
-    if v4.typing then
-      text2 = text2.." ("..v4.typing..")"
-    end
-    if v4.default then
-      text2 = text2.." <*"..v4.default.."*>"
-    end
-    if v4.note then
-      text2 = text2.." `"..v4.note.."`"
-    end
-    fileWriter:write(text2)
-    fileWriter:write("  \n")
-  end
-end
-
-local function printReturns(fileWriter, v3)
-  for _, v4 in pairs(v3.returns) do
-    local text2 = "> &larr; "
-    if v4.name then
-      text2 = text2.."**"..v4.name.."**"
-    end
-    if v4.typing then
-      text2 = text2.." ("..v4.typing..")"
-    end
-    if v4.default then
-      text2 = text2.." <*"..v4.default.."*>"
-    end
-    if v4.note then
-      text2 = text2.." `"..v4.note.."`"
-    end
-    fileWriter:write(text2)
-    fileWriter:write("  \n")
-  end
-end
-
-local function printUnpack(fileWriter, v3)
-  for _, v4 in pairs(v3.unpack) do
-    if v4.lines then
-      for i = 1, #v4.lines do
-        local line = v4.lines[i]
-        local comment1 = string.match(line, patternUnpackComment)
-        local comment2 = string.match(line, patternUnpackComment2)
-        if comment1 then
-          fileWriter:write("> - "..comment1:match(patternLeadingSpace))
-          local stripped = line:gsub(comment1, "")
-          stripped = stripped:gsub(commaComment, "")
-          stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-          fileWriter:write(" `"..stripped.."`")
-          fileWriter:write("  \n")
-        elseif comment2 then
-          fileWriter:write("> - "..comment2:match(patternLeadingSpace))
-          local stripped = line:gsub(comment2, "")
-          stripped = stripped:gsub(comment, "")
-          stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-          fileWriter:write(" `"..stripped.."`")
-          fileWriter:write("  \n")
-        else
-          fileWriter:write("> - "..line:gsub(",", ""):match(patternLeadingSpace))
-          fileWriter:write("  \n")
-        end
-      end
-    end
-  end
-  fileWriter:write(">  \n")
-end
-
-local function generateDoc(data)
-  local outFilename = outputMDFile(data.file)
-  outFilename = outPath.."/"..outFilename
-  local fileWriter = openFileWriter(outFilename)
-  if not fileWriter then
-    return
-  end
-
-  if data.header then
-    fileWriter:write("# "..(data.header.title or Vignette).."\n")
-    writeVignette(fileWriter, data.header, tags)
-    fileWriter:write("\n")
-  else
-    local file = stripOutRoot(data.file)
-    fileWriter:write("# "..file)
-    fileWriter:write("\n")
-  end
-
-  -- Requires --
-  local hasREQ = false
-  for _, v2 in pairs(data.requires) do
-    if not hasREQ then
-      fileWriter:write("\n# Requires")
-      fileWriter:write("\n")
-      hasREQ = true
-    end
-    local file = v2
-    if file:sub(1, 1) == "/" then
-      file = file:sub(2, #file)
-    elseif file:sub(1, 2) == "\\\\" then
-      file = file:sub(3, #file)
-    end
-    local name = stripOutRoot(file)
-    local link = outputMDFile(file)
-    local isInternal = false
-    if module.fileData[file] then
-      isInternal = true
-    end
-    if isInternal then
-      fileWriter:write("\n+ ["..name.."]("..link..")")
-    else
-      fileWriter:write("\n+ "..name.."")
-    end
-  end
-  if hasREQ then
-    fileWriter:write("\n")
-  end
-
-  -- API --
-  local hasAPI = false
-  local count = 0
-  for _, v3 in pairs(data.api) do
-    if v3.name then
-      if not hasAPI then
-        fileWriter:write("\n## API")
-        fileWriter:write("\n")
-        hasAPI = true
-      end
-      count = count + 1
-      local nameText = v3.name:gsub("module.", "")
-      fileWriter:write("\n**"..nameText:match(patternLeadingSpace).."**")
-      if v3.pars then
-        printFn(fileWriter, v3)
-      end
-      if v3.desc then
-        fileWriter:write("\n")
-        fileWriter:write("> "..v3.desc)
-        fileWriter:write("  \n")
-      end
-      if v3.pars then
-        printParams(fileWriter, v3)
-      end
-      if v3.unpack then
-        printUnpack(fileWriter, v3)
-      end
-      if v3.returns then
-        printReturns(fileWriter, v3)
-      end
-    end
-  end
-  fileWriter:write("\n## Project\n")
-  fileWriter:write("\n+ ["..toRoot.."](README.md)\n")
-  fileWriter:close()
-end
-
-local function prepareOutput()
-  module.fileData = {}
-  module.sortSet = {}
-end
-
-local function parseFile(file)
-  module.fileData[file] = { file = file, requires = {}, api = {} }
-  local data = module.fileData[file]
-  local lines, count = readFileLines(file)
-  for i = 1, count do
-    if i == 1 then
-      extractHeaderBlock(lines, 0, data)
-    end
-    if not data.header or (not data.header.endHeader or i > data.header.endHeader) then
-      extractRequires(lines, i, data)
-      extractFunctionBlock(lines, i, data)
-    end
-  end
-end
-
---[[ Functions ]]--
 
 --[[Start document generation
 @param rootPath (string) <default: ""> [Path to read source code from]
@@ -736,9 +231,230 @@ function module.start(rootPath, outputPath)
   if outputPath then
     outPath = outputPath
   end
-  prepareOutput()
+
+  module.fileData = {}
+  module.sortSet = {}
 
   -- Parse --
+  local function parseFile(file)
+    local function extractHeaderBlock(lines, startLine, data)
+      local function searchForMultilineTaggedData(set, line, multilines, multilineStarted)
+        local function multiLineField(set, field, data)
+          if not set[field] then
+            set[field] = {}
+          else
+            set[field][#set[field] + 1] = "||"
+          end
+          local text = data:match(patternLeadingSpace)
+          if text ~= "" then
+            set[field][#set[field] + 1] = text
+          end
+        end
+        local description = string.match(line, patternDesc)
+        if description then
+          if multilineStarted then
+            catchMultilineEnd(set, multilines, multilineStarted)
+          end
+          multiLineField(set, "description", description)
+          return "description"
+        end
+        local warning = string.match(line, patternWarning)
+        if warning then
+          if multilineStarted then
+            catchMultilineEnd(set, multilines, multilineStarted)
+          end
+          multiLineField(set, "warning", warning)
+          return "warning"
+        end
+        local sample = string.match(line, patternSample)
+        if sample then
+          if multilineStarted then
+            catchMultilineEnd(set, multilines, multilineStarted)
+          end
+          multiLineField(set, "sample", sample)
+          return "sample"
+        end
+        local example = string.match(line, patternExample)
+        if example then
+          if multilineStarted then
+            catchMultilineEnd(set, multilines, multilineStarted)
+          end
+          multiLineField(set, "example", example)
+          return "example"
+        end
+        return nil
+      end
+      local search = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
+      if search then
+        local search3 = fileParser.searchForPattern(lines, startLine, 500, endBlockComment)
+        local set = {}
+        if search3 then
+          set.endHeader = search3
+          local multilineStarted = nil
+          local multilines = {}
+          for j = 1, search3 - 2 do
+            local paramLineN = fileParser.searchForPattern(lines, startLine + j, 1, patternAt)
+            if paramLineN then -- Line is prefixed with '@' --
+              local line = lines[startLine + j + paramLineN]
+              local matched = searchForMultilineTaggedData(set, line, multilines, multilineStarted)
+              if matched then
+                multilineStarted = matched
+                multilines = {}
+              else
+                local function searchForTaggedData(line2, set)
+                  local title = string.match(line2, patternTitle)
+                  if title then
+                    set.title = title:match(patternLeadingSpace)
+                    return "title"
+                  end
+                  local version = string.match(line2, patternVersion)
+                  if version then
+                    set.version = version:match(patternLeadingSpace)
+                    return "version"
+                  end
+                  local authors = string.match(line2, patternAuthors)
+                  if authors then
+                    set.authors = authors:match(patternLeadingSpace)
+                    return "authors"
+                  end
+                  local copyright = string.match(line2, patternCopyright)
+                  if copyright then
+                    set.copyright = copyright:match(patternLeadingSpace)
+                    return "copyright"
+                  end
+                  local license = string.match(line2, patternLicense)
+                  if license then
+                    set.license = license:match(patternLeadingSpace)
+                    return "license"
+                  end
+                  return nil
+                end
+                local otherTagMatch = searchForTaggedData(line, set)
+                if otherTagMatch and multilineStarted then
+                  catchMultilineEnd(set, multilines, multilineStarted)
+                  multilineStarted = nil
+                  multilines = {}
+                end
+              end
+            else -- Line is not prefixed with '@' --
+              local line = lines[startLine + j + 1]
+              if multilineStarted then
+                local text = line:match(patternLeadingSpace)
+                multilines[#multilines + 1] = text
+              end
+            end
+          end
+          if multilineStarted then -- On end block, but check if a multiline catch wasn't done --
+            catchMultilineEnd(set, multilines, multilineStarted)
+          end
+        end
+        data.header = set
+      end
+    end
+    local function readFileLines(file)
+      local count = 0
+      local lines = {}
+      for line in io.lines(file) do
+        count = count + 1
+        lines[count] = line
+      end
+      return lines, count
+    end
+    module.fileData[file] = { file = file, requires = {}, api = {} }
+    local data = module.fileData[file]
+    local lines, count = readFileLines(file)
+    for i = 1, count do
+      if i == 1 then
+        extractHeaderBlock(lines, 0, data)
+      end
+      if not data.header or (not data.header.endHeader or i > data.header.endHeader) then
+        local function extractRequires(lines, startLine, data)
+          local search1, result1 = fileParser.searchForPattern(lines, startLine, 1, patternRequire)
+          local search2 = fileParser.searchForPattern(lines, startLine, 1, "scriptum")
+          if search1 and not search2 then
+            data.requires[#data.requires + 1] = "/"..result1..config.codeSourceType
+          end
+        end
+        local function extractFunctionBlock(lines, startLine, data)
+          local search2 = fileParser.searchForPattern(lines, startLine, 1, patternInsideBlockComment)
+          if search2 then
+            data.api[#data.api + 1] = {line = startLine}
+          else
+            local search2b, result2b = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
+            if search2b then
+              local search3 = fileParser.searchForPattern(lines, startLine, 10, endBlockComment)
+              -- Functions --
+              local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
+              local fnL, fnLine = fileParser.searchForPattern(lines, startLine + search3, 1, patternFunction)
+              if fnL then
+                fnSet.name = fnLine
+              end
+              -- Function details --
+              if search3 then
+                local function extractParam(fnSet, lines, startLine, j)
+                  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternParam)
+                  if match then
+                    if not fnSet.pars then
+                      fnSet.pars = {}
+                    end
+                    local par = {}
+                    par.name = string.match(line, patternTextToSpace)
+                    par.typing = string.match(line, patternTextInBrackets)
+                    par.default = string.match(line, patternTextInAngled)
+                    par.note = string.match(line, patternTextInSquare)
+                    fnSet.pars[#fnSet.pars + 1] = par
+                  end
+                end
+                local function extractReturn(fnSet, lines, startLine, j)
+                  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternReturn)
+                  if match then
+                    if not fnSet.returns then
+                      fnSet.returns = {}
+                    end
+                    local ret = {}
+                    ret.name = string.match(line, patternTextToSpace)
+                    ret.typing = string.match(line, patternTextInBrackets)
+                    ret.default = string.match(line, patternTextInAngled)
+                    ret.note = string.match(line, patternTextInSquare)
+                    fnSet.returns[#fnSet.returns + 1] = ret
+                  end
+                end
+                local function extractUnpack(fnSet, lines, startLine, j)
+                  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternUnpack)
+                  if match then
+                    local ret = {}
+                    if not fnSet.unpack then
+                      fnSet.unpack = {}
+                    end
+                    ret.name = line:match(patternLeadingSpace)
+                    local findUnpack = fileParser.searchForPattern(lines, 1, 500, "local "..line.." = {")
+                    if findUnpack then
+                      local endUnpack = fileParser.searchForPattern(lines, findUnpack + 1, 100, "^}$")
+                      if endUnpack then
+                        ret.lines = {}
+                        for i = findUnpack + 2, findUnpack + endUnpack do
+                          ret.lines[#ret.lines + 1] = lines[i]
+                        end
+                      end
+                    end
+                    fnSet.unpack[#fnSet.unpack + 1] = ret
+                  end
+                end
+                for j = 1, search3 do
+                  extractParam(fnSet, lines, startLine, j)
+                  extractReturn(fnSet, lines, startLine, j)
+                  extractUnpack(fnSet, lines, startLine, j)
+                end
+              end
+              data.api[#data.api + 1] = fnSet
+            end
+          end
+        end
+        extractRequires(lines, i, data)
+        extractFunctionBlock(lines, i, data)
+      end
+    end
+  end
   local fileTree = projParser.scanDir(rootInput)
   local files = filterFiles(fileTree, config.codeSourceType)
   sortStrings(files)
@@ -756,13 +472,269 @@ function module.start(rootPath, outputPath)
   end
   sortStrings(module.sortSet)
 
-  -- Generate markdown--
-  generateReadme()
+  do -- Generate markdown--
+    local outFilename = outPath.."/README.md"
+    local fileWriter = openFileWriter(outFilename)
+    if not fileWriter then
+      return
+    end
+    fileWriter:write("# Project Code Documentation")
+    fileWriter:write("\n")
+    fileWriter:write("\n## Index")
+    fileWriter:write("\n")
+    for i = 1, #module.sortSet do
+      local data = module.fileData[module.sortSet[i]]
+      local name = stripOutRoot(data.file)
+      local link = outputMDFile(data.file)
+      fileWriter:write("\n+ ["..name.."]("..link..")\n")
+    end
+  end
+
+  local function generateDoc(data)
+    local outFilename = outputMDFile(data.file)
+    outFilename = outPath.."/"..outFilename
+    local fileWriter = openFileWriter(outFilename)
+    if not fileWriter then
+      return
+    end
+
+    if data.header then
+      --[[
+      Will force a repeated header on a line that is '||', as code for a manual new line
+      ]]
+      local function writeVignette(output, set, fields)
+        local function firstToUpper(text)
+          return (text:gsub("^%l", string.upper))
+        end
+        local codeBlockOpened = false
+        for i = 1, #fields do
+          local field = fields[i]
+          if field ~= "title" and set[field] then
+            output:write("\n**"..firstToUpper(field).."**:")
+            if type(set[field]) == "table" then
+              local count = 0
+              local maximum = #set[field]
+              for j = 1, maximum do
+                local text = set[field][j]
+                text = text:gsub("%(a%)", "@")
+                text = text:gsub("%(start%)", "--[[")
+                text = text:gsub("%(end%)", "]]")
+                count = count + 1
+                if text == "||" then
+                  output:write("\n")
+                  output:write("\n**"..firstToUpper(field).."**:")
+                  count = 0
+                else
+                  local code = string.match(text, subpatternCode)
+                  if code then
+                    if count == 2 then
+                      output:write("\n")
+                    end
+                    output:write("\n    "..code)
+                    codeBlockOpened = true
+                  else
+                    if codeBlockOpened then
+                      codeBlockOpened = false
+                    end
+                    output:write("\n"..text)
+                  end
+                end
+              end
+            else
+              output:write("\n"..set[field])
+            end
+            output:write("\n")
+          end
+        end
+      end
+      fileWriter:write("# "..(data.header.title or Vignette).."\n")
+      writeVignette(fileWriter, data.header, tags)
+      fileWriter:write("\n")
+    else
+      local file = stripOutRoot(data.file)
+      fileWriter:write("# "..file)
+      fileWriter:write("\n")
+    end
+
+    -- Requires --
+    local hasREQ = false
+    for _, v2 in pairs(data.requires) do
+      if not hasREQ then
+        fileWriter:write("\n# Requires")
+        fileWriter:write("\n")
+        hasREQ = true
+      end
+      local file = v2
+      if file:sub(1, 1) == "/" then
+        file = file:sub(2, #file)
+      elseif file:sub(1, 2) == "\\\\" then
+        file = file:sub(3, #file)
+      end
+      local name = stripOutRoot(file)
+      local link = outputMDFile(file)
+      local isInternal = false
+      if module.fileData[file] then
+        isInternal = true
+      end
+      if isInternal then
+        fileWriter:write("\n+ ["..name.."]("..link..")")
+      else
+        fileWriter:write("\n+ "..name.."")
+      end
+    end
+    if hasREQ then
+      fileWriter:write("\n")
+    end
+
+    -- API --
+    local function printFn(fileWriter, v3)
+      fileWriter:write(" (")
+      local cat = ""
+      local count = 0
+      for _, v4 in pairs(v3.pars) do
+        if v4.name then
+          count = count + 1
+          if count > 1 then
+            cat = cat..", "..v4.name
+          else
+            cat = cat..v4.name
+          end
+          if v4.default ~= "required" and v4.default ~= "r" then
+            cat = cat.."\\*"
+          end
+        end
+      end
+      fileWriter:write(cat)
+      fileWriter:write(")")
+      if v3.returns then
+        fileWriter:write(" : ")
+        cat = ""
+        count = 0
+        for _, v4 in pairs(v3.returns) do
+          if v4.name then
+            count = count + 1
+            if count > 1 then
+              cat = cat..", "..v4.name
+            else
+              cat = cat..v4.name
+            end
+          end
+        end
+        fileWriter:write(cat)
+      end
+      fileWriter:write("  \n")
+    end
+    local function printParams(fileWriter, v3)
+      for _, v4 in pairs(v3.pars) do
+        local text2 = "> &rarr; "
+        if v4.name then
+          text2 = text2.."**"..v4.name.."**"
+        end
+        if v4.typing then
+          text2 = text2.." ("..v4.typing..")"
+        end
+        if v4.default then
+          text2 = text2.." <*"..v4.default.."*>"
+        end
+        if v4.note then
+          text2 = text2.." `"..v4.note.."`"
+        end
+        fileWriter:write(text2)
+        fileWriter:write("  \n")
+      end
+    end
+    local function printReturns(fileWriter, v3)
+      for _, v4 in pairs(v3.returns) do
+        local text2 = "> &larr; "
+        if v4.name then
+          text2 = text2.."**"..v4.name.."**"
+        end
+        if v4.typing then
+          text2 = text2.." ("..v4.typing..")"
+        end
+        if v4.default then
+          text2 = text2.." <*"..v4.default.."*>"
+        end
+        if v4.note then
+          text2 = text2.." `"..v4.note.."`"
+        end
+        fileWriter:write(text2)
+        fileWriter:write("  \n")
+      end
+    end
+    local function printUnpack(fileWriter, v3)
+      for _, v4 in pairs(v3.unpack) do
+        if v4.lines then
+          for i = 1, #v4.lines do
+            local line = v4.lines[i]
+            local comment1 = string.match(line, patternUnpackComment)
+            local comment2 = string.match(line, patternUnpackComment2)
+            if comment1 then
+              fileWriter:write("> - "..comment1:match(patternLeadingSpace))
+              local stripped = line:gsub(comment1, "")
+              stripped = stripped:gsub(commaComment, "")
+              stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
+              fileWriter:write(" `"..stripped.."`")
+              fileWriter:write("  \n")
+            elseif comment2 then
+              fileWriter:write("> - "..comment2:match(patternLeadingSpace))
+              local stripped = line:gsub(comment2, "")
+              stripped = stripped:gsub(comment, "")
+              stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
+              fileWriter:write(" `"..stripped.."`")
+              fileWriter:write("  \n")
+            else
+              fileWriter:write("> - "..line:gsub(",", ""):match(patternLeadingSpace))
+              fileWriter:write("  \n")
+            end
+          end
+        end
+      end
+      fileWriter:write(">  \n")
+    end
+
+    local hasAPI = false
+    local count = 0
+    for _, v3 in pairs(data.api) do
+      if v3.name then
+        if not hasAPI then
+          fileWriter:write("\n## API")
+          fileWriter:write("\n")
+          hasAPI = true
+        end
+        count = count + 1
+        local nameText = v3.name:gsub("module.", "")
+        fileWriter:write("\n**"..nameText:match(patternLeadingSpace).."**")
+        if v3.pars then
+          printFn(fileWriter, v3)
+        end
+        if v3.desc then
+          fileWriter:write("\n")
+          fileWriter:write("> "..v3.desc)
+          fileWriter:write("  \n")
+        end
+        if v3.pars then
+          printParams(fileWriter, v3)
+        end
+        if v3.unpack then
+          printUnpack(fileWriter, v3)
+        end
+        if v3.returns then
+          printReturns(fileWriter, v3)
+        end
+      end
+    end
+    fileWriter:write("\n## Project\n")
+    fileWriter:write("\n+ ["..toRoot.."](README.md)\n")
+    fileWriter:close()
+  end
+
   for i = 1, count do
     local data = module.fileData[module.sortSet[i]]
     generateDoc(data)
   end
 end
+
 
 --[[Modify the configuration of this module programmatically;
 Provide a table with keys that share the same name as the configuration parameters:
@@ -791,5 +763,5 @@ function module.configuration(overrides)
   end
 end
 
---[[ End ]]--
+
 return module
