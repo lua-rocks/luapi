@@ -172,10 +172,6 @@ local tags = {
 }
 
 
-local function removeLeadingSpaces(text)
-  return string.match(text, patternLeadingSpace)
-end
-
 local function sortStrings(tableOfStrings)
   table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
 end
@@ -255,7 +251,7 @@ local function extractUnpack(fnSet, lines, startLine, j)
     if not fnSet.unpack then
       fnSet.unpack = {}
     end
-    ret.name = removeLeadingSpaces(line)
+    ret.name = line:match(patternLeadingSpace)
     local findUnpack = searchForPattern(lines, 1, 500, "local "..line.." = {")
     if findUnpack then
       local endUnpack = searchForPattern(lines, findUnpack + 1, 100, "^}$")
@@ -303,7 +299,7 @@ local function multiLineField(set, field, data)
   else
     set[field][#set[field] + 1] = "||"
   end
-  local text = removeLeadingSpaces(data)
+  local text = data:match(patternLeadingSpace)
   if text ~= "" then
     set[field][#set[field] + 1] = text
   end
@@ -354,27 +350,27 @@ end
 local function searchForTaggedData(line2, set)
   local title = string.match(line2, patternTitle)
   if title then
-    set.title = removeLeadingSpaces(title)
+    set.title = title:match(patternLeadingSpace)
     return "title"
   end
   local version = string.match(line2, patternVersion)
   if version then
-    set.version = removeLeadingSpaces(version)
+    set.version = version:match(patternLeadingSpace)
     return "version"
   end
   local authors = string.match(line2, patternAuthors)
   if authors then
-    set.authors = removeLeadingSpaces(authors)
+    set.authors = authors:match(patternLeadingSpace)
     return "authors"
   end
   local copyright = string.match(line2, patternCopyright)
   if copyright then
-    set.copyright = removeLeadingSpaces(copyright)
+    set.copyright = copyright:match(patternLeadingSpace)
     return "copyright"
   end
   local license = string.match(line2, patternLicense)
   if license then
-    set.license = removeLeadingSpaces(license)
+    set.license = license:match(patternLeadingSpace)
     return "license"
   end
   return nil
@@ -408,7 +404,7 @@ local function extractHeaderBlock(lines, startLine, data)
         else -- Line is not prefixed with '@' --
           local line = lines[startLine + j + 1]
           if multilineStarted then
-            local text = removeLeadingSpaces(line)
+            local text = line:match(patternLeadingSpace)
             multilines[#multilines + 1] = text
           end
         end
@@ -611,21 +607,21 @@ local function printUnpack(fileWriter, v3)
         local comment1 = string.match(line, patternUnpackComment)
         local comment2 = string.match(line, patternUnpackComment2)
         if comment1 then
-          fileWriter:write("> - "..removeLeadingSpaces(comment1))
+          fileWriter:write("> - "..comment1:match(patternLeadingSpace))
           local stripped = line:gsub(comment1, "")
           stripped = stripped:gsub(commaComment, "")
-          stripped = removeLeadingSpaces(stripped:gsub("-", ""))
+          stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
           fileWriter:write(" `"..stripped.."`")
           fileWriter:write("  \n")
         elseif comment2 then
-          fileWriter:write("> - "..removeLeadingSpaces(comment2))
+          fileWriter:write("> - "..comment2:match(patternLeadingSpace))
           local stripped = line:gsub(comment2, "")
           stripped = stripped:gsub(comment, "")
-          stripped = removeLeadingSpaces(stripped:gsub("-", ""))
+          stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
           fileWriter:write(" `"..stripped.."`")
           fileWriter:write("  \n")
         else
-          fileWriter:write("> - "..removeLeadingSpaces(line:gsub(",", "")))
+          fileWriter:write("> - "..line:gsub(",", ""):match(patternLeadingSpace))
           fileWriter:write("  \n")
         end
       end
@@ -694,7 +690,7 @@ local function generateDoc(data)
       end
       count = count + 1
       local nameText = v3.name:gsub("module.", "")
-      fileWriter:write("\n**"..removeLeadingSpaces(nameText).."**")
+      fileWriter:write("\n**"..nameText:match(patternLeadingSpace).."**")
       if v3.pars then
         printFn(fileWriter, v3)
       end
