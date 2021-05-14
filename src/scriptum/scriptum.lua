@@ -105,6 +105,8 @@ new table using the matched key names:
 local config = {
   codeSourceType = ".lua", -- Looking for these source code files
   outputType = ".md", -- Output file suffix
+  rootPath = "", -- Search files here
+  outPath = "doc", -- Generate output here
 }
 
 
@@ -115,8 +117,6 @@ local fileWriter = require 'writer.file'
 local module = {}
 
 
-local rootInput = ""
-local outPath = "scriptum"
 local anyText = "(.*)"
 local spaceChar = "%s"
 local anyQuote = "\""
@@ -165,11 +165,11 @@ local tags = {
 
 --[[Start document generation
 @param rootPath (string) <default: ""> [Path to read source code from]
-@param outputPath (string) <default: "scriptum"> [Path to output to]
+@param outPath (string) <default: "scriptum"> [Path to output to]
 ]]
-function module.start(rootPath, outputPath)
-  rootInput = rootPath or rootInput
-  outPath = outputPath or outPath
+function module.start(rootPath, outPath)
+  rootPath = rootPath or config.rootPath
+  outPath = outPath or config.outPath
   module.fileData = {}
   module.sortSet = {}
 
@@ -495,7 +495,7 @@ function module.start(rootPath, outputPath)
     end
   end
 
-  local files = filterFiles(scanDir(rootInput), config.codeSourceType)
+  local files = filterFiles(scanDir(rootPath), config.codeSourceType)
   sortStrings(files)
   local fileCount = #files
   for i = 1, fileCount do
@@ -521,14 +521,14 @@ function module.start(rootPath, outputPath)
   end
 
   local function stripOutRoot(text)
-    if rootInput == "" then
+    if rootPath == "" then
       return text
     end
-    local cleanRootInput = rootInput
-    cleanRootInput = cleanRootInput:gsub("\\\\", "/")
-    cleanRootInput = cleanRootInput:gsub("\\", "/")
-    text = text:gsub(cleanRootInput.."/", "")
-    text = text:gsub(cleanRootInput, "")
+    local cleanrootPath = rootPath
+    cleanrootPath = cleanrootPath:gsub("\\\\", "/")
+    cleanrootPath = cleanrootPath:gsub("\\", "/")
+    text = text:gsub(cleanrootPath.."/", "")
+    text = text:gsub(cleanrootPath, "")
     return text
   end
 

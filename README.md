@@ -17,6 +17,8 @@ can't promise anything but I'll try :)
 - [ ] Replace 4 spaces code indents with **```lua** style to enable syntax.
 - [ ] Show doc only for external module fields.
 - [ ] Multiline comments for fields descriptions.
+- [ ] Throw error when function argument name doesn't match with described.
+- [ ] Throw error when function argument type doesn't match with accepted !?
 - [ ] Custom comments style.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
