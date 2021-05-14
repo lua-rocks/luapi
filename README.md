@@ -7,6 +7,7 @@ can't promise anything but I'll try :)
 
 - [ ] Separate code to submodules for easier maintain.
   - [ ] Document every function in each module.
+- [ ] Remove `love` (why do we need it if it's not required?).
 - [ ] Remove all H1: `Vignette`, `API`, `Project` and replace them with:
   - H1 - Title of the current module (can be only one H1 in document)
   - H2 - Module fields (described tables and functions)
@@ -16,6 +17,9 @@ can't promise anything but I'll try :)
 - [ ] Replace 4 spaces code indents with **```lua** style to enable syntax.
 - [ ] Show doc only for module fields (maybe its default behavior idk).
 - [ ] Custom comments style.
+  - [ ] Remove useless tags (`copyrights`, `authors`, `version`, etc).
+  - [ ] Combine `title` and `description`.
+  - [ ] Combine `sample` and `example`.
 - [ ] Suppport for OOP: inheritance.
 - [ ] Easy links for headers.
 - [ ] Add support for
