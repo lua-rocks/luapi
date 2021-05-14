@@ -8,11 +8,7 @@ The output files are in markdown syntax.
 @copyright (c) 2020 Charles Mallah
 @license MIT license (mit-license.org)
 
-@warning This module will use 'Love2D' for the filesystem if you are using that framework;
-Otherwise the basic Lua file-io will be used for read/write, and system calls for file scanning.
-In this case, you must provide an absolute path to the input source code, and the output
-folder must already exist (please create yourself in code or manually). For the Love2D option
-everything will be handled automatically.
+@warning Love2D is not required anymore.
 
 @sample Output is in markdown
 `This document was created with this module, view the source file to see example input
@@ -99,7 +95,7 @@ the module 'config'. The tag in that case is used as:
 new table using the matched key names:
 
 `local overrides = {
-`                    allowLoveFilesystem = false
+`                    codeSourceType = ".lua"
 `                  }
 `scriptum.configuration(overrides)
 
@@ -110,12 +106,10 @@ new table using the matched key names:
 local config = {
   codeSourceType = ".lua", -- Looking for these source code files
   outputType = ".md", -- Output file suffix
-  allowLoveFilesystem = true -- Use Love2D filesystem if it is available
 }
 
 --[[ Locals ]]--
 
-local love = love -- luacheck: ignore
 local string, table, pairs = string, table, pairs
 
 local module = {}
@@ -196,51 +190,6 @@ end
 
 local function removeLeadingSpaces(text)
   return string.match(text, patternLeadingSpace)
-end
-
-local function recursivelyDelete(item)
-  if love.filesystem.getInfo(item, "directory") then
-    for _, child in pairs(love.filesystem.getDirectoryItems(item)) do
-      recursivelyDelete(item .. '/' .. child)
-      love.filesystem.remove(item .. '/' .. child)
-    end
-  end
-  love.filesystem.remove(item)
-end
-
-local function recursiveFileSearch(folder, fileTree)
-  if not fileTree then
-    fileTree = {}
-  end
-  if not folder then
-    folder = ""
-  end
-  if folder:sub(1, 1) == "/" then
-    folder = folder:sub(2, #folder)
-  elseif folder:sub(1, 2) == "\\\\" then
-    folder = folder:sub(3, #folder)
-  end
-  if folder:sub(1, 1) == "." then -- Ignore hidden folder
-    return fileTree
-  end
-  local filesTable = love.filesystem.getDirectoryItems(folder)
-  for _, v in ipairs(filesTable) do
-    local fullpath = folder.."/"..v
-    local info = love.filesystem.getInfo(fullpath)
-    if info then
-      if info.type == "file" then
-        if fullpath:sub(1, 1) == "/" then
-          fullpath = fullpath:sub(2, #fullpath)
-        end
-        fileTree[#fileTree + 1] = fullpath
-      else
-        if info.type == "directory" then
-          fileTree = recursiveFileSearch(fullpath, fileTree)
-        end
-      end
-    end
-  end
-  return fileTree
 end
 
 local function scanDir(folder, fileTree)
@@ -592,35 +541,18 @@ end
 local function readFileLines(file)
   local count = 0
   local lines = {}
-  if config.allowLoveFilesystem and love and love.filesystem then
-    for line in love.filesystem.lines(file) do
-      count = count + 1
-      lines[count] = line
-    end
-  else
-    for line in io.lines(file) do
-      count = count + 1
-      lines[count] = line
-    end
+  for line in io.lines(file) do
+    count = count + 1
+    lines[count] = line
   end
   return lines, count
 end
 
 local function openFileWriter(filename)
-  local fileWriter
-  if config.allowLoveFilesystem and love and love.filesystem then
-    fileWriter = love.filesystem.newFile(filename)
-    local opened = fileWriter:open("w")
-    if not opened then
-      print("error: failed to create '"..filename.."' (openFileWriter)")
-      return nil
-    end
-  else
-    fileWriter = io.open(filename, "w+")
-    if not fileWriter then
-      print("error: failed to create '"..filename.."' (openFileWriter)")
-      return
-    end
+  local fileWriter = io.open(filename, "w+")
+  if not fileWriter then
+    print("error: failed to create '"..filename.."' (openFileWriter)")
+    return
   end
   return fileWriter
 end
@@ -840,11 +772,6 @@ end
 local function prepareOutput()
   module.fileData = {}
   module.sortSet = {}
-  if config.allowLoveFilesystem and love and love.filesystem then
-    recursivelyDelete(outPath)
-    love.timer.sleep(1)
-    love.filesystem.createDirectory(outPath)
-  end
 end
 
 local function parseFile(file)
@@ -879,12 +806,7 @@ function module.start(rootPath, outputPath)
   prepareOutput()
 
   -- Parse --
-  local fileTree
-  if config.allowLoveFilesystem and love and love.filesystem then
-    fileTree = recursiveFileSearch(rootInput)
-  else
-    fileTree = scanDir(rootInput)
-  end
+  local fileTree = scanDir(rootInput)
   local files = filterFiles(fileTree, config.codeSourceType)
   sortStrings(files)
   local fileCount = #files
