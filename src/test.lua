@@ -3,8 +3,8 @@
 @version 1.0
 @authors Mr. Munki
 @example Import and run with start()
-`local module = require("testmodule")
-`module.start()
+~local module = require("testmodule")
+~module.start()
 ]]
 
 local module = {}
