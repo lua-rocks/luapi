@@ -169,6 +169,7 @@ function module.start(rootPath, outputPath)
   local function sortStrings(tableOfStrings)
     table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
   end
+
   local function filterFiles(fileTree, fileType)
     local set = {}
     local count = 0
@@ -185,6 +186,54 @@ function module.start(rootPath, outputPath)
     return set
   end
 
+  --[[ Recursively scan directory and return list with each file path.
+  @param folder (string) [folder path]
+  @param fileTree (table) <{}> [table to extend]
+  @return fileTree (table) [result table]
+  ]]
+  local function scanDir(folder, fileTree)
+    local function systemCheck()
+      local check = package.config:sub(1, 1)
+      if check == "\\" or check == "\\\\" then
+        return "windows"
+      end
+      return "linux"
+    end
+    if not fileTree then
+      fileTree = {}
+    end
+    if folder then
+      folder = folder:gsub("\\\\", "/")
+      folder = folder:gsub("\\", "/")
+    end
+    local pfile
+    -- Files --
+    local command
+    if systemCheck() == "windows" then
+      command = 'dir "'..folder..'" /b /a-d-h'
+    else
+      command = 'ls -p "'..folder..'" | grep -v /'
+    end
+    pfile = io.popen(command)
+    for item in pfile:lines() do
+      fileTree[#fileTree + 1] = (folder.."/"..item):gsub("//", "/")
+    end
+    pfile:close()
+    -- Folders --
+    if systemCheck() == "windows" then
+      command = 'dir "'..folder..'" /b /ad-h'
+    else
+      command = 'ls -p "'..folder..'" | grep /'
+    end
+    pfile = io.popen(command)
+    for item in pfile:lines() do
+      item = item:gsub("\\", "")
+      fileTree = scanDir(folder.."/"..item, fileTree)
+    end
+    pfile:close()
+    return fileTree
+  end
+
   -- Prep --
   if rootPath then
     rootInput = rootPath
@@ -198,12 +247,35 @@ function module.start(rootPath, outputPath)
 
   -- Parse --
   local function parseFile(file)
+    --[[ Search for first pattern in multiply lines.
+    @param lines ({integer=string}) [list of lines]
+    @param startLine (integer) [all lines before will be ignored]
+    @param forLines (integer) [all lines after will be ignored]
+    @param pattern (string) [search for this]
+    @return line (integer) <nil> [line number where pattern was found]
+    @return result (string) <nil> [matched result]
+    ]]
+    local function searchForPattern(lines, startLine, forLines, pattern)
+      local count = #lines
+      for j = 1, forLines do
+        local k = startLine + j
+        if k <= count then
+          local line3 = string.match(lines[k], pattern)
+          if line3 then
+            return j, line3
+          end
+        end
+      end
+      return nil, nil
+    end
+
     local function extractHeaderBlock(lines, startLine, data)
       local function catchMultilineEnd(set, multilines, multilineStarted)
         for i = 1, #multilines do
           set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
         end
       end
+
       local function searchForMultilineTaggedData(set, line, multilines, multilineStarted)
         local function multiLineField(set, field, data)
           if not set[field] then
@@ -250,9 +322,10 @@ function module.start(rootPath, outputPath)
         end
         return nil
       end
-      local search = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
+
+      local search = searchForPattern(lines, startLine, 1, startBlockComment)
       if search then
-        local search3 = fileParser.searchForPattern(lines, startLine, 500, endBlockComment)
+        local search3 = searchForPattern(lines, startLine, 500, endBlockComment)
         local set = {}
         if search3 then
           local function searchForTaggedData(line2, set)
@@ -287,7 +360,7 @@ function module.start(rootPath, outputPath)
           local multilineStarted = nil
           local multilines = {}
           for j = 1, search3 - 2 do
-            local paramLineN = fileParser.searchForPattern(lines, startLine + j, 1, patternAt)
+            local paramLineN = searchForPattern(lines, startLine + j, 1, patternAt)
             if paramLineN then -- Line is prefixed with '@' --
               local line = lines[startLine + j + paramLineN]
               local matched = searchForMultilineTaggedData(set, line, multilines, multilineStarted)
@@ -317,6 +390,7 @@ function module.start(rootPath, outputPath)
         data.header = set
       end
     end
+
     local function readFileLines(file)
       local count = 0
       local lines = {}
@@ -326,31 +400,33 @@ function module.start(rootPath, outputPath)
       end
       return lines, count
     end
+
     local function extractRequires(lines, startLine, data)
-      local search1, result1 = fileParser.searchForPattern(lines, startLine, 1, patternRequire)
-      local search2 = fileParser.searchForPattern(lines, startLine, 1, "scriptum")
+      local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
+      local search2 = searchForPattern(lines, startLine, 1, "scriptum")
       if search1 and not search2 then
         data.requires[#data.requires + 1] = "/"..result1..config.codeSourceType
       end
     end
+
     local function extractFunctionBlock(lines, startLine, data)
-      local search2 = fileParser.searchForPattern(lines, startLine, 1, patternInsideBlockComment)
+      local search2 = searchForPattern(lines, startLine, 1, patternInsideBlockComment)
       if search2 then
         data.api[#data.api + 1] = {line = startLine}
       else
-        local search2b, result2b = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
+        local search2b, result2b = searchForPattern(lines, startLine, 1, startBlockComment)
         if search2b then
-          local search3 = fileParser.searchForPattern(lines, startLine, 10, endBlockComment)
+          local search3 = searchForPattern(lines, startLine, 10, endBlockComment)
           -- Functions --
           local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
-          local fnL, fnLine = fileParser.searchForPattern(lines, startLine + search3, 1, patternFunction)
+          local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
           if fnL then
             fnSet.name = fnLine
           end
           -- Function details --
           if search3 then
             local function extractParam(fnSet, lines, startLine, j)
-              local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternParam)
+              local match, line = searchForPattern(lines, startLine + j, 1, patternParam)
               if match then
                 if not fnSet.pars then
                   fnSet.pars = {}
@@ -364,7 +440,7 @@ function module.start(rootPath, outputPath)
               end
             end
             local function extractReturn(fnSet, lines, startLine, j)
-              local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternReturn)
+              local match, line = searchForPattern(lines, startLine + j, 1, patternReturn)
               if match then
                 if not fnSet.returns then
                   fnSet.returns = {}
@@ -378,16 +454,16 @@ function module.start(rootPath, outputPath)
               end
             end
             local function extractUnpack(fnSet, lines, startLine, j)
-              local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternUnpack)
+              local match, line = searchForPattern(lines, startLine + j, 1, patternUnpack)
               if match then
                 local ret = {}
                 if not fnSet.unpack then
                   fnSet.unpack = {}
                 end
                 ret.name = line:match(patternLeadingSpace)
-                local findUnpack = fileParser.searchForPattern(lines, 1, 500, "local "..line.." = {")
+                local findUnpack = searchForPattern(lines, 1, 500, "local "..line.." = {")
                 if findUnpack then
-                  local endUnpack = fileParser.searchForPattern(lines, findUnpack + 1, 100, "^}$")
+                  local endUnpack = searchForPattern(lines, findUnpack + 1, 100, "^}$")
                   if endUnpack then
                     ret.lines = {}
                     for i = findUnpack + 2, findUnpack + endUnpack do
@@ -408,6 +484,7 @@ function module.start(rootPath, outputPath)
         end
       end
     end
+
     module.fileData[file] = { file = file, requires = {}, api = {} }
     local data = module.fileData[file]
     local lines, count = readFileLines(file)
@@ -421,7 +498,8 @@ function module.start(rootPath, outputPath)
       end
     end
   end
-  local fileTree = projParser.scanDir(rootInput)
+
+  local fileTree = scanDir(rootInput)
   local files = filterFiles(fileTree, config.codeSourceType)
   sortStrings(files)
   local fileCount = #files
