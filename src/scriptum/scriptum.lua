@@ -172,22 +172,6 @@ local tags = {
 }
 
 
-local function filterFiles(fileTree, fileType)
-  local set = {}
-  local count = 0
-  local typeSize = #fileType
-  for i = 1, #fileTree do
-    local name = fileTree[i]
-    local typePart = string.sub(name, #name - typeSize + 1, #name)
-    if typePart == fileType then
-      name = string.sub(name, 1, #name - typeSize)
-      count = count + 1
-      set[count] = name
-    end
-  end
-  return set
-end
-
 local function searchForPattern(lines, startLine, forLines, pattern)
   local count = #lines
   for j = 1, forLines do
@@ -740,6 +724,21 @@ end
 function module.start(rootPath, outputPath)
   local function sortStrings(tableOfStrings)
     table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
+  end
+  local function filterFiles(fileTree, fileType)
+    local set = {}
+    local count = 0
+    local typeSize = #fileType
+    for i = 1, #fileTree do
+      local name = fileTree[i]
+      local typePart = string.sub(name, #name - typeSize + 1, #name)
+      if typePart == fileType then
+        name = string.sub(name, 1, #name - typeSize)
+        count = count + 1
+        set[count] = name
+      end
+    end
+    return set
   end
 
   -- Prep --
