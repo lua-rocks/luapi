@@ -51,7 +51,6 @@ function projParser.scanDir(folder, fileTree)
     fileTree = projParser.scanDir(folder.."/"..item, fileTree)
   end
   pfile:close()
-  print(require 'inspect'(fileTree))
   return fileTree
 end
 
