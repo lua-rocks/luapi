@@ -16,7 +16,7 @@ can't promise anything but I'll try :)
 - [ ] Replace 4 spaces code indents with **```lua** style to enable syntax.
 - [ ] Show doc only for module fields (maybe its default behavior idk).
 - [ ] Custom comments style.
-  - [ ] Suppport for OOP: inheritance.
+- [ ] Suppport for OOP: inheritance.
 - [ ] Easy links for headers.
 - [ ] Add support for
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
