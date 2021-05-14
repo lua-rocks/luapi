@@ -113,7 +113,7 @@ local config = {
 local projParser = require 'parser.proj'
 local fileParser = require 'parser.file'
 local projWriter = require 'writer.proj'
-local file = require 'writer.file'
+local fileWriter = require 'writer.file'
 local module = {}
 
 
