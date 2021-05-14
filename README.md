@@ -6,6 +6,7 @@ can't promise anything but I'll try :)
 ## Roadmap
 
 - [ ] Separate code to submodules for easier maintain.
+  - [ ] Document every function in each module.
 - [ ] Remove all H1: `Vignette`, `API`, `Project` and replace them with:
   - H1 - Title of the current module (can be only one H1 in document)
   - H2 - Module fields (described tables and functions)
@@ -15,8 +16,9 @@ can't promise anything but I'll try :)
 - [ ] Replace 4 spaces code indents with **```lua** style to enable syntax.
 - [ ] Show doc only for module fields (maybe its default behavior idk).
 - [ ] Custom comments style.
+  - [ ] Suppport for OOP: inheritance.
 - [ ] Easy links for headers.
 - [ ] Add support for
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
 - [ ] Clean markdown: no
-    [markdownlint](https://github.com/DavidAnson/markdownlint) warnings;
+    [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
