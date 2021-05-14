@@ -20,7 +20,7 @@ function module.startModule(name, verbose)
   return success
 end
 
-package.path = package.path .. ';src/?.lua;src/scriptum/?.lua'
+package.path = package.path .. ';src/scriptum/?.lua'
 
 local scriptum = require 'scriptum'
 

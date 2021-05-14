@@ -105,8 +105,7 @@ new table using the matched key names:
 --[[ Modules ]]--
 
 
-local fs = require 'filesystem'
-local help = require 'helpers'
+local projParser = require 'parser.project'
 
 
 --[[ Configuration ]]--
@@ -751,7 +750,7 @@ function module.start(rootPath, outputPath)
   prepareOutput()
 
   -- Parse --
-  local fileTree = fs.scanDir(rootInput)
+  local fileTree = projParser.scanDir(rootInput)
   local files = filterFiles(fileTree, config.codeSourceType)
   sortStrings(files)
   local fileCount = #files

@@ -1,9 +1,9 @@
 --[[
-@title FileSystem
+@title Project Parser
 ]]
 
 
-local fs = {}
+local projParser = {}
 
 
 --[[ Recursively scan directory and return list with each file path.
@@ -11,7 +11,7 @@ local fs = {}
 @param fileTree (table) <{}> [table to extend]
 @return fileTree (table) [result table]
 ]]
-function fs.scanDir(folder, fileTree)
+function projParser.scanDir(folder, fileTree)
   local function systemCheck()
     local check = package.config:sub(1, 1)
     if check == "\\" or check == "\\\\" then
@@ -48,12 +48,11 @@ function fs.scanDir(folder, fileTree)
   pfile = io.popen(command)
   for item in pfile:lines() do
     item = item:gsub("\\", "")
-    fileTree = fs.scanDir(folder.."/"..item, fileTree)
+    fileTree = projParser.scanDir(folder.."/"..item, fileTree)
   end
   pfile:close()
   print(require 'inspect'(fileTree))
   return fileTree
 end
 
-
-return fs
+return projParser
