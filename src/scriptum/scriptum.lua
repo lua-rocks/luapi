@@ -161,45 +161,6 @@ local tags = {
 }
 
 
-local function catchMultilineEnd(set, multilines, multilineStarted)
-  for i = 1, #multilines do
-    set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
-  end
-end
-
-
-local function stripOutRoot(text)
-  if rootInput == "" then
-    return text
-  end
-  local cleanRootInput = rootInput
-  cleanRootInput = cleanRootInput:gsub("\\\\", "/")
-  cleanRootInput = cleanRootInput:gsub("\\", "/")
-  text = text:gsub(cleanRootInput.."/", "")
-  text = text:gsub(cleanRootInput, "")
-  return text
-end
-
-
-local function outputMDFile(file)
-  local outFilename = file..config.outputType
-  outFilename = stripOutRoot(outFilename)
-  outFilename = outFilename:gsub("/", ".")
-  outFilename = outFilename:gsub(config.codeSourceType, "")
-  return outFilename
-end
-
-
-local function openFileWriter(filename)
-  local fileWriter = io.open(filename, "w+")
-  if not fileWriter then
-    print("error: failed to create '"..filename.."' (openFileWriter)")
-    return
-  end
-  return fileWriter
-end
-
-
 --[[Start document generation
 @param rootPath (string) <default: ""> [Path to read source code from]
 @param outputPath (string) <default: "scriptum"> [Path to output to]
@@ -238,6 +199,11 @@ function module.start(rootPath, outputPath)
   -- Parse --
   local function parseFile(file)
     local function extractHeaderBlock(lines, startLine, data)
+      local function catchMultilineEnd(set, multilines, multilineStarted)
+        for i = 1, #multilines do
+          set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
+        end
+      end
       local function searchForMultilineTaggedData(set, line, multilines, multilineStarted)
         local function multiLineField(set, field, data)
           if not set[field] then
@@ -471,6 +437,35 @@ function module.start(rootPath, outputPath)
     module.sortSet[count] = k
   end
   sortStrings(module.sortSet)
+
+  local function openFileWriter(filename)
+    local fileWriter = io.open(filename, "w+")
+    if not fileWriter then
+      print("error: failed to create '"..filename.."' (openFileWriter)")
+      return
+    end
+    return fileWriter
+  end
+
+  local function stripOutRoot(text)
+    if rootInput == "" then
+      return text
+    end
+    local cleanRootInput = rootInput
+    cleanRootInput = cleanRootInput:gsub("\\\\", "/")
+    cleanRootInput = cleanRootInput:gsub("\\", "/")
+    text = text:gsub(cleanRootInput.."/", "")
+    text = text:gsub(cleanRootInput, "")
+    return text
+  end
+
+  local function outputMDFile(file)
+    local outFilename = file..config.outputType
+    outFilename = stripOutRoot(outFilename)
+    outFilename = outFilename:gsub("/", ".")
+    outFilename = outFilename:gsub(config.codeSourceType, "")
+    return outFilename
+  end
 
   do -- Generate markdown--
     local outFilename = outPath.."/README.md"
