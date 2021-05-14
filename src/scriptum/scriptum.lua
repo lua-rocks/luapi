@@ -175,70 +175,7 @@ function module.start(rootPath, outPath)
 
   local function sortStrings(tableOfStrings)
     table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
-  end
-
-  local function filterFiles(fileTree, fileType)
-    local set = {}
-    local count = 0
-    local typeSize = #fileType
-    for i = 1, #fileTree do
-      local name = fileTree[i]
-      local typePart = string.sub(name, #name - typeSize + 1, #name)
-      if typePart == fileType then
-        name = string.sub(name, 1, #name - typeSize)
-        count = count + 1
-        set[count] = name
-      end
-    end
-    return set
-  end
-
-  --[[ Recursively scan directory and return list with each file path.
-  @param folder (string) [folder path]
-  @param fileTree (table) <{}> [table to extend]
-  @return fileTree (table) [result table]
-  ]]
-  local function scanDir(folder, fileTree)
-    local function systemCheck()
-      local check = package.config:sub(1, 1)
-      if check == "\\" or check == "\\\\" then
-        return "windows"
-      end
-      return "linux"
-    end
-    if not fileTree then
-      fileTree = {}
-    end
-    if folder then
-      folder = folder:gsub("\\\\", "/")
-      folder = folder:gsub("\\", "/")
-    end
-    local pfile
-    -- Files --
-    local command
-    if systemCheck() == "windows" then
-      command = 'dir "'..folder..'" /b /a-d-h'
-    else
-      command = 'ls -p "'..folder..'" | grep -v /'
-    end
-    pfile = io.popen(command)
-    for item in pfile:lines() do
-      fileTree[#fileTree + 1] = (folder.."/"..item):gsub("//", "/")
-    end
-    pfile:close()
-    -- Folders --
-    if systemCheck() == "windows" then
-      command = 'dir "'..folder..'" /b /ad-h'
-    else
-      command = 'ls -p "'..folder..'" | grep /'
-    end
-    pfile = io.popen(command)
-    for item in pfile:lines() do
-      item = item:gsub("\\", "")
-      fileTree = scanDir(folder.."/"..item, fileTree)
-    end
-    pfile:close()
-    return fileTree
+    return tableOfStrings
   end
 
   -- Parse --
@@ -495,13 +432,8 @@ function module.start(rootPath, outPath)
     end
   end
 
-  local files = filterFiles(scanDir(rootPath), config.codeSourceType)
-  sortStrings(files)
-  local fileCount = #files
-  for i = 1, fileCount do
-    local file = files[i]..config.codeSourceType
-    parseFile(file)
-  end
+  local files = sortStrings(projParser.parse(rootPath, config.codeSourceType))
+  for _, f in ipairs(files) do parseFile(f) end
 
   -- Output order --
   local count = 0
