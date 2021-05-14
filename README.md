@@ -21,7 +21,7 @@ can't promise anything but I'll try :)
     (because **`** is used for keywords).
   - [ ] Remove useless tags (`copyrights`, `authors`, `version`, etc).
   - [ ] Combine `title` and `description`.
-  - [ ] Combine `sample` and `example`.
+  - [ ] Combine or remove `sample` and `example`.
 - [ ] Suppport for OOP: inheritance.
 - [ ] Easy links for headers.
 - [ ] Add support for

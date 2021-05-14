@@ -101,6 +101,11 @@ new table using the matched key names:
 
 ]]
 
+--[[ Modules ]]--
+
+local fs = require 'src.scriptum.filesystem'
+local help = require 'src.scriptum.helpers'
+
 --[[ Configuration ]]--
 
 local config = {
@@ -159,18 +164,6 @@ local tags = {
   "title", "version", "description", "authors", "copyright", "license",
   "warning", "sample", "example"
 }
-
-local function deepCopy(input)
-  if type(input) == "table" then
-    local output = {}
-    for i, o in next, input, nil do
-      output[deepCopy(i)] = deepCopy(o)
-    end
-    return output
-  else
-    return input
-  end
-end
 
 local function systemCheck()
   local check = package.config:sub(1, 1)
@@ -832,11 +825,11 @@ end
 
 --[[Modify the configuration of this module programmatically;
 Provide a table with keys that share the same name as the configuration parameters:
-@param overrides (table) <required> [Each key is from a valid name, the value is the override]
+@param overrides (table) [Each key is from a valid name, the value is the override]
 @unpack config
 ]]
 function module.configuration(overrides)
-  local safe = deepCopy(overrides)
+  local safe = help.deepCopy(overrides)
   for k, v in pairs(safe) do
     if config[k] == nil then
       print("error: override field '"..k.."' not found (configuration)")
