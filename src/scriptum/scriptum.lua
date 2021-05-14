@@ -113,6 +113,8 @@ local fileParser = require 'parser.file'
 local projWriter = require 'writer.proj'
 local fileWriter = require 'writer.file'
 local module = {}
+
+
 local rootInput = ""
 local outPath = "scriptum"
 local anyText = "(.*)"
@@ -545,7 +547,8 @@ function module.start(rootPath, outputPath)
     return outFilename
   end
 
-  do -- Generate markdown--
+  -- Generate markdown--
+  do
     local outFilename = outPath.."/README.md"
     local fileWriter = openFileWriter(outFilename)
     if not fileWriter then
@@ -809,7 +812,7 @@ function module.start(rootPath, outputPath)
 end
 
 
---[[Modify the configuration of this module programmatically;
+--[[Modify the configuration of this module programmatically.
 Provide a table with keys that share the same name as the configuration parameters:
 @param overrides (table) [Each key is from a valid name, the value is the override]
 @unpack config
