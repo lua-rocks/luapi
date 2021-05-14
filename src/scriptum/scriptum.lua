@@ -113,7 +113,7 @@ local config = {
 local projParser = require 'parser.proj'
 local fileParser = require 'parser.file'
 local projWriter = require 'writer.proj'
-local fileWriter = require 'writer.file'
+local file = require 'writer.file'
 local module = {}
 
 
@@ -512,12 +512,12 @@ function module.start(rootPath, outPath)
   sortStrings(module.sortSet)
 
   local function openFileWriter(filename)
-    local fileWriter = io.open(filename, "w+")
-    if not fileWriter then
+    local file = io.open(filename, "w+")
+    if not file then
       print("error: failed to create '"..filename.."' (openFileWriter)")
       return
     end
-    return fileWriter
+    return file
   end
 
   local function stripOutRoot(text)
@@ -543,27 +543,22 @@ function module.start(rootPath, outPath)
   -- Generate markdown--
   do
     local outFilename = outPath.."/README.md"
-    local fileWriter = openFileWriter(outFilename)
-    if not fileWriter then
-      return
-    end
-    fileWriter:write("# Project Code Documentation")
-    fileWriter:write("\n")
-    fileWriter:write("\n## Index")
-    fileWriter:write("\n")
+    local file = openFileWriter(outFilename)
+    if not file then return end
+    file:write("# Project Code Documentation\n\n## Index\n")
     for i = 1, #module.sortSet do
       local data = module.fileData[module.sortSet[i]]
       local name = stripOutRoot(data.file)
       local link = outputMDFile(data.file)
-      fileWriter:write("\n+ ["..name.."]("..link..")\n")
+      file:write("\n+ ["..name.."]("..link..")\n")
     end
   end
 
   local function generateDoc(data)
     local outFilename = outputMDFile(data.file)
     outFilename = outPath.."/"..outFilename
-    local fileWriter = openFileWriter(outFilename)
-    if not fileWriter then
+    local file = openFileWriter(outFilename)
+    if not file then
       return
     end
 
@@ -616,21 +611,19 @@ function module.start(rootPath, outPath)
           end
         end
       end
-      fileWriter:write("# "..(data.header.title or Vignette).."\n")
-      writeVignette(fileWriter, data.header, tags)
-      fileWriter:write("\n")
+      file:write("# "..(data.header.title or Vignette).."\n")
+      writeVignette(file, data.header, tags)
+      file:write("\n")
     else
       local file = stripOutRoot(data.file)
-      fileWriter:write("# "..file)
-      fileWriter:write("\n")
+      file:write("# "..file.."\n")
     end
 
     -- Requires --
     local hasREQ = false
     for _, v2 in pairs(data.requires) do
       if not hasREQ then
-        fileWriter:write("\n# Requires")
-        fileWriter:write("\n")
+        file:write("\n# Requires\n")
         hasREQ = true
       end
       local file = v2
@@ -646,18 +639,18 @@ function module.start(rootPath, outPath)
         isInternal = true
       end
       if isInternal then
-        fileWriter:write("\n+ ["..name.."]("..link..")")
+        file:write("\n+ ["..name.."]("..link..")")
       else
-        fileWriter:write("\n+ "..name.."")
+        file:write("\n+ "..name.."")
       end
     end
     if hasREQ then
-      fileWriter:write("\n")
+      file:write("\n")
     end
 
     -- API --
-    local function printFn(fileWriter, v3)
-      fileWriter:write(" (")
+    local function printFn(file, v3)
+      file:write(" (")
       local cat = ""
       local count = 0
       for _, v4 in pairs(v3.pars) do
@@ -673,10 +666,9 @@ function module.start(rootPath, outPath)
           end
         end
       end
-      fileWriter:write(cat)
-      fileWriter:write(")")
+      file:write(cat..")")
       if v3.returns then
-        fileWriter:write(" : ")
+        file:write(" : ")
         cat = ""
         count = 0
         for _, v4 in pairs(v3.returns) do
@@ -689,11 +681,11 @@ function module.start(rootPath, outPath)
             end
           end
         end
-        fileWriter:write(cat)
+        file:write(cat)
       end
-      fileWriter:write("  \n")
+      file:write("  \n")
     end
-    local function printParams(fileWriter, v3)
+    local function printParams(file, v3)
       for _, v4 in pairs(v3.pars) do
         local text2 = "> &rarr; "
         if v4.name then
@@ -708,11 +700,10 @@ function module.start(rootPath, outPath)
         if v4.note then
           text2 = text2.." `"..v4.note.."`"
         end
-        fileWriter:write(text2)
-        fileWriter:write("  \n")
+        file:write(text2.."  \n")
       end
     end
-    local function printReturns(fileWriter, v3)
+    local function printReturns(file, v3)
       for _, v4 in pairs(v3.returns) do
         local text2 = "> &larr; "
         if v4.name then
@@ -727,11 +718,10 @@ function module.start(rootPath, outPath)
         if v4.note then
           text2 = text2.." `"..v4.note.."`"
         end
-        fileWriter:write(text2)
-        fileWriter:write("  \n")
+        file:write(text2.."  \n")
       end
     end
-    local function printUnpack(fileWriter, v3)
+    local function printUnpack(file, v3)
       for _, v4 in pairs(v3.unpack) do
         if v4.lines then
           for i = 1, #v4.lines do
@@ -739,27 +729,24 @@ function module.start(rootPath, outPath)
             local comment1 = string.match(line, patternUnpackComment)
             local comment2 = string.match(line, patternUnpackComment2)
             if comment1 then
-              fileWriter:write("> - "..comment1:match(patternLeadingSpace))
+              file:write("> - "..comment1:match(patternLeadingSpace))
               local stripped = line:gsub(comment1, "")
               stripped = stripped:gsub(commaComment, "")
               stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-              fileWriter:write(" `"..stripped.."`")
-              fileWriter:write("  \n")
+              file:write(" `"..stripped.."`  \n")
             elseif comment2 then
-              fileWriter:write("> - "..comment2:match(patternLeadingSpace))
+              file:write("> - "..comment2:match(patternLeadingSpace))
               local stripped = line:gsub(comment2, "")
               stripped = stripped:gsub(comment, "")
               stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-              fileWriter:write(" `"..stripped.."`")
-              fileWriter:write("  \n")
+              file:write(" `"..stripped.."`  \n")
             else
-              fileWriter:write("> - "..line:gsub(",", ""):match(patternLeadingSpace))
-              fileWriter:write("  \n")
+              file:write("> - "..line:gsub(",", ""):match(patternLeadingSpace).."  \n")
             end
           end
         end
       end
-      fileWriter:write(">  \n")
+      file:write(">  \n")
     end
 
     local hasAPI = false
@@ -767,35 +754,31 @@ function module.start(rootPath, outPath)
     for _, v3 in pairs(data.api) do
       if v3.name then
         if not hasAPI then
-          fileWriter:write("\n## API")
-          fileWriter:write("\n")
+          file:write("\n## API\n")
           hasAPI = true
         end
         count = count + 1
         local nameText = v3.name:gsub("module.", "")
-        fileWriter:write("\n**"..nameText:match(patternLeadingSpace).."**")
+        file:write("\n**"..nameText:match(patternLeadingSpace).."**")
         if v3.pars then
-          printFn(fileWriter, v3)
+          printFn(file, v3)
         end
         if v3.desc then
-          fileWriter:write("\n")
-          fileWriter:write("> "..v3.desc)
-          fileWriter:write("  \n")
+          file:write("\n> "..v3.desc.."  \n")
         end
         if v3.pars then
-          printParams(fileWriter, v3)
+          printParams(file, v3)
         end
         if v3.unpack then
-          printUnpack(fileWriter, v3)
+          printUnpack(file, v3)
         end
         if v3.returns then
-          printReturns(fileWriter, v3)
+          printReturns(file, v3)
         end
       end
     end
-    fileWriter:write("\n## Project\n")
-    fileWriter:write("\n+ ["..toRoot.."](README.md)\n")
-    fileWriter:close()
+    file:write("\n## Project\n\n+ ["..toRoot.."](README.md)\n")
+    file:close()
   end
 
   for i = 1, count do
