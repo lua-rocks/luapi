@@ -165,60 +165,12 @@ local tags = {
   "warning", "sample", "example"
 }
 
-local function systemCheck()
-  local check = package.config:sub(1, 1)
-  if check == "\\" or check == "\\\\" then
-    return "windows"
-  end
-  return "linux"
-end
-
-local function strReplace(stringIn, tag, replace)
-  return stringIn:gsub(tag, replace)
-end
-
 local function firstToUpper(text)
   return (text:gsub("^%l", string.upper))
 end
 
 local function removeLeadingSpaces(text)
   return string.match(text, patternLeadingSpace)
-end
-
-local function scanDir(folder, fileTree)
-  if not fileTree then
-    fileTree = {}
-  end
-  if folder then
-    folder = strReplace(folder, "\\\\", "/")
-    folder = strReplace(folder, "\\", "/")
-  end
-  local pfile
-  -- Files --
-  local command
-  if systemCheck() == "windows" then
-    command = 'dir "'..folder..'" /b /a-d-h'
-  else
-    command = 'ls -p "'..folder..'" | grep -v /'
-  end
-  pfile = io.popen(command)
-  for item in pfile:lines() do
-    fileTree[#fileTree + 1] = strReplace(folder.."/"..item, "//", "/")
-  end
-  pfile:close()
-  -- Folders --
-  if systemCheck() == "windows" then
-    command = 'dir "'..folder..'" /b /ad-h'
-  else
-    command = 'ls -p "'..folder..'" | grep /'
-  end
-  pfile = io.popen(command)
-  for item in pfile:lines() do
-    item = strReplace(item, "\\", "")
-    fileTree = scanDir(folder.."/"..item, fileTree)
-  end
-  pfile:close()
-  return fileTree
 end
 
 local function sortStrings(tableOfStrings)
@@ -478,9 +430,9 @@ local function writeVignette(output, set, fields)
         local maximum = #set[field]
         for j = 1, maximum do
           local text = set[field][j]
-          text = strReplace(text, "%(a%)", "@")
-          text = strReplace(text, "%(start%)", "--[[")
-          text = strReplace(text, "%(end%)", "]]")
+          text = text:gsub("%(a%)", "@")
+          text = text:gsub("%(start%)", "--[[")
+          text = text:gsub("%(end%)", "]]")
           count = count + 1
           if text == "||" then
             output:write("\n")
@@ -515,18 +467,18 @@ local function stripOutRoot(text)
     return text
   end
   local cleanRootInput = rootInput
-  cleanRootInput = strReplace(cleanRootInput, "\\\\", "/")
-  cleanRootInput = strReplace(cleanRootInput, "\\", "/")
-  text = strReplace(text, cleanRootInput.."/", "")
-  text = strReplace(text, cleanRootInput, "")
+  cleanRootInput = cleanRootInput:gsub("\\\\", "/")
+  cleanRootInput = cleanRootInput:gsub("\\", "/")
+  text = text:gsub(cleanRootInput.."/", "")
+  text = text:gsub(cleanRootInput, "")
   return text
 end
 
 local function outputMDFile(file)
   local outFilename = file..config.outputType
   outFilename = stripOutRoot(outFilename)
-  outFilename = strReplace(outFilename, "/", ".")
-  outFilename = strReplace(outFilename, config.codeSourceType, "")
+  outFilename = outFilename:gsub("/", ".")
+  outFilename = outFilename:gsub(config.codeSourceType, "")
   return outFilename
 end
 
@@ -654,20 +606,20 @@ local function printUnpack(fileWriter, v3)
         local comment2 = string.match(line, patternUnpackComment2)
         if comment1 then
           fileWriter:write("> - "..removeLeadingSpaces(comment1))
-          local stripped = strReplace(line, comment1, "")
-          stripped = strReplace(stripped, commaComment, "")
-          stripped = removeLeadingSpaces(strReplace(stripped, "-", ""))
+          local stripped = line:gsub(comment1, "")
+          stripped = stripped:gsub(commaComment, "")
+          stripped = removeLeadingSpaces(stripped:gsub("-", ""))
           fileWriter:write(" `"..stripped.."`")
           fileWriter:write("  \n")
         elseif comment2 then
           fileWriter:write("> - "..removeLeadingSpaces(comment2))
-          local stripped = strReplace(line, comment2, "")
-          stripped = strReplace(stripped, comment, "")
-          stripped = removeLeadingSpaces(strReplace(stripped, "-", ""))
+          local stripped = line:gsub(comment2, "")
+          stripped = stripped:gsub(comment, "")
+          stripped = removeLeadingSpaces(stripped:gsub("-", ""))
           fileWriter:write(" `"..stripped.."`")
           fileWriter:write("  \n")
         else
-          fileWriter:write("> - "..removeLeadingSpaces(strReplace(line, ",", "")))
+          fileWriter:write("> - "..removeLeadingSpaces(line:gsub(",", "")))
           fileWriter:write("  \n")
         end
       end
@@ -735,7 +687,7 @@ local function generateDoc(data)
         hasAPI = true
       end
       count = count + 1
-      local nameText = strReplace(v3.name, "module.", "")
+      local nameText = v3.name:gsub("module.", "")
       fileWriter:write("\n**"..removeLeadingSpaces(nameText).."**")
       if v3.pars then
         printFn(fileWriter, v3)
@@ -798,7 +750,7 @@ function module.start(rootPath, outputPath)
   prepareOutput()
 
   -- Parse --
-  local fileTree = scanDir(rootInput)
+  local fileTree = fs.scanDir(rootInput)
   local files = filterFiles(fileTree, config.codeSourceType)
   sortStrings(files)
   local fileCount = #files

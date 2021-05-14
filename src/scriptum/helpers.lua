@@ -5,6 +5,9 @@
 local help = {}
 
 
+--[[ Table ]]--
+
+
 function help.deepCopy(input)
   if type(input) == "table" then
     local output = {}
@@ -16,6 +19,12 @@ function help.deepCopy(input)
     return input
   end
 end
+
+
+--[[ String ]]--
+
+
+--[[ Other ]]--
 
 
 return help
