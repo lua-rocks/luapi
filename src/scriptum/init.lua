@@ -172,10 +172,6 @@ local tags = {
 }
 
 
-local function sortStrings(tableOfStrings)
-  table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
-end
-
 local function filterFiles(fileTree, fileType)
   local set = {}
   local count = 0
@@ -742,6 +738,10 @@ end
 @param outputPath (string) <default: "scriptum"> [Path to output to]
 ]]
 function module.start(rootPath, outputPath)
+  local function sortStrings(tableOfStrings)
+    table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
+  end
+
   -- Prep --
   if rootPath then
     rootInput = rootPath
