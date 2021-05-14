@@ -105,7 +105,10 @@ new table using the matched key names:
 --[[ Modules ]]--
 
 
-local projParser = require 'parser.project'
+local projParser = require 'parser.proj'
+local fileParser = require 'parser.file'
+local projWriter = require 'writer.proj'
+local fileWriter = require 'writer.file'
 
 
 --[[ Configuration ]]--
@@ -171,30 +174,16 @@ local tags = {
 }
 
 
-local function searchForPattern(lines, startLine, forLines, pattern)
-  local count = #lines
-  for j = 1, forLines do
-    local k = startLine + j
-    if k <= count then
-      local line3 = string.match(lines[k], pattern)
-      if line3 then
-        return j, line3
-      end
-    end
-  end
-  return nil, nil
-end
-
 local function extractRequires(lines, startLine, data)
-  local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
-  local search2 = searchForPattern(lines, startLine, 1, "scriptum")
+  local search1, result1 = fileParser.searchForPattern(lines, startLine, 1, patternRequire)
+  local search2 = fileParser.searchForPattern(lines, startLine, 1, "scriptum")
   if search1 and not search2 then
     data.requires[#data.requires + 1] = "/"..result1..config.codeSourceType
   end
 end
 
 local function extractParam(fnSet, lines, startLine, j)
-  local match, line = searchForPattern(lines, startLine + j, 1, patternParam)
+  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternParam)
   if match then
     if not fnSet.pars then
       fnSet.pars = {}
@@ -209,7 +198,7 @@ local function extractParam(fnSet, lines, startLine, j)
 end
 
 local function extractReturn(fnSet, lines, startLine, j)
-  local match, line = searchForPattern(lines, startLine + j, 1, patternReturn)
+  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternReturn)
   if match then
     if not fnSet.returns then
       fnSet.returns = {}
@@ -224,16 +213,16 @@ local function extractReturn(fnSet, lines, startLine, j)
 end
 
 local function extractUnpack(fnSet, lines, startLine, j)
-  local match, line = searchForPattern(lines, startLine + j, 1, patternUnpack)
+  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternUnpack)
   if match then
     local ret = {}
     if not fnSet.unpack then
       fnSet.unpack = {}
     end
     ret.name = line:match(patternLeadingSpace)
-    local findUnpack = searchForPattern(lines, 1, 500, "local "..line.." = {")
+    local findUnpack = fileParser.searchForPattern(lines, 1, 500, "local "..line.." = {")
     if findUnpack then
-      local endUnpack = searchForPattern(lines, findUnpack + 1, 100, "^}$")
+      local endUnpack = fileParser.searchForPattern(lines, findUnpack + 1, 100, "^}$")
       if endUnpack then
         ret.lines = {}
         for i = findUnpack + 2, findUnpack + endUnpack do
@@ -246,16 +235,16 @@ local function extractUnpack(fnSet, lines, startLine, j)
 end
 
 local function extractFunctionBlock(lines, startLine, data)
-  local search2 = searchForPattern(lines, startLine, 1, patternInsideBlockComment)
+  local search2 = fileParser.searchForPattern(lines, startLine, 1, patternInsideBlockComment)
   if search2 then
     data.api[#data.api + 1] = {line = startLine}
   else
-    local search2b, result2b = searchForPattern(lines, startLine, 1, startBlockComment)
+    local search2b, result2b = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
     if search2b then
-      local search3 = searchForPattern(lines, startLine, 10, endBlockComment)
+      local search3 = fileParser.searchForPattern(lines, startLine, 10, endBlockComment)
       -- Functions --
       local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
-      local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
+      local fnL, fnLine = fileParser.searchForPattern(lines, startLine + search3, 1, patternFunction)
       if fnL then
         fnSet.name = fnLine
       end
@@ -356,16 +345,16 @@ local function searchForTaggedData(line2, set)
 end
 
 local function extractHeaderBlock(lines, startLine, data)
-  local search = searchForPattern(lines, startLine, 1, startBlockComment)
+  local search = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
   if search then
-    local search3 = searchForPattern(lines, startLine, 500, endBlockComment)
+    local search3 = fileParser.searchForPattern(lines, startLine, 500, endBlockComment)
     local set = {}
     if search3 then
       set.endHeader = search3
       local multilineStarted = nil
       local multilines = {}
       for j = 1, search3 - 2 do
-        local paramLineN = searchForPattern(lines, startLine + j, 1, patternAt)
+        local paramLineN = fileParser.searchForPattern(lines, startLine + j, 1, patternAt)
         if paramLineN then -- Line is prefixed with '@' --
           local line = lines[startLine + j + paramLineN]
           local matched = searchForMultilineTaggedData(set, line, multilines, multilineStarted)
