@@ -101,19 +101,25 @@ new table using the matched key names:
 
 ]]
 
+
 --[[ Modules ]]--
 
-local fs = require 'src.scriptum.filesystem'
-local help = require 'src.scriptum.helpers'
+
+local fs = require 'filesystem'
+local help = require 'helpers'
+
 
 --[[ Configuration ]]--
+
 
 local config = {
   codeSourceType = ".lua", -- Looking for these source code files
   outputType = ".md", -- Output file suffix
 }
 
+
 --[[ Locals ]]--
+
 
 local string, table, pairs = string, table, pairs
 
@@ -165,9 +171,6 @@ local tags = {
   "warning", "sample", "example"
 }
 
-local function firstToUpper(text)
-  return (text:gsub("^%l", string.upper))
-end
 
 local function removeLeadingSpaces(text)
   return string.match(text, patternLeadingSpace)
@@ -420,6 +423,9 @@ end
 
 --[[Will force a repeated header on a line that is '||', as code for a manual new line]]
 local function writeVignette(output, set, fields)
+  local function firstToUpper(text)
+    return (text:gsub("^%l", string.upper))
+  end
   local codeBlockOpened = false
   for i = 1, #fields do
     local field = fields[i]

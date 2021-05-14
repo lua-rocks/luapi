@@ -3,7 +3,7 @@
 ]]
 
 
-local help = require 'src.scriptum.helpers'
+local help = require 'helpers'
 local fs = {}
 
 

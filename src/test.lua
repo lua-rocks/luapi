@@ -20,6 +20,8 @@ function module.startModule(name, verbose)
   return success
 end
 
-local scriptum = require 'src.scriptum.init'
+package.path = package.path .. ';src/?.lua;src/scriptum/?.lua'
+
+local scriptum = require 'init'
 
 scriptum.start('/home/luarocks/repo/scriptum/src', 'doc')
