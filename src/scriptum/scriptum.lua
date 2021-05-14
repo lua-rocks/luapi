@@ -289,6 +289,34 @@ function module.start(rootPath, outputPath)
         local search3 = fileParser.searchForPattern(lines, startLine, 500, endBlockComment)
         local set = {}
         if search3 then
+          local function searchForTaggedData(line2, set)
+            local title = string.match(line2, patternTitle)
+            if title then
+              set.title = title:match(patternLeadingSpace)
+              return "title"
+            end
+            local version = string.match(line2, patternVersion)
+            if version then
+              set.version = version:match(patternLeadingSpace)
+              return "version"
+            end
+            local authors = string.match(line2, patternAuthors)
+            if authors then
+              set.authors = authors:match(patternLeadingSpace)
+              return "authors"
+            end
+            local copyright = string.match(line2, patternCopyright)
+            if copyright then
+              set.copyright = copyright:match(patternLeadingSpace)
+              return "copyright"
+            end
+            local license = string.match(line2, patternLicense)
+            if license then
+              set.license = license:match(patternLeadingSpace)
+              return "license"
+            end
+            return nil
+          end
           set.endHeader = search3
           local multilineStarted = nil
           local multilines = {}
@@ -301,34 +329,6 @@ function module.start(rootPath, outputPath)
                 multilineStarted = matched
                 multilines = {}
               else
-                local function searchForTaggedData(line2, set)
-                  local title = string.match(line2, patternTitle)
-                  if title then
-                    set.title = title:match(patternLeadingSpace)
-                    return "title"
-                  end
-                  local version = string.match(line2, patternVersion)
-                  if version then
-                    set.version = version:match(patternLeadingSpace)
-                    return "version"
-                  end
-                  local authors = string.match(line2, patternAuthors)
-                  if authors then
-                    set.authors = authors:match(patternLeadingSpace)
-                    return "authors"
-                  end
-                  local copyright = string.match(line2, patternCopyright)
-                  if copyright then
-                    set.copyright = copyright:match(patternLeadingSpace)
-                    return "copyright"
-                  end
-                  local license = string.match(line2, patternLicense)
-                  if license then
-                    set.license = license:match(patternLeadingSpace)
-                    return "license"
-                  end
-                  return nil
-                end
                 local otherTagMatch = searchForTaggedData(line, set)
                 if otherTagMatch and multilineStarted then
                   catchMultilineEnd(set, multilines, multilineStarted)
@@ -360,6 +360,88 @@ function module.start(rootPath, outputPath)
       end
       return lines, count
     end
+    local function extractRequires(lines, startLine, data)
+      local search1, result1 = fileParser.searchForPattern(lines, startLine, 1, patternRequire)
+      local search2 = fileParser.searchForPattern(lines, startLine, 1, "scriptum")
+      if search1 and not search2 then
+        data.requires[#data.requires + 1] = "/"..result1..config.codeSourceType
+      end
+    end
+    local function extractFunctionBlock(lines, startLine, data)
+      local search2 = fileParser.searchForPattern(lines, startLine, 1, patternInsideBlockComment)
+      if search2 then
+        data.api[#data.api + 1] = {line = startLine}
+      else
+        local search2b, result2b = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
+        if search2b then
+          local search3 = fileParser.searchForPattern(lines, startLine, 10, endBlockComment)
+          -- Functions --
+          local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
+          local fnL, fnLine = fileParser.searchForPattern(lines, startLine + search3, 1, patternFunction)
+          if fnL then
+            fnSet.name = fnLine
+          end
+          -- Function details --
+          if search3 then
+            local function extractParam(fnSet, lines, startLine, j)
+              local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternParam)
+              if match then
+                if not fnSet.pars then
+                  fnSet.pars = {}
+                end
+                local par = {}
+                par.name = string.match(line, patternTextToSpace)
+                par.typing = string.match(line, patternTextInBrackets)
+                par.default = string.match(line, patternTextInAngled)
+                par.note = string.match(line, patternTextInSquare)
+                fnSet.pars[#fnSet.pars + 1] = par
+              end
+            end
+            local function extractReturn(fnSet, lines, startLine, j)
+              local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternReturn)
+              if match then
+                if not fnSet.returns then
+                  fnSet.returns = {}
+                end
+                local ret = {}
+                ret.name = string.match(line, patternTextToSpace)
+                ret.typing = string.match(line, patternTextInBrackets)
+                ret.default = string.match(line, patternTextInAngled)
+                ret.note = string.match(line, patternTextInSquare)
+                fnSet.returns[#fnSet.returns + 1] = ret
+              end
+            end
+            local function extractUnpack(fnSet, lines, startLine, j)
+              local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternUnpack)
+              if match then
+                local ret = {}
+                if not fnSet.unpack then
+                  fnSet.unpack = {}
+                end
+                ret.name = line:match(patternLeadingSpace)
+                local findUnpack = fileParser.searchForPattern(lines, 1, 500, "local "..line.." = {")
+                if findUnpack then
+                  local endUnpack = fileParser.searchForPattern(lines, findUnpack + 1, 100, "^}$")
+                  if endUnpack then
+                    ret.lines = {}
+                    for i = findUnpack + 2, findUnpack + endUnpack do
+                      ret.lines[#ret.lines + 1] = lines[i]
+                    end
+                  end
+                end
+                fnSet.unpack[#fnSet.unpack + 1] = ret
+              end
+            end
+            for j = 1, search3 do
+              extractParam(fnSet, lines, startLine, j)
+              extractReturn(fnSet, lines, startLine, j)
+              extractUnpack(fnSet, lines, startLine, j)
+            end
+          end
+          data.api[#data.api + 1] = fnSet
+        end
+      end
+    end
     module.fileData[file] = { file = file, requires = {}, api = {} }
     local data = module.fileData[file]
     local lines, count = readFileLines(file)
@@ -368,88 +450,6 @@ function module.start(rootPath, outputPath)
         extractHeaderBlock(lines, 0, data)
       end
       if not data.header or (not data.header.endHeader or i > data.header.endHeader) then
-        local function extractRequires(lines, startLine, data)
-          local search1, result1 = fileParser.searchForPattern(lines, startLine, 1, patternRequire)
-          local search2 = fileParser.searchForPattern(lines, startLine, 1, "scriptum")
-          if search1 and not search2 then
-            data.requires[#data.requires + 1] = "/"..result1..config.codeSourceType
-          end
-        end
-        local function extractFunctionBlock(lines, startLine, data)
-          local search2 = fileParser.searchForPattern(lines, startLine, 1, patternInsideBlockComment)
-          if search2 then
-            data.api[#data.api + 1] = {line = startLine}
-          else
-            local search2b, result2b = fileParser.searchForPattern(lines, startLine, 1, startBlockComment)
-            if search2b then
-              local search3 = fileParser.searchForPattern(lines, startLine, 10, endBlockComment)
-              -- Functions --
-              local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
-              local fnL, fnLine = fileParser.searchForPattern(lines, startLine + search3, 1, patternFunction)
-              if fnL then
-                fnSet.name = fnLine
-              end
-              -- Function details --
-              if search3 then
-                local function extractParam(fnSet, lines, startLine, j)
-                  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternParam)
-                  if match then
-                    if not fnSet.pars then
-                      fnSet.pars = {}
-                    end
-                    local par = {}
-                    par.name = string.match(line, patternTextToSpace)
-                    par.typing = string.match(line, patternTextInBrackets)
-                    par.default = string.match(line, patternTextInAngled)
-                    par.note = string.match(line, patternTextInSquare)
-                    fnSet.pars[#fnSet.pars + 1] = par
-                  end
-                end
-                local function extractReturn(fnSet, lines, startLine, j)
-                  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternReturn)
-                  if match then
-                    if not fnSet.returns then
-                      fnSet.returns = {}
-                    end
-                    local ret = {}
-                    ret.name = string.match(line, patternTextToSpace)
-                    ret.typing = string.match(line, patternTextInBrackets)
-                    ret.default = string.match(line, patternTextInAngled)
-                    ret.note = string.match(line, patternTextInSquare)
-                    fnSet.returns[#fnSet.returns + 1] = ret
-                  end
-                end
-                local function extractUnpack(fnSet, lines, startLine, j)
-                  local match, line = fileParser.searchForPattern(lines, startLine + j, 1, patternUnpack)
-                  if match then
-                    local ret = {}
-                    if not fnSet.unpack then
-                      fnSet.unpack = {}
-                    end
-                    ret.name = line:match(patternLeadingSpace)
-                    local findUnpack = fileParser.searchForPattern(lines, 1, 500, "local "..line.." = {")
-                    if findUnpack then
-                      local endUnpack = fileParser.searchForPattern(lines, findUnpack + 1, 100, "^}$")
-                      if endUnpack then
-                        ret.lines = {}
-                        for i = findUnpack + 2, findUnpack + endUnpack do
-                          ret.lines[#ret.lines + 1] = lines[i]
-                        end
-                      end
-                    end
-                    fnSet.unpack[#fnSet.unpack + 1] = ret
-                  end
-                end
-                for j = 1, search3 do
-                  extractParam(fnSet, lines, startLine, j)
-                  extractReturn(fnSet, lines, startLine, j)
-                  extractUnpack(fnSet, lines, startLine, j)
-                end
-              end
-              data.api[#data.api + 1] = fnSet
-            end
-          end
-        end
         extractRequires(lines, i, data)
         extractFunctionBlock(lines, i, data)
       end
