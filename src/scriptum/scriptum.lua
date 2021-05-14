@@ -168,6 +168,11 @@ local tags = {
 @param outputPath (string) <default: "scriptum"> [Path to output to]
 ]]
 function module.start(rootPath, outputPath)
+  rootInput = rootPath or rootInput
+  outPath = outputPath or outPath
+  module.fileData = {}
+  module.sortSet = {}
+
   local function sortStrings(tableOfStrings)
     table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
   end
@@ -235,17 +240,6 @@ function module.start(rootPath, outputPath)
     pfile:close()
     return fileTree
   end
-
-  -- Prep --
-  if rootPath then
-    rootInput = rootPath
-  end
-  if outputPath then
-    outPath = outputPath
-  end
-
-  module.fileData = {}
-  module.sortSet = {}
 
   -- Parse --
   local function parseFile(file)
@@ -501,8 +495,7 @@ function module.start(rootPath, outputPath)
     end
   end
 
-  local fileTree = scanDir(rootInput)
-  local files = filterFiles(fileTree, config.codeSourceType)
+  local files = filterFiles(scanDir(rootInput), config.codeSourceType)
   sortStrings(files)
   local fileCount = #files
   for i = 1, fileCount do
