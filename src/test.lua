@@ -20,10 +20,16 @@ function module.startModule(name, verbose)
   return success
 end
 
+inspect = require 'inspect' -- luacheck: ignore
 package.path = package.path .. ';src/scriptum/?.lua'
 
 local scriptum = require 'scriptum'
 
-scriptum.start('/home/luarocks/repo/scriptum/src')
+local model = scriptum.start('/home/luarocks/repo/scriptum/src')
+
+for key, value in pairs(model.fileData) do
+  print(key)
+  print(inspect(value.api, {depth = 4})) -- luacheck: ignore
+end
 
 return module

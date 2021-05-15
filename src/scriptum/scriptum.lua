@@ -100,6 +100,7 @@ local module = {}
 --[[Start document generation
 @param rootPath (string) <""> [Path to read source code from]
 @param outPath (string) <"scriptum"> [Path to output to]
+@return model (table) [Project model can be used for autocomlete in an IDE]
 ]]
 function module.start(rootPath, outPath)
   rootPath = rootPath or config.rootPath
@@ -116,6 +117,8 @@ function module.start(rootPath, outPath)
   for i, _ in ipairs(module.files) do
     fileWriter.write(rootPath, outPath, config, module, module.fileData[module.files[i]])
   end
+
+  return module
 end
 
 
