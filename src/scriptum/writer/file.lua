@@ -76,9 +76,7 @@ function fileWriter.write(rootPath, outPath, config, module, data)
   local outFilename = writer.makeOutputFileName(data.file, config, rootPath)
   outFilename = outPath.."/"..outFilename
   local file = writer.open(outFilename)
-  if not file then
-    return
-  end
+  if not file then return end
 
   if data.header then
     file:write("# "..(data.header.title or "Vignette").."\n")
@@ -95,22 +93,21 @@ function fileWriter.write(rootPath, outPath, config, module, data)
       file:write("\n# Requires\n")
       hasREQ = true
     end
-    local file = v2
-    if file:sub(1, 1) == "/" then
-      file = file:sub(2, #file)
-    elseif file:sub(1, 2) == "\\\\" then
-      file = file:sub(3, #file)
+    if v2:sub(1, 1) == "/" then
+      v2 = v2:sub(2, #v2)
+    elseif v2:sub(1, 2) == "\\\\" then
+      v2 = v2:sub(3, #v2)
     end
-    local name = writer.stripOutRoot(file, rootPath)
-    local link = writer.makeOutputFileName(file, config, rootPath)
+    local name = writer.stripOutRoot(v2, rootPath)
+    local link = writer.makeOutputFileName(v2, config, rootPath)
     local isInternal = false
-    if module.fileData[file] then
+    if module.fileData[v2] then
       isInternal = true
     end
     if isInternal then
-      file:write("\n+ ["..name.."]("..link..")")
+      v2:write("\n+ ["..name.."]("..link..")")
     else
-      file:write("\n+ "..name.."")
+      v2:write("\n+ "..name.."")
     end
   end
   if hasREQ then
@@ -118,8 +115,8 @@ function fileWriter.write(rootPath, outPath, config, module, data)
   end
 
   -- API --
-  local function printFn(file, v3)
-    file:write(" (")
+  local function printFn(f, v3)
+    f:write(" (")
     local cat = ""
     local count = 0
     for _, v4 in pairs(v3.pars) do
@@ -135,9 +132,9 @@ function fileWriter.write(rootPath, outPath, config, module, data)
         end
       end
     end
-    file:write(cat..")")
+    f:write(cat..")")
     if v3.returns then
-      file:write(" : ")
+      f:write(" : ")
       cat = ""
       count = 0
       for _, v4 in pairs(v3.returns) do
@@ -150,11 +147,11 @@ function fileWriter.write(rootPath, outPath, config, module, data)
           end
         end
       end
-      file:write(cat)
+      f:write(cat)
     end
-    file:write("  \n")
+    f:write("  \n")
   end
-  local function printParams(file, v3)
+  local function printParams(f, v3)
     for _, v4 in pairs(v3.pars) do
       local text2 = "> &rarr; "
       if v4.name then
@@ -169,10 +166,10 @@ function fileWriter.write(rootPath, outPath, config, module, data)
       if v4.note then
         text2 = text2.." `"..v4.note.."`"
       end
-      file:write(text2.."  \n")
+      f:write(text2.."  \n")
     end
   end
-  local function printReturns(file, v3)
+  local function printReturns(f, v3)
     for _, v4 in pairs(v3.returns) do
       local text2 = "> &larr; "
       if v4.name then
@@ -187,10 +184,10 @@ function fileWriter.write(rootPath, outPath, config, module, data)
       if v4.note then
         text2 = text2.." `"..v4.note.."`"
       end
-      file:write(text2.."  \n")
+      f:write(text2.."  \n")
     end
   end
-  local function printUnpack(file, v3)
+  local function printUnpack(f, v3)
     for _, v4 in pairs(v3.unpack) do
       if v4.lines then
         for i = 1, #v4.lines do
@@ -198,24 +195,24 @@ function fileWriter.write(rootPath, outPath, config, module, data)
           local comment1 = string.match(line, patternUnpackComment)
           local comment2 = string.match(line, patternUnpackComment2)
           if comment1 then
-            file:write("> - "..comment1:match(patternLeadingSpace))
+            f:write("> - "..comment1:match(patternLeadingSpace))
             local stripped = line:gsub(comment1, "")
             stripped = stripped:gsub(commaComment, "")
             stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-            file:write(" `"..stripped.."`  \n")
+            f:write(" `"..stripped.."`  \n")
           elseif comment2 then
-            file:write("> - "..comment2:match(patternLeadingSpace))
+            f:write("> - "..comment2:match(patternLeadingSpace))
             local stripped = line:gsub(comment2, "")
             stripped = stripped:gsub(comment, "")
             stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-            file:write(" `"..stripped.."`  \n")
+            f:write(" `"..stripped.."`  \n")
           else
-            file:write("> - "..line:gsub(",", ""):match(patternLeadingSpace).."  \n")
+            f:write("> - "..line:gsub(",", ""):match(patternLeadingSpace).."  \n")
           end
         end
       end
     end
-    file:write(">  \n")
+    f:write(">  \n")
   end
 
   local hasAPI = false
