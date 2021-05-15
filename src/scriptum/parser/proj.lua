@@ -83,7 +83,9 @@ end
 @return files (table) [list of file paths]
 ]]
 function projParser.getFiles(path, ext)
-  return filterFiles(scanDir(path), ext)
+  local t = filterFiles(scanDir(path), ext)
+  table.sort(t, function(a, b) return a:upper() < b:upper() end)
+  return t
 end
 
 

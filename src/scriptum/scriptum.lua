@@ -142,14 +142,9 @@ function module.start(rootPath, outPath)
   module.fileData = {}
   module.files = {}
 
-  local function sortStrings(tableOfStrings)
-    table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
-    return tableOfStrings
-  end
-
   -- Parse --
 
-  module.files = sortStrings(projParser.getFiles(rootPath, config.codeSourceType))
+  module.files = projParser.getFiles(rootPath, config.codeSourceType)
   for _, f in ipairs(module.files) do module.fileData[f] = fileParser.parse(f) end
 
   local function openFileWriter(filename)
