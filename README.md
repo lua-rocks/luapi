@@ -22,8 +22,9 @@ can't promise anything but I'll try :)
 - [ ] Custom comments style.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
+    - [ ] Replace this bullshit with 2 spaces (and maybe `||` with `\n`).
   - [ ] Remove **all** vignette tags - just use markdown in comments instead.
-    first line in first comment is title; other lines for description.
+    First line in first comment is title; other lines for description.
   - [x] Any function param is **required** by default. If it has default value,
     then it is optional. Empty opt values (like this: `<>`) are acceptable.
 - [ ] Suppport for OOP: inheritance.
