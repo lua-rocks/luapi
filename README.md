@@ -29,5 +29,5 @@ can't promise anything but I'll try :)
 - [ ] Easy links for headers.
 - [ ] Add support for
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
-- [ ] Clean markdown: no
-    [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
+- [ ] Clean markdown:
+    no [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
