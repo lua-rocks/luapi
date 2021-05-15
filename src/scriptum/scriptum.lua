@@ -8,14 +8,18 @@ Output is in markdown
 
 Generate all documentation from the root directory:
 
-~local scriptum = require("scriptum")
-~scriptum.start()
+```lua
+local scriptum = require "scriptum"
+scriptum.start()
+```
 
 For non Love2D use make sure you give the absolute path to the source root, and make
 sure the output folder 'scriptum' in this example already exists in the source path, such as:
 
-~local scriptum = require("scriptum")
-~scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
+```lua
+local scriptum = require "scriptum"
+scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
+```
 
 Create an optional header vignette with a comment block.
 Start from the first line of the source file, and use these tags (all optional):
@@ -24,12 +28,14 @@ Start from the first line of the source file, and use these tags (all optional):
 
 Such as the following:
 
-~(start)
-~(a)title Test Module
-~Import and run with start()
-~  local module = require("testmodule")
-~  module.start()
-~(end)
+```lua
+(start)
+(a)title Test Module
+Import and run with start()
+  local module = require "testmodule"
+  module.start()
+(end)
+```
 
 Backtic is used to mark a line as a code block when written in markdown.
 Empty lines can be used if required as to your preference.
@@ -44,16 +50,18 @@ and:
 
 Such as:
 
-~(start)My function for documentation
-~(a)param name (typing) <required> [File will be created and overwritten]
-~(a)param verbose (boolean) <default: true> [More output if true]
-~(a)return success (boolean) [Fail will be handled gracefully and return false]
-~(end)
-~function module.startModule(name, verbose)
-~  local success = false
-~  -- sample code --
-~  return success
-~end
+```lua
+(start)My function for documentation
+(a)param name (typing) <required> [File will be created and overwritten]
+(a)param verbose (boolean) <default: true> [More output if true]
+(a)return success (boolean) [Fail will be handled gracefully and return false]
+(end)
+function module.startModule(name, verbose)
+  local success = false
+  -- sample code --
+  return success
+end
+```
 
 Where:
 
@@ -76,10 +84,10 @@ The mark-up used in this file requires escape symbols to generate the outputs pr
 Override a configuration parameter programmatically; insert your override values into a
 new table using the matched key names:
 
-~local overrides = {
-~                    codeSourceType = ".lua"
-~                  }
-~scriptum.configuration(overrides)
+```lua
+local overrides = { codeSourceType = ".lua" }
+scriptum.configuration(overrides)
+```
 
 ]]
 

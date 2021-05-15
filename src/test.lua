@@ -3,8 +3,12 @@
 
 Import and run with start()
 
-~local module = require("testmodule")
-~module.start()
+```lua
+local module = require("testmodule")
+module.start()
+```
+
+~I'm not a code
 ]]
 
 local module = {}
