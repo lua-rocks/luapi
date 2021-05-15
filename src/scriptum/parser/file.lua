@@ -77,6 +77,7 @@ local function multiLineField(set, field, data)
 end
 
 
+-- TODO: deprecated
 local function searchForMultilineTaggedData(set, line, multilines, multilineStarted)
   local title = string.match(line, patternTitle)
   if title then
@@ -90,6 +91,7 @@ local function searchForMultilineTaggedData(set, line, multilines, multilineStar
 end
 
 
+-- TODO: deprecated
 local function searchForTaggedData(line2, set)
   local title = string.match(line2, patternTitle)
   if title then
@@ -101,44 +103,43 @@ end
 
 
 local function extractHeaderBlock(lines, startLine, data)
-  local search = searchForPattern(lines, startLine, 1, startBlockComment)
-  if search then
-    local search3 = searchForPattern(lines, startLine, 500, endBlockComment)
-    local set = {}
-    if search3 then
-      set.endHeader = search3
-      local multilineStarted = nil
-      local multilines = {}
-      for j = 1, search3 - 2 do
-        local paramLineN = searchForPattern(lines, startLine + j, 1, patternAt)
-        if paramLineN then -- Line is prefixed with '@' --
-          local line = lines[startLine + j + paramLineN]
-          local matched = searchForMultilineTaggedData(set, line, multilines, multilineStarted)
-          if matched then
-            multilineStarted = matched
+  if not searchForPattern(lines, startLine, 1, startBlockComment) then return end
+
+  local search3 = searchForPattern(lines, startLine, 500, endBlockComment)
+  local set = {}
+  if search3 then
+    set.endHeader = search3
+    local multilineStarted = nil
+    local multilines = {}
+    for j = 1, search3 - 2 do
+      local paramLineN = searchForPattern(lines, startLine + j, 1, patternAt)
+      if paramLineN then -- Line is prefixed with '@' --
+        local line = lines[startLine + j + paramLineN]
+        local matched = searchForMultilineTaggedData(set, line, multilines, multilineStarted)
+        if matched then
+          multilineStarted = matched
+          multilines = {}
+        else
+          local otherTagMatch = searchForTaggedData(line, set)
+          if otherTagMatch and multilineStarted then
+            catchMultilineEnd(set, multilines, multilineStarted)
+            multilineStarted = nil
             multilines = {}
-          else
-            local otherTagMatch = searchForTaggedData(line, set)
-            if otherTagMatch and multilineStarted then
-              catchMultilineEnd(set, multilines, multilineStarted)
-              multilineStarted = nil
-              multilines = {}
-            end
-          end
-        else -- Line is not prefixed with '@' --
-          local line = lines[startLine + j + 1]
-          if multilineStarted then
-            local text = line:match(patternLeadingSpace)
-            multilines[#multilines + 1] = text
           end
         end
-      end
-      if multilineStarted then -- On end block, but check if a multiline catch wasn't done --
-        catchMultilineEnd(set, multilines, multilineStarted)
+      else -- Line is not prefixed with '@' --
+        local line = lines[startLine + j + 1]
+        if multilineStarted then
+          local text = line:match(patternLeadingSpace)
+          multilines[#multilines + 1] = text
+        end
       end
     end
-    data.header = set
+    if multilineStarted then -- On end block, but check if a multiline catch wasn't done --
+      catchMultilineEnd(set, multilines, multilineStarted)
+    end
   end
+  data.header = set
 end
 
 
