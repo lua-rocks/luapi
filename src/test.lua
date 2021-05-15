@@ -1,8 +1,6 @@
 --[[
 @title Test Module
-
 Import and run with start()
-
 ```lua
 local module = require("testmodule")
 module.start()

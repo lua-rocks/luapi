@@ -108,8 +108,8 @@ local module = {}
 
 
 --[[Start document generation
-@param rootPath (string) <default: ""> [Path to read source code from]
-@param outPath (string) <default: "scriptum"> [Path to output to]
+@param rootPath (string) <""> [Path to read source code from]
+@param outPath (string) <"scriptum"> [Path to output to]
 ]]
 function module.start(rootPath, outPath)
   rootPath = rootPath or config.rootPath
