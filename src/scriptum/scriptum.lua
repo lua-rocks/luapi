@@ -140,7 +140,7 @@ function module.start(rootPath, outPath)
   rootPath = rootPath or config.rootPath
   outPath = outPath or config.outPath
   module.fileData = {}
-  module.sortSet = {}
+  module.files = {}
 
   local function sortStrings(tableOfStrings)
     table.sort(tableOfStrings, function(a, b) return a:upper() < b:upper() end)
@@ -149,16 +149,8 @@ function module.start(rootPath, outPath)
 
   -- Parse --
 
-  local files = sortStrings(projParser.getFiles(rootPath, config.codeSourceType))
-  for _, f in ipairs(files) do module.fileData[f] = fileParser.parse(f) end
-
-  -- Output order --
-  local count = 0
-  for k, _ in pairs(module.fileData) do
-    count = count + 1
-    module.sortSet[count] = k
-  end
-  sortStrings(module.sortSet)
+  module.files = sortStrings(projParser.getFiles(rootPath, config.codeSourceType))
+  for _, f in ipairs(module.files) do module.fileData[f] = fileParser.parse(f) end
 
   local function openFileWriter(filename)
     local file = io.open(filename, "w+")
@@ -195,8 +187,8 @@ function module.start(rootPath, outPath)
     local file = openFileWriter(outFilename)
     if not file then return end
     file:write("# Project Code Documentation\n\n## Index\n")
-    for i = 1, #module.sortSet do
-      local data = module.fileData[module.sortSet[i]]
+    for i = 1, #module.files do
+      local data = module.fileData[module.files[i]]
       local name = stripOutRoot(data.file)
       local link = outputMDFile(data.file)
       file:write("\n+ ["..name.."]("..link..")\n")
@@ -430,9 +422,8 @@ function module.start(rootPath, outPath)
     file:close()
   end
 
-  for i = 1, count do
-    local data = module.fileData[module.sortSet[i]]
-    generateDoc(data)
+  for index, _ in ipairs(module.files) do
+    generateDoc(module.fileData[module.files[index]])
   end
 end
 
