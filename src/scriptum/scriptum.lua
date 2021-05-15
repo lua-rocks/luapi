@@ -23,8 +23,8 @@ Create a block comment with a tittle in the first line:
 
 ~(start) Test Module
 ~Import and run with start()
-~  local module = require "testmodule"
-~  module.start()
+~~  local module = require "testmodule"
+~~  module.start()
 ~(end)
 
 Tilde is used to mark a line as a code block when written in markdown.
