@@ -1,9 +1,10 @@
---[[ File Parser ]]
+--[[ File Parser ]]--
 
 
 local fileParser = {}
 
 
+local comment = "%-%-"
 local anyText = "(.*)"
 local spaceChar = "%s"
 local anyQuote = "\""
@@ -75,7 +76,8 @@ end
 
 -- TODO: deprecated?
 local function searchForTitle(set, line, multilines, multilineStarted)
-  local title = line:match(startBlockComment):gsub(spaceChar, ""):gsub(closeBlockComment, "")
+  local title = line:match(startBlockComment)
+    :gsub(spaceChar, ""):gsub(closeBlockComment, ""):gsub(comment, "")
   if title then
     if multilineStarted then
       catchMultilineEnd(set, multilines, multilineStarted)

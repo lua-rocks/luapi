@@ -1,4 +1,4 @@
---[[ Project Writer ]]
+--[[ Project Writer ]]--
 
 
 local writer = require 'writer.writer'
