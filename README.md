@@ -25,8 +25,8 @@ can't promise anything but I'll try :)
   - [ ] Remove useless tags (`copyrights`, `authors`, `version`, etc).
   - [ ] Combine `title` and `description`.
   - [ ] Combine or remove `sample` and `example`.
-  - [ ] Any function param is **required** by default. If it has default value,
-    then it is optional. Empty opt values (like this: `<>`) are also acceptable.
+  - [x] Any function param is **required** by default. If it has default value,
+    then it is optional. Empty opt values (like this: `<>`) are acceptable.
 - [ ] Suppport for OOP: inheritance.
 - [ ] Easy links for headers.
 - [ ] Add support for
