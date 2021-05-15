@@ -151,27 +151,14 @@ function fileWriter.write(rootPath, outPath, config, module, data)
     end
     f:write("  \n")
   end
-  local function printParams(f, v3)
-    for _, v4 in pairs(v3.pars) do
-      local text2 = "> &rarr; "
-      if v4.name then
-        text2 = text2.."**"..v4.name.."**"
+  local function printParamsOrReturns(f, v3, which)
+    for _, v4 in pairs(v3[which]) do
+      local text2
+      if which == "pars" then
+        text2 = "> &rarr; "
+      else
+        text2 = "> &larr; "
       end
-      if v4.typing then
-        text2 = text2.." ("..v4.typing..")"
-      end
-      if v4.default then
-        text2 = text2.." <*"..v4.default.."*>"
-      end
-      if v4.note then
-        text2 = text2.." `"..v4.note.."`"
-      end
-      f:write(text2.."  \n")
-    end
-  end
-  local function printReturns(f, v3)
-    for _, v4 in pairs(v3.returns) do
-      local text2 = "> &larr; "
       if v4.name then
         text2 = text2.."**"..v4.name.."**"
       end
@@ -233,13 +220,13 @@ function fileWriter.write(rootPath, outPath, config, module, data)
         file:write("\n> "..v3.desc.."  \n")
       end
       if v3.pars then
-        printParams(file, v3)
+        printParamsOrReturns(file, v3, 'pars')
       end
       if v3.unpack then
         printUnpack(file, v3)
       end
       if v3.returns then
-        printReturns(file, v3)
+        printParamsOrReturns(file, v3, 'returns')
       end
     end
   end

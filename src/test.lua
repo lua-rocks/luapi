@@ -10,13 +10,13 @@
 local module = {}
 
 --[[My function for documentation
-@param name (typing) <required> [File will be created and overwritten]
-@param verbose (boolean) <default: true> [More output if true]
+@param name (typing) [File will be created and overwritten]
+@param verbose (boolean) <true> [More output if true]
 @return success (boolean) [Fail will be handled gracefully and return false]
 ]]
 function module.startModule(name, verbose)
   local success = false
-  print(name, verbose)
+  if verbose then print(name) end
   return success
 end
 
