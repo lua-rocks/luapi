@@ -91,17 +91,6 @@ local function searchForMultilineTaggedData(set, line, multilines, multilineStar
 end
 
 
--- TODO: deprecated
-local function searchForTaggedData(line2, set)
-  local title = string.match(line2, patternTitle)
-  if title then
-    set.title = title:match(patternLeadingSpace)
-    return "title"
-  end
-  return nil
-end
-
-
 local function extractHeaderBlock(lines, startLine, data)
   if not searchForPattern(lines, startLine, 1, startBlockComment) then return end
 
@@ -119,13 +108,6 @@ local function extractHeaderBlock(lines, startLine, data)
         if matched then
           multilineStarted = matched
           multilines = {}
-        else
-          local otherTagMatch = searchForTaggedData(line, set)
-          if otherTagMatch and multilineStarted then
-            catchMultilineEnd(set, multilines, multilineStarted)
-            multilineStarted = nil
-            multilines = {}
-          end
         end
       else -- Line is not prefixed with '@' --
         local line = lines[startLine + j + 1]
