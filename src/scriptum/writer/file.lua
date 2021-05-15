@@ -14,10 +14,7 @@ local patternUnpackComment2 = anyText..spaceChar..comment..anyText
 local subpatternCode = "~"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
 local toRoot = "Back to root"
-local tags = {
-  "title", "version", "description", "authors", "copyright", "license",
-  "warning", "sample", "example"
-}
+local tags = {"description"}
 
 
 --[[
