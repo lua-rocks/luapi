@@ -28,14 +28,12 @@ Start from the first line of the source file, and use these tags (all optional):
 
 Such as the following:
 
-```lua
-(start)
-(a)title Test Module
-Import and run with start()
-  local module = require "testmodule"
-  module.start()
-(end)
-```
+~(start)
+~(a)title Test Module
+~Import and run with start()
+~  local module = require "testmodule"
+~  module.start()
+~(end)
 
 Backtic is used to mark a line as a code block when written in markdown.
 Empty lines can be used if required as to your preference.
