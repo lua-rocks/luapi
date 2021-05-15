@@ -1,6 +1,4 @@
---[[
-@title Project Parser
-]]
+--[[ Project Parser ]]
 
 
 local projParser = {}

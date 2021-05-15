@@ -1,7 +1,5 @@
---[[
-@title Scriptum
-
-Output is in markdown
+--[[ Scriptum
+Output is in markdown.
 
 ~This document was created with this module, view the source file to see example input
 ~And see the raw readme.md for example output
@@ -13,29 +11,23 @@ local scriptum = require "scriptum"
 scriptum.start()
 ```
 
-For non Love2D use make sure you give the absolute path to the source root, and make
-sure the output folder 'scriptum' in this example already exists in the source path, such as:
+Make sure you give the absolute path to the source root, and make
+sure the output folder 'doc' in this example already exists in the source path, such as:
 
 ```lua
 local scriptum = require "scriptum"
-scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
+scriptum.start("C:/Users/me/Desktop/codebase", "doc")
 ```
 
-Create an optional header vignette with a comment block.
-Start from the first line of the source file, and use these tags (all optional):
+Create a block comment with a tittle in the first line:
 
-- **(a)title** the name of the file/module (once, single line)
-
-Such as the following:
-
-~(start)
-~(a)title Test Module
+~(start) Test Module
 ~Import and run with start()
 ~  local module = require "testmodule"
 ~  module.start()
 ~(end)
 
-Backtic is used to mark a line as a code block when written in markdown.
+Tilde is used to mark a line as a code block when written in markdown.
 Empty lines can be used if required as to your preference.
 
 Create an API function entry with a comment block and one of more of:

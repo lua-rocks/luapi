@@ -1,6 +1,4 @@
---[[
-@title File Writer
-]]
+--[[ File Writer ]]
 
 
 local writer = require 'writer.writer'

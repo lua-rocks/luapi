@@ -1,6 +1,4 @@
---[[
-@title writer
-]]
+--[[ writer ]]
 
 
 local writer = {}

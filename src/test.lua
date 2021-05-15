@@ -1,8 +1,7 @@
---[[ Ololo!
-@title Test Module
+--[[ Test Module
 Import and run with start()
 ```lua
-local module = require("testmodule")
+local module = require "testmodule"
 module.start()
 ```
 ~I'm not a code

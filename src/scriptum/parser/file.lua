@@ -1,6 +1,4 @@
---[[
-@title File Parser
-]]
+--[[ File Parser ]]
 
 
 local fileParser = {}
@@ -29,8 +27,6 @@ local patternTextInBrackets = openBracket..anyText..closeBracket
 local patternTextInAngled = openBracket2..anyText..closeBracket2
 local patternTextInSquare = openBracket3..anyText..closeBracket3
 local patternFunction = "function"..anyText..openBracket
-local patternTitle = "@title"..anyText
-local patternAt = "@"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
 
 
@@ -77,9 +73,9 @@ local function multiLineField(set, field, data)
 end
 
 
--- TODO: deprecated
-local function searchForMultilineTaggedData(set, line, multilines, multilineStarted)
-  local title = string.match(line, patternTitle)
+-- TODO: deprecated?
+local function searchForTitle(set, line, multilines, multilineStarted)
+  local title = line:match(startBlockComment):gsub(spaceChar, ""):gsub(closeBlockComment, "")
   if title then
     if multilineStarted then
       catchMultilineEnd(set, multilines, multilineStarted)
@@ -100,21 +96,16 @@ local function extractHeaderBlock(lines, startLine, data)
     set.endHeader = search
     local multilineStarted = nil
     local multilines = {}
+    local matched = searchForTitle(set, lines[1], multilines, multilineStarted)
+    if matched then
+      multilineStarted = matched
+      multilines = {}
+    end
     for j = 1, search - 2 do
-      local paramLineN = searchForPattern(lines, startLine + j, 1, patternAt)
-      if paramLineN then -- Line is prefixed with '@' --
-        local line = lines[startLine + j + paramLineN]
-        local matched = searchForMultilineTaggedData(set, line, multilines, multilineStarted)
-        if matched then
-          multilineStarted = matched
-          multilines = {}
-        end
-      else -- Line is not prefixed with '@' --
-        local line = lines[startLine + j + 1]
-        if multilineStarted then
-          local text = line:match(patternLeadingSpace)
-          multilines[#multilines + 1] = text
-        end
+      local line = lines[startLine + j + 1]
+      if multilineStarted then
+        local text = line:match(patternLeadingSpace)
+        multilines[#multilines + 1] = text
       end
     end
     if multilineStarted then -- On end block, but check if a multiline catch wasn't done --
