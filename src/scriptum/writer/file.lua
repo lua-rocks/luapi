@@ -74,7 +74,6 @@ function fileWriter.write(rootPath, outPath, config, module, data)
   if not file then return end
 
   if data.header then
-    print(require 'inspect' (data.header))
     file:write("# "..(data.header.description[1] or "Vignette").."\n")
     writeVignette(file, data.header, tags)
     file:write("\n")
