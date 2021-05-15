@@ -36,8 +36,8 @@ local patternLeadingSpace = spaceChar.."*"..anyText
 @param startLine (integer) [all lines before will be ignored]
 @param forLines (integer) [all lines after will be ignored]
 @param pattern (string) [search for this]
-@return line (integer) <nil> [line number where pattern was found]
-@return result (string) <nil> [matched result]
+@return line (integer) <> [line number where pattern was found]
+@return result (string) <> [matched result]
 ]]
 local function searchForPattern(lines, startLine, forLines, pattern)
   local count = #lines
@@ -74,7 +74,6 @@ local function multiLineField(set, field, data)
 end
 
 
--- TODO: deprecated?
 local function searchForTitle(set, line, multilines, multilineStarted)
   local title = line:match(startBlockComment)
     :gsub(spaceChar, ""):gsub(closeBlockComment, ""):gsub(comment, "")
@@ -129,6 +128,14 @@ local function readFileLines(file)
 end
 
 
+local function correctOpt(opt)
+  if opt == "" or opt == "nil" or opt == "opt" then
+    opt = "optional"
+  end
+  return opt
+end
+
+
 local function extractRequires(lines, startLine, data)
   local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
   local search2 = searchForPattern(lines, startLine, 1, "scriptum")
@@ -147,7 +154,7 @@ local function extractParam(fnSet, lines, startLine, j)
     local par = {}
     par.name = string.match(line, patternTextToSpace)
     par.typing = string.match(line, patternTextInBrackets)
-    par.default = string.match(line, patternTextInAngled)
+    par.default = correctOpt(string.match(line, patternTextInAngled))
     par.note = string.match(line, patternTextInSquare)
     fnSet.pars[#fnSet.pars + 1] = par
   end
@@ -163,7 +170,7 @@ local function extractReturn(fnSet, lines, startLine, j)
     local ret = {}
     ret.name = string.match(line, patternTextToSpace)
     ret.typing = string.match(line, patternTextInBrackets)
-    ret.default = string.match(line, patternTextInAngled)
+    ret.default = correctOpt(string.match(line, patternTextInAngled))
     ret.note = string.match(line, patternTextInSquare)
     fnSet.returns[#fnSet.returns + 1] = ret
   end

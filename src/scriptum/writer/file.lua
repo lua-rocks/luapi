@@ -122,8 +122,6 @@ function fileWriter.write(rootPath, outPath, config, module, data)
         end
         if not v4.default then
           cat = cat.."\\*"
-        elseif v4.default == "" or v4.default == "nil" or v4.default == "opt" then
-          v4.default = "optional"
         end
       end
     end
