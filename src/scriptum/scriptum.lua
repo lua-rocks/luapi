@@ -128,17 +128,13 @@ function module.start(rootPath, outPath)
   module.files = {}
 
   -- Parse --
-
   module.files = projParser.getFiles(rootPath, config.codeSourceType)
   for _, f in ipairs(module.files) do module.fileData[f] = fileParser.parse(f) end
 
   -- Generate markdown--
-
   projWriter.write(rootPath, outPath, config, module)
-
-
-  for index, _ in ipairs(module.files) do
-    fileWriter.write(rootPath, outPath, config, module, module.fileData[module.files[index]])
+  for i, _ in ipairs(module.files) do
+    fileWriter.write(rootPath, outPath, config, module, module.fileData[module.files[i]])
   end
 end
 
