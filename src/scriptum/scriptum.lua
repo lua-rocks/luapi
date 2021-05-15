@@ -41,10 +41,10 @@ and:
 Such as:
 
 ```lua
-(start)My function for documentation
-(a)param name (typing) <required> [File will be created and overwritten]
-(a)param verbose (boolean) <default: true> [More output if true]
-(a)return success (boolean) [Fail will be handled gracefully and return false]
+(start) My function for documentation
+(a)param name (typing) [file will be created and overwritten]
+(a)param verbose (boolean) <true> [more output if true]
+(a)return success (boolean) [fail will be handled gracefully and return false]
 (end)
 function module.startModule(name, verbose)
   local success = false
