@@ -14,7 +14,6 @@ can't promise anything but I'll try :)
   - [ ] You can make links across all you files or just in one local file
     **to it parts** in this way: `[link_name](#header_name_in_current_file)` or
     `[link_name](other_file#header_name)`. That's why fields must be a headers.
-- [ ] Replace 4 spaces code indents with **```lua** style to enable syntax.
 - [ ] Show doc only for external module fields.
 - [ ] Multiline comments for fields descriptions.
 - [ ] Throw error when function argument name doesn't match with described.
