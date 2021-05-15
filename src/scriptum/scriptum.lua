@@ -1,20 +1,12 @@
 --[[
-@title lua-scriptum
-@version 1.0
-@description Lua based document generator;
-The output files are in markdown syntax.
+@title Scriptum
 
-@authors Charles Mallah
-@copyright (c) 2020 Charles Mallah
-@license MIT license (mit-license.org)
+Output is in markdown
 
-@warning `Love2D` is not required anymore.
-
-@sample Output is in markdown
 ~This document was created with this module, view the source file to see example input
 ~And see the raw readme.md for example output
 
-@example Generate all documentation from the root directory:
+Generate all documentation from the root directory:
 
 ~local scriptum = require("scriptum")
 ~scriptum.start()
@@ -25,26 +17,16 @@ sure the output folder 'scriptum' in this example already exists in the source p
 ~local scriptum = require("scriptum")
 ~scriptum.start("C:/Users/me/Desktop/codebase", "scriptum")
 
-@example Create an optional header vignette with a comment block.
+Create an optional header vignette with a comment block.
 Start from the first line of the source file, and use these tags (all optional):
 
 - **(a)title** the name of the file/module (once, single line)
-- **(a)version** the current version (once, single line)
-- **(a)description** module description (once, multiple lines)
-- **(a)warning** module warning (multiple entries, multiple lines)
-- **(a)authors** the authors (once, single line)
-- **(a)copyright** the copyright line (once, single line)
-- **(a)license** the license (once, single line)
-- **(a)sample** provide sample outputs (multiple entries, multiple lines)
-- **(a)example** provide usage examples (multiple entries, multiple lines)
 
 Such as the following:
 
 ~(start)
 ~(a)title Test Module
-~(a)version 1.0
-~(a)authors Mr. Munki
-~(a)example Import and run with start()
+~Import and run with start()
 ~  local module = require("testmodule")
 ~  module.start()
 ~(end)
@@ -52,7 +34,7 @@ Such as the following:
 Backtic is used to mark a line as a code block when written in markdown.
 Empty lines can be used if required as to your preference.
 
-@example Create an API function entry with a comment block and one of more of:
+Create an API function entry with a comment block and one of more of:
 
 ~(a)param name (typing) <default> [note]
 
@@ -77,7 +59,7 @@ Where:
 
 - **name** is the parameter or return value
 - optional **(typing)** such as (boolean), (number), (function), (string)
-- optional **\<default\>** is the default value; if optional put \<nil\>; or \<required\> if so
+- optional **\<default\>** is the default value; if optional put \<nil\>, \<opt\> or \<\>
 - optional **[note]** is any further information
 
 Additionally, the (a)unpack tag can be used to automatically unpack a simple table with key/value
@@ -86,12 +68,12 @@ the module 'config'. The tag in that case is used as:
 
 ~(a)unpack config
 
-@example The mark-up used in this file requires escape symbols to generate the outputs properly:
+The mark-up used in this file requires escape symbols to generate the outputs properly:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - And **()** with **a** is used to escape the @ symbol.
 - Angled brackets are escaped with \\< and \\>
 
-@example Override a configuration parameter programmatically; insert your override values into a
+Override a configuration parameter programmatically; insert your override values into a
 new table using the matched key names:
 
 ~local overrides = {

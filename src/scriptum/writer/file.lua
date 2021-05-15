@@ -32,39 +32,34 @@ local function writeVignette(output, set, fields)
   local codeBlockOpened = false
   for i = 1, #fields do
     local field = fields[i]
-    if field ~= "title" and set[field] then
-      output:write("\n**"..firstToUpper(field).."**:")
-      if type(set[field]) == "table" then
-        local count = 0
-        local maximum = #set[field]
-        for j = 1, maximum do
-          local text = set[field][j]
-          text = text:gsub("%(a%)", "@")
-          text = text:gsub("%(start%)", "--[[")
-          text = text:gsub("%(end%)", "]]")
-          count = count + 1
-          if text == "||" then
-            output:write("\n")
-            output:write("\n**"..firstToUpper(field).."**:")
-            count = 0
-          else
-            local code = string.match(text, subpatternCode)
-            if code then
-              if count == 2 then
-                output:write("\n")
-              end
-              output:write("\n    "..code)
-              codeBlockOpened = true
-            else
-              if codeBlockOpened then
-                codeBlockOpened = false
-              end
-              output:write("\n"..text)
+    if set[field] then
+      local count = 0
+      local maximum = #set[field]
+      for j = 2, maximum do
+        local text = set[field][j]
+        text = text:gsub("%(a%)", "@")
+        text = text:gsub("%(start%)", "--[[")
+        text = text:gsub("%(end%)", "]]")
+        count = count + 1
+        if text == "||" then
+          output:write("\n")
+          output:write("\n**"..firstToUpper(field).."**:")
+          count = 0
+        else
+          local code = string.match(text, subpatternCode)
+          if code then
+            if count == 2 then
+              output:write("\n")
             end
+            output:write("\n    "..code)
+            codeBlockOpened = true
+          else
+            if codeBlockOpened then
+              codeBlockOpened = false
+            end
+            output:write("\n"..text)
           end
         end
-      else
-        output:write("\n"..set[field])
       end
       output:write("\n")
     end
@@ -79,7 +74,8 @@ function fileWriter.write(rootPath, outPath, config, module, data)
   if not file then return end
 
   if data.header then
-    file:write("# "..(data.header.title or "Vignette").."\n")
+    print(require 'inspect' (data.header))
+    file:write("# "..(data.header.description[1] or "Vignette").."\n")
     writeVignette(file, data.header, tags)
     file:write("\n")
   else
@@ -129,7 +125,7 @@ function fileWriter.write(rootPath, outPath, config, module, data)
         end
         if not v4.default then
           cat = cat.."\\*"
-        elseif v4.default == "" then
+        elseif v4.default == "" or v4.default == "nil" or v4.default == "opt" then
           v4.default = "optional"
         end
       end

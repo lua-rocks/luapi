@@ -30,14 +30,6 @@ local patternTextInAngled = openBracket2..anyText..closeBracket2
 local patternTextInSquare = openBracket3..anyText..closeBracket3
 local patternFunction = "function"..anyText..openBracket
 local patternTitle = "@title"..anyText
-local patternVersion = "@version"..anyText
-local patternDesc = "@description"..anyText
-local patternWarning = "@warning"..anyText
-local patternExample = "@example"..anyText
-local patternSample = "@sample"..anyText
-local patternAuthors = "@authors"..anyText
-local patternCopyright = "@copyright"..anyText
-local patternLicense = "@license"..anyText
 local patternAt = "@"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
 
@@ -86,37 +78,13 @@ end
 
 
 local function searchForMultilineTaggedData(set, line, multilines, multilineStarted)
-  local description = string.match(line, patternDesc)
-  if description then
+  local title = string.match(line, patternTitle)
+  if title then
     if multilineStarted then
       catchMultilineEnd(set, multilines, multilineStarted)
     end
-    multiLineField(set, "description", description)
+    multiLineField(set, "description", title)
     return "description"
-  end
-  local warning = string.match(line, patternWarning)
-  if warning then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
-    end
-    multiLineField(set, "warning", warning)
-    return "warning"
-  end
-  local sample = string.match(line, patternSample)
-  if sample then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
-    end
-    multiLineField(set, "sample", sample)
-    return "sample"
-  end
-  local example = string.match(line, patternExample)
-  if example then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
-    end
-    multiLineField(set, "example", example)
-    return "example"
   end
   return nil
 end
@@ -127,26 +95,6 @@ local function searchForTaggedData(line2, set)
   if title then
     set.title = title:match(patternLeadingSpace)
     return "title"
-  end
-  local version = string.match(line2, patternVersion)
-  if version then
-    set.version = version:match(patternLeadingSpace)
-    return "version"
-  end
-  local authors = string.match(line2, patternAuthors)
-  if authors then
-    set.authors = authors:match(patternLeadingSpace)
-    return "authors"
-  end
-  local copyright = string.match(line2, patternCopyright)
-  if copyright then
-    set.copyright = copyright:match(patternLeadingSpace)
-    return "copyright"
-  end
-  local license = string.match(line2, patternLicense)
-  if license then
-    set.license = license:match(patternLeadingSpace)
-    return "license"
   end
   return nil
 end

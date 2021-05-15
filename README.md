@@ -22,9 +22,8 @@ can't promise anything but I'll try :)
 - [ ] Custom comments style.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
-  - [ ] Remove useless tags (`copyrights`, `authors`, `version`, etc).
-  - [ ] Combine `title` and `description`.
-  - [ ] Combine or remove `sample` and `example`.
+  - [ ] Remove **all** vignette tags - just use markdown in comments instead.
+    first line in first comment is title; other lines for description.
   - [x] Any function param is **required** by default. If it has default value,
     then it is optional. Empty opt values (like this: `<>`) are acceptable.
 - [ ] Suppport for OOP: inheritance.
