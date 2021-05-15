@@ -94,13 +94,13 @@ end
 local function extractHeaderBlock(lines, startLine, data)
   if not searchForPattern(lines, startLine, 1, startBlockComment) then return end
 
-  local search3 = searchForPattern(lines, startLine, 500, endBlockComment)
+  local search = searchForPattern(lines, startLine, 500, endBlockComment)
   local set = {}
-  if search3 then
-    set.endHeader = search3
+  if search then
+    set.endHeader = search
     local multilineStarted = nil
     local multilines = {}
-    for j = 1, search3 - 2 do
+    for j = 1, search - 2 do
       local paramLineN = searchForPattern(lines, startLine + j, 1, patternAt)
       if paramLineN then -- Line is prefixed with '@' --
         local line = lines[startLine + j + paramLineN]
