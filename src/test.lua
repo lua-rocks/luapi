@@ -16,7 +16,7 @@ local module = {}
 ]]
 function module.startModule(name, verbose)
   local success = false
-  -- sample code --
+  print(name, verbose)
   return success
 end
 
@@ -25,3 +25,5 @@ package.path = package.path .. ';src/scriptum/?.lua'
 local scriptum = require 'scriptum'
 
 scriptum.start('/home/luarocks/repo/scriptum/src')
+
+return module

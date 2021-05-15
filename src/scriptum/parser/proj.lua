@@ -55,7 +55,7 @@ local function scanDir(folder, fileTree)
 end
 
 
---[[ Select and return only those files whose extensions match
+--[[ Select and return only those files whose extensions match.
 @param fileTree (table)
 @param ext (string)
 @return fileTree (table)
@@ -77,14 +77,13 @@ local function filterFiles(fileTree, ext)
 end
 
 
---[[
+--[[ Get list of all parseable files in directory.
 @param path (string) [directory full path]
 @param ext (string) [file extension]
-@return files (table) [list of file names]
+@return files (table) [list of file paths]
 ]]
-function projParser.parse(path, ext)
-  local files = filterFiles(scanDir(path), ext)
-  return files
+function projParser.getFiles(path, ext)
+  return filterFiles(scanDir(path), ext)
 end
 
 
