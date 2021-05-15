@@ -5,7 +5,7 @@ can't promise anything but I'll try :)
 
 ## Roadmap
 
-- [ ] Separate code to submodules for easier maintain.
+- [x] Separate code to submodules for easier maintain.
   - [ ] Document every function in each module.
 - [x] Remove `love` (why do we need it if it's not required?).
 - [ ] Remove all H1: `Vignette`, `API`, `Project` and replace them with:
