@@ -43,12 +43,10 @@ end
 < outFilename (string)
 ]]
 function writer.makeOutputFileName(file, config, rootPath)
-  print(file, config, rootPath)
   local outFilename = file..config.outputType
   outFilename = writer.stripOutRoot(outFilename, rootPath)
   outFilename = outFilename:gsub("/", ".")
   outFilename = outFilename:gsub(config.codeSourceType, "")
-  print(outFilename)
   return outFilename
 end
 
