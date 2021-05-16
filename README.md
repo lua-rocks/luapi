@@ -39,6 +39,6 @@ can't promise anything but I'll try :)
 These rules are not currently enforced, but they should.
 
 - Maximum line number is 80 characters.
-- Title one line comments must start with uppercase letter.
-- Title one line parameter comments must start with a lowercase.
+- One line title comments must start with uppercase letter.
+- One line parameter comments must start with a lowercase.
 - One line comments must **not** have a dot or semicolon at the end.
