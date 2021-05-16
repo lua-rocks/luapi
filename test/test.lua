@@ -24,7 +24,7 @@ end
 inspect = require 'inspect' -- luacheck: ignore
 
 -- just in case if your path is broken (usually this is no needed)
-package.path = package.path .. ';?.lua;./?/init.lua;.\\?\\init.lua'
+package.path = package.path .. ';./?.lua;./?/init.lua;.\\?.lua;.\\?\\init.lua'
 
 local scriptum = require 'src.scriptum'
 
