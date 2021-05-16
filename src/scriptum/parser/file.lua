@@ -16,7 +16,6 @@ local openBracket3 = "%["
 local closeBracket3 = "%]"
 local openBlockComment = "%-%-%[%["
 local closeBlockComment = "%]%]"
-local patternInsideBlockComment = openBlockComment..anyText..closeBlockComment
 local startBlockComment = openBlockComment..anyText
 local endBlockComment = anyText..closeBlockComment
 local patternRequire = "require"..openBracket..anyQuote..anyText..anyQuote..closeBracket
@@ -76,7 +75,9 @@ end
 
 local function searchForTitle(set, line, multilines, multilineStarted)
   local title = line:match(startBlockComment)
-    :gsub(spaceChar, ""):gsub(closeBlockComment, ""):gsub(comment, "")
+    :gsub(spaceChar, "")
+    :gsub(closeBlockComment, "")
+    :gsub(comment, "")
   if title then
     if multilineStarted then
       catchMultilineEnd(set, multilines, multilineStarted)
@@ -201,30 +202,27 @@ end
 
 
 local function extractFunctionBlock(lines, startLine, data)
-  local search2 = searchForPattern(lines, startLine, 1, patternInsideBlockComment)
-  if search2 then
-    data.api[#data.api + 1] = {line = startLine}
-  else
-    local search2b, result2b = searchForPattern(lines, startLine, 1, startBlockComment)
-    if search2b then
-      local search3 = searchForPattern(lines, startLine, 10, endBlockComment)
-      -- Functions --
-      local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine, desc = result2b}
-      local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
-      if fnL then
-        fnSet.name = fnLine
-      end
-      -- Function details --
-      if search3 then
-        for j = 1, search3 do
-          extractParam(fnSet, lines, startLine, j)
-          extractReturn(fnSet, lines, startLine, j)
-          extractUnpack(fnSet, lines, startLine, j)
-        end
-      end
-      data.api[#data.api + 1] = fnSet
+  local search2b, result2b = searchForPattern(lines, startLine, 1, startBlockComment)
+  if not search2b then return end
+
+  local search3 = searchForPattern(lines, startLine, 10, endBlockComment)
+  -- Functions --
+  local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine,
+    desc = result2b:gsub(closeBlockComment, ""):gsub(comment, "")
+  }
+  local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
+  if fnL then
+    fnSet.name = fnLine
+  end
+  -- Function details --
+  if search3 then
+    for j = 1, search3 do
+      extractParam(fnSet, lines, startLine, j)
+      extractReturn(fnSet, lines, startLine, j)
+      extractUnpack(fnSet, lines, startLine, j)
     end
   end
+  data.api[#data.api + 1] = fnSet
 end
 
 

@@ -25,11 +25,11 @@ package.path = package.path .. ';src/scriptum/?.lua'
 
 local scriptum = require 'scriptum'
 
-local model = scriptum.start('/home/luarocks/repo/scriptum/src')
+local model = scriptum.start('/home/luarocks/repo/scriptum/src') -- luacheck: ignore
 
-for key, value in pairs(model.fileData) do
-  print(key)
-  print(inspect(value.api, {depth = 4})) -- luacheck: ignore
-end
+-- for key, value in pairs(model.fileData) do
+--   print(key)
+--   print(inspect(value.api, {depth = 4})) -- luacheck: ignore
+-- end
 
 return module

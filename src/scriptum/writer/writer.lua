@@ -4,6 +4,7 @@
 local writer = {}
 
 
+--[[ Open a file to write ]]--
 function writer.open(filename)
   local file = io.open(filename, "w+")
   if not file then
