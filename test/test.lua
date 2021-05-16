@@ -20,8 +20,11 @@ function module.startModule(name, verbose)
   return success
 end
 
+-- luarocks install inspect
 inspect = require 'inspect' -- luacheck: ignore
-package.path = package.path .. ';?.lua;?/init.lua'
+
+-- just in case if your path is broken (usually this is no needed)
+package.path = package.path .. ';?.lua;?/init.lua;?\\init.lua'
 
 local scriptum = require 'src.scriptum'
 
