@@ -1,7 +1,7 @@
 --[[ Project Writer ]]--
 
 
-local writer = require 'writer.writer'
+local writer = require 'src.scriptum.writer'
 local projWriter = {}
 
 

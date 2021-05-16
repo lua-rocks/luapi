@@ -21,11 +21,11 @@ function module.startModule(name, verbose)
 end
 
 inspect = require 'inspect' -- luacheck: ignore
-package.path = package.path .. ';src/scriptum/?.lua'
+package.path = package.path .. ';?.lua;?/init.lua'
 
-local scriptum = require 'scriptum'
+local scriptum = require 'src.scriptum'
 
-local model = scriptum.start('/home/luarocks/repo/scriptum/src') -- luacheck: ignore
+local model = scriptum.start('/home/luarocks/repo/scriptum/test') -- luacheck: ignore
 
 -- for key, value in pairs(model.fileData) do
 --   print(key)

@@ -90,10 +90,10 @@ local config = {
 }
 
 
-local projParser = require 'parser.proj'
-local fileParser = require 'parser.file'
-local projWriter = require 'writer.proj'
-local fileWriter = require 'writer.file'
+local projParser = require 'src.scriptum.parser.proj'
+local fileParser = require 'src.scriptum.parser.file'
+local projWriter = require 'src.scriptum.writer.proj'
+local fileWriter = require 'src.scriptum.writer.file'
 local module = {}
 
 
