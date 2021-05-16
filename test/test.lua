@@ -29,10 +29,10 @@ package.path = package.path .. ';./?.lua;./?/init.lua;.\\?.lua;.\\?\\init.lua'
 local scriptum = require 'src.scriptum'
 
 -- generate full project documetation
--- local model = scriptum.start('/home/luarocks/repo/scriptum/src') -- luacheck: ignore
+local model = scriptum.start('/home/luarocks/repo/scriptum/src') -- luacheck: ignore
 
 -- generate minimal doc just for quick test
-local model = scriptum.start('/home/luarocks/repo/scriptum/test') -- luacheck: ignore
+-- local model = scriptum.start('/home/luarocks/repo/scriptum/test') -- luacheck: ignore
 
 -- for key, value in pairs(model.fileData) do
 --   print(key)

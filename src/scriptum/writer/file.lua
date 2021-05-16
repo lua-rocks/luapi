@@ -14,50 +14,49 @@ local patternUnpackComment2 = anyText..spaceChar..comment..anyText
 local subpatternCode = "~"..anyText
 local patternLeadingSpace = spaceChar.."*"..anyText
 local toRoot = "Back to root"
-local tags = {"description"}
 
 
---[[
-Will force a repeated header on a line that is '||', as code for a manual new line
+--[[ Write module description
+Will force a repeated header on a line that is '||', as code for a manual new line.
+> file (userdata) [io.file]
+> set ({integer=string}) [lines to write]
 ]]
-local function writeVignette(output, set, fields)
+local function writeVignette(file, set)
   local function firstToUpper(text)
     return (text:gsub("^%l", string.upper))
   end
   local codeBlockOpened = false
-  for i = 1, #fields do
-    local field = fields[i]
-    if set[field] then
-      local count = 0
-      local maximum = #set[field]
-      for j = 2, maximum do
-        local text = set[field][j]
-        text = text:gsub("%(a%)", "@")
-        text = text:gsub("%(start%)", "--[[")
-        text = text:gsub("%(end%)", "]]")
-        count = count + 1
-        if text == "||" then
-          output:write("\n")
-          output:write("\n**"..firstToUpper(field).."**:")
-          count = 0
-        else
-          local code = string.match(text, subpatternCode)
-          if code then
-            if count == 2 then
-              output:write("\n")
-            end
-            output:write("\n    "..code)
-            codeBlockOpened = true
-          else
-            if codeBlockOpened then
-              codeBlockOpened = false
-            end
-            output:write("\n"..text)
+  local field = "description"
+  if set[field] then
+    local count = 0
+    local maximum = #set[field]
+    for j = 2, maximum do
+      local text = set[field][j]
+      text = text:gsub("%(a%)", "@")
+      text = text:gsub("%(start%)", "--[[")
+      text = text:gsub("%(end%)", "]]")
+      count = count + 1
+      if text == "||" then
+        file:write("\n")
+        file:write("\n**"..firstToUpper(field).."**:")
+        count = 0
+      else
+        local code = string.match(text, subpatternCode)
+        if code then
+          if count == 2 then
+            file:write("\n")
           end
+          file:write("\n    "..code)
+          codeBlockOpened = true
+        else
+          if codeBlockOpened then
+            codeBlockOpened = false
+          end
+          file:write("\n"..text)
         end
       end
-      output:write("\n")
     end
+    file:write("\n")
   end
 end
 
@@ -162,7 +161,7 @@ function fileWriter.write(rootPath, outPath, config, module, data)
 
   if data.header then
     file:write("# "..(data.header.description[1] or "Vignette").."\n")
-    writeVignette(file, data.header, tags)
+    writeVignette(file, data.header)
     file:write("\n")
   else
     writer.stripOutRoot(data.file, rootPath):write("# "..file.."\n")

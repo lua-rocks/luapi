@@ -23,6 +23,7 @@ can't promise anything but I'll try :)
     then it is optional. Empty opt values (like this: `<>`) are acceptable.
   - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
     I no need any other tags!
+  - [ ] Use square brackets for default function params and nothing for comment.
 - [ ] Show doc only for external module fields.
 - [ ] Multiline comments for fields descriptions.
 - [ ] Throw error when function argument name doesn't match with described.

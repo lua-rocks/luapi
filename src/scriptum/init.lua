@@ -123,7 +123,7 @@ end
 
 --[[ Modify the configuration of this module programmatically
 Provide a table with keys that share the same name as the configuration parameters:
-> overrides (table) [Each key is from a valid name, the value is the override]
+> overrides (table) [each key is from a valid name, the value is the override]
 @ config
 ]]
 function module.configuration(overrides)

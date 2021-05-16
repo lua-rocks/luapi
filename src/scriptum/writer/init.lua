@@ -1,4 +1,4 @@
---[[ writer ]]--
+--[[ Writer ]]--
 
 
 local writer = {}

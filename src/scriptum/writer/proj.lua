@@ -5,6 +5,12 @@ local writer = require 'src.scriptum.writer'
 local projWriter = {}
 
 
+--[[ Write project index file
+> rootPath (string)
+> outPath (string)
+> config (table)
+> module (table)
+]]
 function projWriter.write(rootPath, outPath, config, module)
   local file = writer.open(outPath.."/README.md")
   if not file then return end
