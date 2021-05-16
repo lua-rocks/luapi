@@ -21,7 +21,7 @@ can't promise anything but I'll try :)
     First line in first comment is title; other lines for description.
   - [x] Any function param is **required** by default. If it has default value,
     then it is optional. Empty opt values (like this: `<>`) are acceptable.
-  - [ ] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
+  - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
     I no need any other tags!
 - [ ] Show doc only for external module fields.
 - [ ] Multiline comments for fields descriptions.
