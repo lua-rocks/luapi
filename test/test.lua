@@ -9,10 +9,10 @@ module.start()
 
 local module = {}
 
---[[My function for documentation
-@param name (typing) [File will be created and overwritten]
-@param verbose (boolean) <> [More output if true]
-@return success (boolean) [Fail will be handled gracefully and return false]
+--[[ My function for documentation.
+> name (typing) [file will be created and overwritten]
+> verbose (boolean) <> [more output if true]
+< success (boolean) [fail will be handled gracefully and return false]
 ]]
 function module.startModule(name, verbose)
   local success = false
@@ -26,10 +26,10 @@ package.path = package.path .. ';?.lua;?/init.lua'
 local scriptum = require 'src.scriptum'
 
 -- generate full project documetation
-local model = scriptum.start('/home/luarocks/repo/scriptum/src') -- luacheck: ignore
+-- local model = scriptum.start('/home/luarocks/repo/scriptum/src') -- luacheck: ignore
 
 -- generate minimal doc just for quick test
--- local model = scriptum.start('/home/luarocks/repo/scriptum/test') -- luacheck: ignore
+local model = scriptum.start('/home/luarocks/repo/scriptum/test') -- luacheck: ignore
 
 -- for key, value in pairs(model.fileData) do
 --   print(key)

@@ -41,7 +41,7 @@ and:
 Such as:
 
 ```lua
-(start) My function for documentation
+(start) My function for documentation.
 > name (typing) [file will be created and overwritten]
 > verbose (boolean) <true> [more output if true]
 < success (boolean) [fail will be handled gracefully and return false]
@@ -78,15 +78,14 @@ new table using the matched key names:
 local overrides = { codeSourceType = ".lua" }
 scriptum.configuration(overrides)
 ```
-
 ]]
 
 
 local config = {
-  codeSourceType = ".lua", -- Looking for these source code files
-  outputType = ".md", -- Output file suffix
-  rootPath = "", -- Search files here
-  outPath = "doc", -- Generate output here
+  codeSourceType = ".lua", -- looking for these source code files
+  outputType = ".md", -- output file suffix
+  rootPath = "", -- search files here
+  outPath = "doc", -- generate output here
 }
 
 
@@ -97,10 +96,10 @@ local fileWriter = require 'src.scriptum.writer.file'
 local module = {}
 
 
---[[Start document generation
-> rootPath (string) <""> [Path to read source code from]
-> outPath (string) <"scriptum"> [Path to output to]
-< model (table) [Project model can be used for autocomlete in an IDE]
+--[[ Start document generation.
+> rootPath (string) <""> [path to read source code from]
+> outPath (string) <"scriptum"> [path to output to]
+< model (table) [project model can be used for autocomlete in an IDE]
 ]]
 function module.start(rootPath, outPath)
   rootPath = rootPath or config.rootPath
@@ -122,7 +121,7 @@ function module.start(rootPath, outPath)
 end
 
 
---[[Modify the configuration of this module programmatically.
+--[[ Modify the configuration of this module programmatically.
 Provide a table with keys that share the same name as the configuration parameters:
 > overrides (table) [Each key is from a valid name, the value is the override]
 @ config
