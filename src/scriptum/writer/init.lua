@@ -5,8 +5,8 @@ local writer = {}
 
 
 --[[ Open a file to write
-@param filename (string) [full path to the file]
-@return file (table) [io.open result]
+> filename (string) [full path to the file]
+< file (table) [io.open result]
 ]]
 function writer.open(filename)
   local file = io.open(filename, "w+")
@@ -19,9 +19,9 @@ end
 
 
 --[[ Convert full path to relative
-@param fullPath (string)
-@param rootPath (string)
-@return relativePath (string)
+> fullPath (string)
+> rootPath (string)
+< relativePath (string)
 ]]
 function writer.stripOutRoot(fullPath, rootPath)
   if rootPath == "" then
@@ -36,7 +36,11 @@ function writer.stripOutRoot(fullPath, rootPath)
 end
 
 
-
+--[[ Create unique name for .md file
+> file (string) [full path to .lua file]
+> config (table) [package config]
+> rootPath (string) [full path to the project root]
+]]
 function writer.makeOutputFileName(file, config, rootPath)
   print(file, config, rootPath)
   local outFilename = file..config.outputType

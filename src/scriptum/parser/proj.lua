@@ -5,9 +5,9 @@ local projParser = {}
 
 
 --[[ Recursively scan directory and return list with each file path.
-@param folder (string) [folder path]
-@param fileTree (table) <{}> [table to extend]
-@return fileTree (table) [result table]
+> folder (string) [folder path]
+> fileTree (table) <{}> [table to extend]
+< fileTree (table) [result table]
 ]]
 local function scanDir(folder, fileTree)
   local function systemCheck()
@@ -54,9 +54,9 @@ end
 
 
 --[[ Select and return only those files whose extensions match.
-@param fileTree (table)
-@param ext (string)
-@return fileTree (table)
+> fileTree (table)
+> ext (string)
+< fileTree (table)
 ]]
 local function filterFiles(fileTree, ext)
   local set = {}
@@ -76,9 +76,9 @@ end
 
 
 --[[ Get list of all parseable files in directory.
-@param path (string) [directory full path]
-@param ext (string) [file extension]
-@return files (table) [list of file paths]
+> path (string) [directory full path]
+> ext (string) [file extension]
+< files (table) [list of file paths]
 ]]
 function projParser.getFiles(path, ext)
   local t = filterFiles(scanDir(path), ext)

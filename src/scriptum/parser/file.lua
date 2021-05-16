@@ -19,9 +19,9 @@ local closeBlockComment = "%]%]"
 local startBlockComment = openBlockComment..anyText
 local endBlockComment = anyText..closeBlockComment
 local patternRequire = "require"..openBracket..anyQuote..anyText..anyQuote..closeBracket
-local patternParam = "@param"..spaceChar..anyText
-local patternReturn = "@return"..spaceChar..anyText
-local patternUnpack = "@unpack"..spaceChar..anyText
+local patternParam = ">"..spaceChar..anyText
+local patternReturn = "<"..spaceChar..anyText
+local patternUnpack = "@"..spaceChar..anyText
 local patternTextToSpace = anyText..spaceChar..openBracket..anyText..closeBracket
 local patternTextInBrackets = openBracket..anyText..closeBracket
 local patternTextInAngled = openBracket2..anyText..closeBracket2
@@ -31,12 +31,12 @@ local patternLeadingSpace = spaceChar.."*"..anyText
 
 
 --[[ Search for first pattern in multiply lines.
-@param lines ({integer=string}) [list of lines]
-@param startLine (integer) [all lines before will be ignored]
-@param forLines (integer) [all lines after will be ignored]
-@param pattern (string) [search for this]
-@return line (integer) <> [line number where pattern was found]
-@return result (string) <> [matched result]
+> lines ({integer=string}) [list of lines]
+> startLine (integer) [all lines before will be ignored]
+> forLines (integer) [all lines after will be ignored]
+> pattern (string) [search for this]
+< line (integer) <> [line number where pattern was found]
+< result (string) <> [matched result]
 ]]
 local function searchForPattern(lines, startLine, forLines, pattern)
   local count = #lines
@@ -227,8 +227,8 @@ end
 
 
 --[[
-@param file (string) [path to file]
-@return data ({"file"=string,"requires"=table,"api"=table})
+> file (string) [path to file]
+< data ({"file"=string,"requires"=table,"api"=table})
 ]]
 function fileParser.parse(file)
   local data = { file = file, requires = {}, api = {} }
