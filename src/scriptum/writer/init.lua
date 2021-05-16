@@ -40,6 +40,7 @@ end
 > file (string) [full path to .lua file]
 > config (table) [package config]
 > rootPath (string) [full path to the project root]
+< outFilename (string)
 ]]
 function writer.makeOutputFileName(file, config, rootPath)
   print(file, config, rootPath)
