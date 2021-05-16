@@ -33,3 +33,12 @@ can't promise anything but I'll try :)
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
 - [ ] Clean markdown:
     no [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
+
+## Style guide
+
+These rules are not currently enforced, but they should.
+
+- Maximum line number is 80 characters.
+- Title one line comments must start with uppercase letter.
+- Title one line parameter comments must start with a lowercase.
+- One line comments must **not** have a dot or semicolon at the end.
