@@ -45,8 +45,11 @@ end
 function writer.makeOutputFileName(file, config, rootPath)
   local outFilename = file..config.outputType
   outFilename = writer.stripOutRoot(outFilename, rootPath)
-  outFilename = outFilename:gsub("/", ".")
-  outFilename = outFilename:gsub(config.codeSourceType, "")
+  outFilename = outFilename
+    :gsub("/", ".")
+    :gsub(config.codeSourceType, "")
+    :gsub(".init.", ".")
+  print(outFilename)
   return outFilename
 end
 

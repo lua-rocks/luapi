@@ -114,7 +114,7 @@ function module.start(rootPath, outPath)
   -- Generate markdown--
   projWriter.write(rootPath, outPath, config, module)
   for i, _ in ipairs(module.files) do
-    fileWriter.write(rootPath, outPath, config, module, module.fileData[module.files[i]])
+    fileWriter.write(rootPath, outPath, config, module.fileData[module.files[i]])
   end
 
   return module

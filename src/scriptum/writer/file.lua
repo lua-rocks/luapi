@@ -170,10 +170,9 @@ end
 > rootPath (string)
 > outPath (string)
 > config (table)
-> module (table)
 > data (table)
 ]]
-function fileWriter.write(rootPath, outPath, config, module, data)
+function fileWriter.write(rootPath, outPath, config, data)
   local outFilename = writer.makeOutputFileName(data.file, config, rootPath)
   outFilename = outPath.."/"..outFilename
   local file = writer.open(outFilename)
@@ -189,27 +188,12 @@ function fileWriter.write(rootPath, outPath, config, module, data)
 
   -- Requires --
   local hasREQ = false
-  for _, v2 in pairs(data.requires) do
+  for _, path in pairs(data.requires) do
     if not hasREQ then
       file:write("\n## Requires\n")
       hasREQ = true
     end
-    if v2:sub(1, 1) == "/" then
-      v2 = v2:sub(2, #v2)
-    elseif v2:sub(1, 2) == "\\\\" then
-      v2 = v2:sub(3, #v2)
-    end
-    local name = writer.stripOutRoot(v2, rootPath)
-    local link = writer.makeOutputFileName(v2, config, rootPath)
-    local isInternal = false
-    if module.fileData[v2] then
-      isInternal = true
-    end
-    if isInternal then
-      file:write("\n+ ["..name.."]("..link..")")
-    else
-      file:write("\n+ "..name.."")
-    end
+    file:write("\n+ ["..path.."]("..path..".md)")
   end
   if hasREQ then
     file:write("\n")

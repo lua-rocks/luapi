@@ -4,7 +4,7 @@
 
 ## Requires
 
-+ src.scriptum.writer
++ [src.scriptum.writer](src.scriptum.writer.md)
 
 ## API
 

@@ -4,7 +4,7 @@
 
 ## Requires
 
-+ src.scriptum.writer
++ [src.scriptum.writer](src.scriptum.writer.md)
 
 ## API
 
@@ -28,11 +28,10 @@
 > &rarr; **file** (userdata) `io.file`  
 > &rarr; **v3** (table) `document model`  
 
-**fileWriter.write** (rootPath\*, outPath\*, config\*, module\*, data\*)  
+**fileWriter.write** (rootPath\*, outPath\*, config\*, data\*)  
 > &rarr; **rootPath** (string)  
 > &rarr; **outPath** (string)  
 > &rarr; **config** (table)  
-> &rarr; **module** (table)  
 > &rarr; **data** (table)  
 
 ## Project
