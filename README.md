@@ -8,7 +8,8 @@ See examples and documentation [here](doc/README.md).
 ## Roadmap
 
 - [x] Separate code to submodules for easier maintain.
-  - [ ] Document every function in each module.
+  - [x] Document every function in each module
+    (some functions does something unknown but whatever lol).
 - [x] Remove `love` (why do we need it if it's not required?).
 - [ ] Custom markdown template:
   - [x] H1 - Title of the current module (can be only one H1 in document)

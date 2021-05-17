@@ -20,6 +20,10 @@ local patternFunction = "function"..anyText..openBracket
 local patternLeadingSpace = spaceChar.."*"..anyText
 
 
+--[[ Remove spaces or other chars from the beginning and the end of string
+str (string)
+chars (string) [" "]
+]]
 local function trim(str, chars)
   if not chars then return str:match("^[%s]*(.-)[%s]*$") end
   chars = chars:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1")
@@ -50,6 +54,11 @@ local function searchForPattern(lines, startLine, forLines, pattern)
 end
 
 
+--[[
+> set (table)
+> multilines (table)
+> multilineStarted ("description")
+]]
 local function catchMultilineEnd(set, multilines, multilineStarted)
   for i = 1, #multilines do
     set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
@@ -57,6 +66,11 @@ local function catchMultilineEnd(set, multilines, multilineStarted)
 end
 
 
+--[[
+> set (table)
+> field ("description")
+> data (string) module name
+]]
 local function multiLineField(set, field, data)
   if not set[field] then
     set[field] = {}
@@ -70,6 +84,13 @@ local function multiLineField(set, field, data)
 end
 
 
+--[[
+> set (table)
+> line (string)
+> multilines (table)
+> multilineStarted (boolean)
+< found ("description"|nil)
+]]
 local function searchForTitle(set, line, multilines, multilineStarted)
   local title = line:match(startBlockComment)
     :gsub(spaceChar, "")
@@ -86,6 +107,11 @@ local function searchForTitle(set, line, multilines, multilineStarted)
 end
 
 
+--[[
+> lines (table)
+> startLine 0
+> data (table)
+]]
 local function extractHeaderBlock(lines, startLine, data)
   if not searchForPattern(lines, startLine, 1, startBlockComment) then return end
 
@@ -115,6 +141,9 @@ local function extractHeaderBlock(lines, startLine, data)
 end
 
 
+--[[
+> file (string) full path to lua file
+]]
 local function readFileLines(file)
   local count = 0
   local lines = {}
@@ -126,6 +155,10 @@ local function readFileLines(file)
 end
 
 
+--[[
+> opt (string)
+< opt (string)
+]]
 local function correctOpt(opt)
   if opt == "" or opt == "nil" or opt == "opt" then
     opt = "optional"
@@ -134,6 +167,11 @@ local function correctOpt(opt)
 end
 
 
+--[[
+> lines (table)
+> startLine (integer)
+> data (table)
+]]
 local function extractRequires(lines, startLine, data)
   local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
   local search2 = searchForPattern(lines, startLine, 1, "scriptum")
@@ -144,6 +182,10 @@ end
 
 
 --[[
+> fnSet (table)
+> lines (table)
+> startLine (integer)
+> j (integer)
 > which ("pars"|"returns")
 ]]
 local function extractFunctionComments(fnSet, lines, startLine, j, which)
@@ -176,6 +218,12 @@ local function extractFunctionComments(fnSet, lines, startLine, j, which)
 end
 
 
+--[[
+> fnSet (table)
+> lines (table)
+> startLine (integer)
+> j (integer)
+]]
 local function extractUnpack(fnSet, lines, startLine, j)
   local match, line = searchForPattern(lines, startLine + j, 1, patternUnpack)
   if match then
@@ -199,6 +247,11 @@ local function extractUnpack(fnSet, lines, startLine, j)
 end
 
 
+--[[
+> lines (table)
+> startLine (integer)
+> data (table)
+]]
 local function extractFunctionBlock(lines, startLine, data)
   local search2b, result2b = searchForPattern(lines, startLine, 1, startBlockComment)
   if not search2b then return end
