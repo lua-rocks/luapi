@@ -61,8 +61,11 @@ local function writeVignette(file, set)
 end
 
 
+--[[
+> file (userdata) io.file
+> v3 (table) document model
+]]
 local function printFn(file, v3)
-  -- print(inspect(v3))
   file:write(" (")
   local cat = ""
   local count = 0
@@ -100,7 +103,12 @@ local function printFn(file, v3)
 end
 
 
-local function printParamsOrReturns(f, v3, which)
+--[[
+> file (userdata) io.file
+> v3 (table) document model
+> which ("pars"|"returns")
+]]
+local function printParamsOrReturns(file, v3, which)
   for _, v4 in pairs(v3[which]) do
     local text2
     if which == "pars" then
@@ -120,12 +128,17 @@ local function printParamsOrReturns(f, v3, which)
     if v4.note then
       text2 = text2.." `"..v4.note.."`"
     end
-    f:write(text2.."  \n")
+    file:write(text2.."  \n")
   end
 end
 
 
-local function printUnpack(f, v3)
+--[[
+> file (userdata) io.file
+> v3 (table) document model
+> which ("pars"|"returns")
+]]
+local function printUnpack(file, v3)
   for _, v4 in pairs(v3.unpack) do
     if v4.lines then
       for i = 1, #v4.lines do
@@ -133,27 +146,34 @@ local function printUnpack(f, v3)
         local comment1 = string.match(line, patternUnpackComment)
         local comment2 = string.match(line, patternUnpackComment2)
         if comment1 then
-          f:write("> - "..comment1:match(patternLeadingSpace))
+          file:write("> - "..comment1:match(patternLeadingSpace))
           local stripped = line:gsub(comment1, "")
           stripped = stripped:gsub(commaComment, "")
           stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-          f:write(" `"..stripped.."`  \n")
+          file:write(" `"..stripped.."`  \n")
         elseif comment2 then
-          f:write("> - "..comment2:match(patternLeadingSpace))
+          file:write("> - "..comment2:match(patternLeadingSpace))
           local stripped = line:gsub(comment2, "")
           stripped = stripped:gsub(comment, "")
           stripped = stripped:gsub("-", ""):match(patternLeadingSpace)
-          f:write(" `"..stripped.."`  \n")
+          file:write(" `"..stripped.."`  \n")
         else
-          f:write("> - "..line:gsub(",", ""):match(patternLeadingSpace).."  \n")
+          file:write("> - "..line:gsub(",", ""):match(patternLeadingSpace).."  \n")
         end
       end
     end
   end
-  f:write(">  \n")
+  file:write(">  \n")
 end
 
 
+--[[
+> rootPath (string)
+> outPath (string)
+> config (table)
+> module (table)
+> data (table)
+]]
 function fileWriter.write(rootPath, outPath, config, module, data)
   local outFilename = writer.makeOutputFileName(data.file, config, rootPath)
   outFilename = outPath.."/"..outFilename
