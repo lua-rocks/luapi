@@ -8,13 +8,12 @@
 
 ## API
 
-**projWriter.write** (rootPath\*, outPath\*, config\*, module\*)  
+**projWriter.write** (rootPath\*, outPath\*, module\*)  
 
 > Write project index file  
 >
 > &rarr; **rootPath** (string)  
 > &rarr; **outPath** (string)  
-> &rarr; **config** (table)  
 > &rarr; **module** (table)  
 
 ## Project

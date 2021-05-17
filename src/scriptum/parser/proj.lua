@@ -77,11 +77,10 @@ end
 
 --[[ Get list of all parseable files in directory.
 > path (string) directory full path
-> ext (string) file extension
 < files (table) list of file paths
 ]]
-function projParser.getFiles(path, ext)
-  local t = filterFiles(scanDir(path), ext)
+function projParser.getFiles(path)
+  local t = filterFiles(scanDir(path), '.lua')
   table.sort(t, function(a, b) return a:upper() < b:upper() end)
   return t
 end

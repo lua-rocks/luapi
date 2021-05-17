@@ -76,7 +76,7 @@ Override a configuration parameter programmatically; insert your override values
 new table using the matched key names:
 
 ```lua
-local overrides = { codeSourceType = ".lua" }
+local overrides = { outPath = "doc" }
 scriptum.configuration(overrides)
 ```
 
@@ -104,8 +104,6 @@ scriptum.configuration(overrides)
 > Modify the configuration of this module programmatically  
 >
 > &rarr; **overrides** (table) `each key is from a valid name, the value is the override`  
-> - codeSourceType = ".lua" `looking for these source code files`  
-> - outputType = ".md" `output file suffix`  
 > - rootPath = "" `search files here`  
 > - outPath = "doc" `generate output here`  
 >  

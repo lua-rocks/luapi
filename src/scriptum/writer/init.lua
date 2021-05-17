@@ -38,18 +38,16 @@ end
 
 --[[ Create unique name for .md file
 > file (string) full path to .lua file
-> config (table) package config
 > rootPath (string) full path to the project root
 < outFilename (string)
 ]]
-function writer.makeOutputFileName(file, config, rootPath)
-  local outFilename = file..config.outputType
+function writer.makeOutputFileName(file, rootPath)
+  local outFilename = file..".md"
   outFilename = writer.stripOutRoot(outFilename, rootPath)
   outFilename = outFilename
     :gsub("/", ".")
-    :gsub(config.codeSourceType, "")
+    :gsub(".lua", "")
     :gsub(".init.", ".")
-  print(outFilename)
   return outFilename
 end
 

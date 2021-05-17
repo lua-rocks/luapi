@@ -21,12 +21,11 @@
 >
 > &larr; **relativePath** (string)  
 
-**writer.makeOutputFileName** (file\*, config\*, rootPath\*) : outFilename  
+**writer.makeOutputFileName** (file\*, rootPath\*) : outFilename  
 
 > Create unique name for .md file  
 >
 > &rarr; **file** (string) `full path to .lua file`  
-> &rarr; **config** (table) `package config`  
 > &rarr; **rootPath** (string) `full path to the project root`  
 >
 > &larr; **outFilename** (string)  

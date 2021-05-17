@@ -75,15 +75,13 @@ Override a configuration parameter programmatically; insert your override values
 new table using the matched key names:
 
 ```lua
-local overrides = { codeSourceType = ".lua" }
+local overrides = { outPath = "doc" }
 scriptum.configuration(overrides)
 ```
 ]]
 
 
 local config = {
-  codeSourceType = ".lua", -- looking for these source code files
-  outputType = ".md", -- output file suffix
   rootPath = "", -- search files here
   outPath = "doc", -- generate output here
 }
@@ -108,13 +106,13 @@ function module.start(rootPath, outPath)
   module.files = {}
 
   -- Parse --
-  module.files = projParser.getFiles(rootPath, config.codeSourceType)
+  module.files = projParser.getFiles(rootPath)
   for _, f in ipairs(module.files) do module.fileData[f] = fileParser.parse(f) end
 
   -- Generate markdown--
-  projWriter.write(rootPath, outPath, config, module)
+  projWriter.write(rootPath, outPath, module)
   for i, _ in ipairs(module.files) do
-    fileWriter.write(rootPath, outPath, config, module.fileData[module.files[i]])
+    fileWriter.write(rootPath, outPath, module.fileData[module.files[i]])
   end
 
   return module

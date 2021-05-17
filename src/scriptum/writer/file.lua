@@ -172,8 +172,8 @@ end
 > config (table)
 > data (table)
 ]]
-function fileWriter.write(rootPath, outPath, config, data)
-  local outFilename = writer.makeOutputFileName(data.file, config, rootPath)
+function fileWriter.write(rootPath, outPath, data)
+  local outFilename = writer.makeOutputFileName(data.file, rootPath)
   outFilename = outPath.."/"..outFilename
   local file = writer.open(outFilename)
   if not file then return end

@@ -22,12 +22,11 @@
 >
 > &larr; **fileTree** (table)  
 
-**projParser.getFiles** (path\*, ext\*) : files  
+**projParser.getFiles** (path\*) : files  
 
 > Get list of all parseable files in directory.  
 >
 > &rarr; **path** (string) `directory full path`  
-> &rarr; **ext** (string) `file extension`  
 >
 > &larr; **files** (table) `list of file paths`  
 
