@@ -173,7 +173,7 @@ end
 > data (table)
 ]]
 function fileWriter.write(rootPath, outPath, data)
-  local outFilename = writer.fs2reqPath(data.file, rootPath)..".md"
+  local outFilename = data.req..".md"
   outFilename = outPath.."/"..outFilename
   local file = writer.open(outFilename)
   if not file then return end

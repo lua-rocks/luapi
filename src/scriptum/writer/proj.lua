@@ -10,14 +10,14 @@ local projWriter = {}
 > outPath (string)
 > module (table)
 ]]
-function projWriter.write(rootPath, outPath, module)
+function projWriter.write(outPath, module)
   local file = writer.open(outPath.."/README.md")
   if not file then return end
   file:write("# Project Code Documentation\n\n## Index\n")
   for i = 1, #module.files do
     local data = module.fileData[module.files[i]]
-    local name = writer.stripOutRoot(data.file, rootPath)
-    local link = writer.fs2reqPath(data.file, rootPath)..".md"
+    local name = data.req
+    local link = data.req..".md"
     file:write("\n+ ["..name.."]("..link..")\n")
   end
 end

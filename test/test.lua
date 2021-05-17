@@ -36,7 +36,7 @@ local model = scriptum.start('/home/luarocks/repo/scriptum') -- luacheck: ignore
 
 --for key, value in pairs(model.fileData) do
 --  print(key)
---  print(inspect(value.api, {depth = 4})) -- luacheck: ignore
+--  print(inspect(value, {depth = 3})) -- luacheck: ignore
 --end
 
 return module

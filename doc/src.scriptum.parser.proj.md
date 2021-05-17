@@ -4,6 +4,24 @@
 
 ## API
 
+**stripOutRoot** (fullPath\*, rootPath\*) : relativePath  
+
+> Convert full path to relative  
+>
+> &rarr; **fullPath** (string)  
+> &rarr; **rootPath** (string)  
+>
+> &larr; **relativePath** (string)  
+
+**fs2reqPath** (path\*, rootPath\*) : path  
+
+> Convert filesystem path to require path  
+>
+> &rarr; **path** (string) `full path to .lua file`  
+> &rarr; **rootPath** (string) `full path to the project root`  
+>
+> &larr; **path** (string)  
+
 **scanDir** (folder\*, fileTree) : fileTree  
 
 > Recursively scan directory and return list with each file path.  
@@ -22,13 +40,14 @@
 >
 > &larr; **fileTree** (table)  
 
-**projParser.getFiles** (path\*) : files  
+**projParser.getFiles** (root\*) : files, reqs  
 
 > Get list of all parseable files in directory.  
 >
-> &rarr; **path** (string) `directory full path`  
+> &rarr; **root** (string) `root directory full path`  
 >
-> &larr; **files** (table) `list of file paths`  
+> &larr; **files** (table) `list of fs-file paths`  
+> &larr; **reqs** (table) `list of require-file paths`  
 
 ## Project
 
