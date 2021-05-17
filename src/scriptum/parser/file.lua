@@ -7,16 +7,13 @@ local fileParser = {}
 local comment = "%-%-"
 local anyText = "(.*)"
 local spaceChar = "%s"
-local anyQuote = "\""
-local openBracket = "%("
-local closeBracket = "%)"
 local openBlockComment = "%-%-%[%["
 local closeBlockComment = "%]%]"
 local startBlockComment = openBlockComment..anyText
 local endBlockComment = anyText..closeBlockComment
-local patternRequire = "require"..openBracket..anyQuote..anyText..anyQuote..closeBracket
+local patternRequire = "require"..spaceChar..anyText
 local patternUnpack = "@"..spaceChar..anyText
-local patternFunction = "function"..anyText..openBracket
+local patternFunction = "function"..anyText.."%("
 local patternLeadingSpace = spaceChar.."*"..anyText
 
 
@@ -171,12 +168,12 @@ end
 > data (table)
 ]]
 local function extractRequires(lines, startLine, data)
-  local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
-  -- local search2 = searchForPattern(lines, startLine, 1, "scriptum")
-  -- if search1 and not search2 then
-  if search1 then
-    data.requires[#data.requires + 1] = "/"..result1
-  end
+  local _, result = searchForPattern(lines, startLine, 1, patternRequire)
+  if not result then return end
+
+  result = result:match("%'"..anyText.."%'") or result:match('%"'..anyText..'%"')
+  print(result)
+  data.requires[#data.requires + 1] = result
 end
 
 

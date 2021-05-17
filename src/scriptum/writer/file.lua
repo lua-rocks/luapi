@@ -191,7 +191,7 @@ function fileWriter.write(rootPath, outPath, config, module, data)
   local hasREQ = false
   for _, v2 in pairs(data.requires) do
     if not hasREQ then
-      file:write("\n# Requires\n")
+      file:write("\n## Requires\n")
       hasREQ = true
     end
     if v2:sub(1, 1) == "/" then
@@ -206,9 +206,9 @@ function fileWriter.write(rootPath, outPath, config, module, data)
       isInternal = true
     end
     if isInternal then
-      v2:write("\n+ ["..name.."]("..link..")")
+      file:write("\n+ ["..name.."]("..link..")")
     else
-      v2:write("\n+ "..name.."")
+      file:write("\n+ "..name.."")
     end
   end
   if hasREQ then

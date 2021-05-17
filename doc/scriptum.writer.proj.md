@@ -2,6 +2,10 @@
 
 
 
+## Requires
+
++ src.scriptum.writer
+
 ## API
 
 **projWriter.write** (rootPath\*, outPath\*, config\*, module\*)  

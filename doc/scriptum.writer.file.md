@@ -2,6 +2,10 @@
 
 
 
+## Requires
+
++ src.scriptum.writer
+
 ## API
 
 **writeVignette** (file\*, set\*)  

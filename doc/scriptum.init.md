@@ -81,6 +81,13 @@ scriptum.configuration(overrides)
 ```
 
 
+## Requires
+
++ src.scriptum.parser.proj
++ src.scriptum.parser.file
++ src.scriptum.writer.proj
++ src.scriptum.writer.file
+
 ## API
 
 **start** (rootPath, outPath) : model  
