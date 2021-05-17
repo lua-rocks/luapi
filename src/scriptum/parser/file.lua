@@ -172,7 +172,6 @@ local function extractRequires(lines, startLine, data)
   if not result then return end
 
   result = result:match("%'"..anyText.."%'") or result:match('%"'..anyText..'%"')
-  print(result)
   data.requires[#data.requires + 1] = result
 end
 
