@@ -14,17 +14,18 @@ can't promise anything but I'll try :)
   - [ ] You can make links across all you files or just in one local file
     **to it parts** in this way: `[link_name](#header_name_in_current_file)` or
     `[link_name](other_file#header_name)`. That's why fields must be a headers.
-- [ ] Custom comments style.
+- [x] Custom comments style.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
   - [x] Remove **all** vignette tags - just use markdown in comments instead.
     First line in first comment is title; other lines for description.
-  - [x] Any function param is **required** by default. If it has default value,
-    then it is optional. Empty opt values (like this: `<>`) are acceptable.
   - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
     I no need any other tags!
-  - [ ] Square brackets for default function params and nothing for comment.
-    - [ ] Many brackets in one line causes bugs - use only first matched.
+  - [x] Square brackets for default function params and nothing for comment.
+    - [x] Many brackets in one line causes bugs - use only first matched.
+    - [x] Any function param is required by default. You don't need to
+      specify this explicitly! If it has default value, then it's optional.
+      Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
 - [ ] Show doc only for external module fields.
 - [ ] Multiline comments for fields descriptions.
 - [ ] Throw error when function argument name doesn't match with described.

@@ -32,19 +32,19 @@ Empty lines can be used if required as to your preference.
 
 Create an API function entry with a comment block and one of more of:
 
-~> name (typing) <default> [note]
+~> name (typing) [default] note
 
 and:
 
-~< name (typing) [note]
+~< name (typing) note
 
 Such as:
 
 ```lua
 (start) My function for documentation
-> name (typing) [file will be created and overwritten]
-> verbose (boolean) <true> [more output if true]
-< success (boolean) [fail will be handled gracefully and return false]
+> name (typing) file will be created and overwritten
+> verbose (boolean) [true] more output if true
+< success (boolean) fail will be handled gracefully and return false
 (end)
 function module.startModule(name, verbose)
   local success = false
@@ -57,8 +57,8 @@ Where:
 
 - **name** is the parameter or return value
 - optional **(typing)** such as (boolean), (number), (function), (string)
-- optional **\<default\>** is the default value; if optional put \<nil\>, \<opt\> or \<\>
-- optional **[note]** is any further information
+- optional **\[default\]** is the default value; if optional put \[nil\], \[opt\] or \[\]
+- optional **note** is any further information
 
 Additionally, the **(a)** tag can be used to automatically unpack a simple table with key/value
 pairs, where each line is one pair ah a comment describing the key. This is used, for example, with
@@ -97,9 +97,9 @@ local module = {}
 
 
 --[[ Start document generation
-> rootPath (string) <""> [path to read source code from]
-> outPath (string) <"scriptum"> [path to output to]
-< model (table) [project model can be used for autocomlete in an IDE]
+> rootPath (string) [""] path to read source code from
+> outPath (string) ["scriptum"] path to output to
+< model (table) project model can be used for autocomlete in an IDE
 ]]
 function module.start(rootPath, outPath)
   rootPath = rootPath or config.rootPath
@@ -123,7 +123,7 @@ end
 
 --[[ Modify the configuration of this module programmatically
 Provide a table with keys that share the same name as the configuration parameters:
-> overrides (table) [each key is from a valid name, the value is the override]
+> overrides (table) each key is from a valid name, the value is the override
 @ config
 ]]
 function module.configuration(overrides)

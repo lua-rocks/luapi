@@ -18,8 +18,8 @@ local toRoot = "Back to root"
 
 --[[ Write module description
 Will force a repeated header on a line that is '||', as code for a manual new line.
-> file (userdata) [io.file]
-> set ({integer=string}) [lines to write]
+> file (userdata) io.file
+> set ({integer=string}) lines to write
 ]]
 local function writeVignette(file, set)
   local function firstToUpper(text)
@@ -114,7 +114,7 @@ local function printParamsOrReturns(f, v3, which)
       text2 = text2.." ("..v4.typing..")"
     end
     if v4.default then
-      text2 = text2.." <*"..v4.default.."*>"
+      text2 = text2.." *["..v4.default.."]*"
     end
     if v4.note then
       text2 = text2.." `"..v4.note.."`"

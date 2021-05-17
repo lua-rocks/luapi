@@ -10,33 +10,23 @@ local spaceChar = "%s"
 local anyQuote = "\""
 local openBracket = "%("
 local closeBracket = "%)"
-local openBracket2 = "%<"
-local closeBracket2 = "%>"
-local openBracket3 = "%["
-local closeBracket3 = "%]"
 local openBlockComment = "%-%-%[%["
 local closeBlockComment = "%]%]"
 local startBlockComment = openBlockComment..anyText
 local endBlockComment = anyText..closeBlockComment
 local patternRequire = "require"..openBracket..anyQuote..anyText..anyQuote..closeBracket
-local patternParam = ">"..spaceChar..anyText
-local patternReturn = "<"..spaceChar..anyText
 local patternUnpack = "@"..spaceChar..anyText
-local patternTextToSpace = anyText..spaceChar..openBracket..anyText..closeBracket
-local patternTextInBrackets = openBracket..anyText..closeBracket
-local patternTextInAngled = openBracket2..anyText..closeBracket2
-local patternTextInSquare = openBracket3..anyText..closeBracket3
 local patternFunction = "function"..anyText..openBracket
 local patternLeadingSpace = spaceChar.."*"..anyText
 
 
 --[[ Search for first pattern in multiply lines.
-> lines ({integer=string}) [list of lines]
-> startLine (integer) [all lines before will be ignored]
-> forLines (integer) [all lines after will be ignored]
-> pattern (string) [search for this]
-< line (integer) <> [line number where pattern was found]
-< result (string) <> [matched result]
+> lines ({integer=string}) list of lines
+> startLine (integer) all lines before will be ignored
+> forLines (integer) all lines after will be ignored
+> pattern (string) search for this
+< line (integer) [] line number where pattern was found
+< result (string) [] matched result
 ]]
 local function searchForPattern(lines, startLine, forLines, pattern)
   local count = #lines
@@ -145,35 +135,35 @@ local function extractRequires(lines, startLine, data)
   end
 end
 
-
-local function extractParam(fnSet, lines, startLine, j)
-  local match, line = searchForPattern(lines, startLine + j, 1, patternParam)
+--[[
+> which ("pars"|"returns")
+]]
+local function extractFunctionComments(fnSet, lines, startLine, j, which)
+  local pattern
+  if which == "pars" then pattern = ">" else pattern = "<" end
+  local match, line =
+    searchForPattern(lines, startLine + j, 1, pattern..spaceChar..anyText)
   if match then
-    if not fnSet.pars then
-      fnSet.pars = {}
+    if not fnSet[which] then
+      fnSet[which] = {}
     end
     local par = {}
-    par.name = string.match(line, patternTextToSpace)
-    par.typing = string.match(line, patternTextInBrackets)
-    par.default = correctOpt(string.match(line, patternTextInAngled))
-    par.note = string.match(line, patternTextInSquare)
-    fnSet.pars[#fnSet.pars + 1] = par
-  end
-end
-
-
-local function extractReturn(fnSet, lines, startLine, j)
-  local match, line = searchForPattern(lines, startLine + j, 1, patternReturn)
-  if match then
-    if not fnSet.returns then
-      fnSet.returns = {}
+    local n, m
+    n = line:find(spaceChar)
+    par.name = line:sub(1, n-1)
+    m = line:find("(", n, true)
+    if m then
+      n = line:find(")", n, true)
+      par.typing = line:sub(m+1, n-1)
     end
-    local ret = {}
-    ret.name = string.match(line, patternTextToSpace)
-    ret.typing = string.match(line, patternTextInBrackets)
-    ret.default = correctOpt(string.match(line, patternTextInAngled))
-    ret.note = string.match(line, patternTextInSquare)
-    fnSet.returns[#fnSet.returns + 1] = ret
+    m = line:find("[", n, true)
+    if m then
+      n = line:find("]", n, true)
+      par.default = correctOpt(line:sub(m+1, n-1))
+    end
+    par.note = line:sub(n+1, -1):match(patternLeadingSpace)
+    if par.note == '' then par.note = nil end
+    fnSet[which][#fnSet[which] + 1] = par
   end
 end
 
@@ -217,8 +207,8 @@ local function extractFunctionBlock(lines, startLine, data)
   -- Function details --
   if search3 then
     for j = 1, search3 do
-      extractParam(fnSet, lines, startLine, j)
-      extractReturn(fnSet, lines, startLine, j)
+      extractFunctionComments(fnSet, lines, startLine, j, "pars")
+      extractFunctionComments(fnSet, lines, startLine, j, "returns")
       extractUnpack(fnSet, lines, startLine, j)
     end
   end
@@ -227,7 +217,7 @@ end
 
 
 --[[
-> file (string) [path to file]
+> file (string) path to file
 < data ({"file"=string,"requires"=table,"api"=table})
 ]]
 function fileParser.parse(file)
