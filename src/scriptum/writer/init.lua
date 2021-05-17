@@ -24,31 +24,26 @@ end
 < relativePath (string)
 ]]
 function writer.stripOutRoot(fullPath, rootPath)
-  if rootPath == "" then
-    return fullPath
-  end
-  local cleanrootPath = rootPath
-  cleanrootPath = cleanrootPath:gsub("\\\\", "/")
-  cleanrootPath = cleanrootPath:gsub("\\", "/")
-  fullPath = fullPath:gsub(cleanrootPath.."/", "")
-  fullPath = fullPath:gsub(cleanrootPath, "")
+  if rootPath == "" then return fullPath end
+  rootPath = rootPath:gsub("\\\\", "/"):gsub("\\", "/")
+  fullPath = fullPath:gsub(rootPath.."/", ""):gsub(rootPath, "")
   return fullPath
 end
 
 
---[[ Create unique name for .md file
-> file (string) full path to .lua file
+--[[ Convert filesystem path to require path
+> path (string) full path to .lua file
 > rootPath (string) full path to the project root
-< outFilename (string)
+< path (string)
 ]]
-function writer.makeOutputFileName(file, rootPath)
-  local outFilename = file..".md"
-  outFilename = writer.stripOutRoot(outFilename, rootPath)
-  outFilename = outFilename
+function writer.fs2reqPath(path, rootPath)
+  path = writer.stripOutRoot(path, rootPath)
+  path = path
     :gsub("/", ".")
     :gsub(".lua", "")
-    :gsub(".init.", ".")
-  return outFilename
+    :gsub(".init", "")
+  print(path)
+  return path
 end
 
 

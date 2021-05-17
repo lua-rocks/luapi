@@ -17,7 +17,7 @@ function projWriter.write(rootPath, outPath, module)
   for i = 1, #module.files do
     local data = module.fileData[module.files[i]]
     local name = writer.stripOutRoot(data.file, rootPath)
-    local link = writer.makeOutputFileName(data.file, rootPath)
+    local link = writer.fs2reqPath(data.file, rootPath)..".md"
     file:write("\n+ ["..name.."]("..link..")\n")
   end
 end

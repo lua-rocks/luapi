@@ -21,14 +21,14 @@
 >
 > &larr; **relativePath** (string)  
 
-**writer.makeOutputFileName** (file\*, rootPath\*) : outFilename  
+**writer.fs2reqPath** (path\*, rootPath\*) : path  
 
-> Create unique name for .md file  
+> Convert filesystem path to require path  
 >
-> &rarr; **file** (string) `full path to .lua file`  
+> &rarr; **path** (string) `full path to .lua file`  
 > &rarr; **rootPath** (string) `full path to the project root`  
 >
-> &larr; **outFilename** (string)  
+> &larr; **path** (string)  
 
 ## Project
 
