@@ -57,29 +57,27 @@ end
 --[[
 > set (table)
 > multilines (table)
-> multilineStarted ("description")
 ]]
-local function catchMultilineEnd(set, multilines, multilineStarted)
+local function catchMultilineEnd(set, multilines)
   for i = 1, #multilines do
-    set[multilineStarted][#set[multilineStarted] + 1] = multilines[i]
+    set.description[#set.description + 1] = multilines[i]
   end
 end
 
 
 --[[
 > set (table)
-> field ("description")
 > data (string) module name
 ]]
-local function multiLineField(set, field, data)
-  if not set[field] then
-    set[field] = {}
+local function multiLineField(set, data)
+  if not set.description then
+    set.description = {}
   else
-    set[field][#set[field] + 1] = "||"
+    set.description[#set.description + 1] = "||"
   end
   local text = data:match(patternLeadingSpace)
   if text ~= "" then
-    set[field][#set[field] + 1] = text
+    set.description[#set.description + 1] = text
   end
 end
 
@@ -98,9 +96,9 @@ local function searchForTitle(set, line, multilines, multilineStarted)
     :gsub(comment, "")
   if title then
     if multilineStarted then
-      catchMultilineEnd(set, multilines, multilineStarted)
+      catchMultilineEnd(set, multilines)
     end
-    multiLineField(set, "description", title)
+    multiLineField(set, title)
     return "description"
   end
   return nil
@@ -134,7 +132,7 @@ local function extractHeaderBlock(lines, startLine, data)
       end
     end
     if multilineStarted then -- On end block, but check if a multiline catch wasn't done --
-      catchMultilineEnd(set, multilines, multilineStarted)
+      catchMultilineEnd(set, multilines)
     end
   end
   data.header = set
@@ -174,8 +172,9 @@ end
 ]]
 local function extractRequires(lines, startLine, data)
   local search1, result1 = searchForPattern(lines, startLine, 1, patternRequire)
-  local search2 = searchForPattern(lines, startLine, 1, "scriptum")
-  if search1 and not search2 then
+  -- local search2 = searchForPattern(lines, startLine, 1, "scriptum")
+  -- if search1 and not search2 then
+  if search1 then
     data.requires[#data.requires + 1] = "/"..result1
   end
 end

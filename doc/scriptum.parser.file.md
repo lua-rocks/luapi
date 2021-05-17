@@ -20,14 +20,12 @@
 > &larr; **line** (integer) *[optional]* `line number where pattern was found`  
 > &larr; **result** (string) *[optional]* `matched result`  
 
-**catchMultilineEnd** (set\*, multilines\*, multilineStarted\*)  
+**catchMultilineEnd** (set\*, multilines\*)  
 > &rarr; **set** (table)  
 > &rarr; **multilines** (table)  
-> &rarr; **multilineStarted** ("description")  
 
-**multiLineField** (set\*, field\*, data\*)  
+**multiLineField** (set\*, data\*)  
 > &rarr; **set** (table)  
-> &rarr; **field** ("description")  
 > &rarr; **data** (string) `module name`  
 
 **searchForTitle** (set\*, line\*, multilines\*, multilineStarted\*) : found  
