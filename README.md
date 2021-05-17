@@ -40,6 +40,13 @@ See examples and documentation [here](doc/README.md).
 - [ ] Clean markdown:
     no [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
 
+<details>
+  <summary>Spoiler warning!</summary>
+
+- [ ] Hide internal module fields under spoiler.
+
+</details>
+
 ## Style guide
 
 These rules are not currently enforced, but they should.
