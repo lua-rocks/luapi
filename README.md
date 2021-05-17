@@ -1,7 +1,7 @@
 # Scriptum fork (WIP)
 
 I'm not sure if I can find a time and superpowers to do all these things,
-can't promise anything but I'll try :)
+can't promise anything but I'll try 🤡
 
 See examples and documentation [here](doc/README.md).
 
