@@ -33,7 +33,7 @@ local function writeVignette(file, set)
     for j = 2, maximum do
       local text = set[field][j]
       text = text:gsub("%(a%)", "@")
-      text = text:gsub("%(start%)", "--[[")
+      text = text:gsub("%(start%)", "--".."[[")
       text = text:gsub("%(end%)", "]]")
       count = count + 1
       if text == "||" then
@@ -61,8 +61,9 @@ local function writeVignette(file, set)
 end
 
 
-local function printFn(f, v3)
-  f:write(" (")
+local function printFn(file, v3)
+  -- print(inspect(v3))
+  file:write(" (")
   local cat = ""
   local count = 0
   for _, v4 in pairs(v3.pars) do
@@ -78,9 +79,9 @@ local function printFn(f, v3)
       end
     end
   end
-  f:write(cat..")")
+  file:write(cat..")")
   if v3.returns then
-    f:write(" : ")
+    file:write(" : ")
     cat = ""
     count = 0
     for _, v4 in pairs(v3.returns) do
@@ -93,9 +94,9 @@ local function printFn(f, v3)
         end
       end
     end
-    f:write(cat)
+    file:write(cat)
   end
-  f:write("  \n")
+  file:write("  \n")
 end
 
 

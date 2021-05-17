@@ -6,7 +6,7 @@
 
 **writer.open** (filename\*) : file  
 
->  Open a file to write  
+> Open a file to write  
 >
 > &rarr; **filename** (string) `full path to the file`  
 >
@@ -14,7 +14,7 @@
 
 **writer.stripOutRoot** (fullPath\*, rootPath\*) : relativePath  
 
->  Convert full path to relative  
+> Convert full path to relative  
 >
 > &rarr; **fullPath** (string)  
 > &rarr; **rootPath** (string)  
@@ -23,7 +23,7 @@
 
 **writer.makeOutputFileName** (file\*, config\*, rootPath\*) : outFilename  
 
->  Create unique name for .md file  
+> Create unique name for .md file  
 >
 > &rarr; **file** (string) `full path to .lua file`  
 > &rarr; **config** (table) `package config`  

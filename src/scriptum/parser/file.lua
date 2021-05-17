@@ -20,6 +20,13 @@ local patternFunction = "function"..anyText..openBracket
 local patternLeadingSpace = spaceChar.."*"..anyText
 
 
+local function trim(str, chars)
+  if not chars then return str:match("^[%s]*(.-)[%s]*$") end
+  chars = chars:gsub("[%(%)%.%%%+%-%*%?%[%]%^%$]", "%%%1")
+  return str:match("^[" .. chars .. "]*(.-)[" .. chars .. "]*$")
+end
+
+
 --[[ Search for first pattern in multiply lines.
 > lines ({integer=string}) list of lines
 > startLine (integer) all lines before will be ignored
@@ -135,6 +142,7 @@ local function extractRequires(lines, startLine, data)
   end
 end
 
+
 --[[
 > which ("pars"|"returns")
 ]]
@@ -161,7 +169,7 @@ local function extractFunctionComments(fnSet, lines, startLine, j, which)
       n = line:find("]", n, true)
       par.default = correctOpt(line:sub(m+1, n-1))
     end
-    par.note = line:sub(n+1, -1):match(patternLeadingSpace)
+    par.note = trim(line:sub(n+1, -1))
     if par.note == '' then par.note = nil end
     fnSet[which][#fnSet[which] + 1] = par
   end
@@ -200,9 +208,11 @@ local function extractFunctionBlock(lines, startLine, data)
   local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine,
     desc = result2b:gsub(closeBlockComment, ""):gsub(comment, "")
   }
+  fnSet.desc=trim(fnSet.desc)
+  if fnSet.desc == "" then fnSet.desc = nil end
   local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
   if fnL then
-    fnSet.name = fnLine
+    fnSet.name = trim(fnLine)
   end
   -- Function details --
   if search3 then

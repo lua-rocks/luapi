@@ -6,7 +6,7 @@
 
 **projWriter.write** (rootPath\*, outPath\*, config\*, module\*)  
 
->  Write project index file  
+> Write project index file  
 >
 > &rarr; **rootPath** (string)  
 > &rarr; **outPath** (string)  

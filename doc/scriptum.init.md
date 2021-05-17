@@ -85,7 +85,7 @@ scriptum.configuration(overrides)
 
 **start** (rootPath, outPath) : model  
 
->  Start document generation  
+> Start document generation  
 >
 > &rarr; **rootPath** (string) *[""]* `path to read source code from`  
 > &rarr; **outPath** (string) *["scriptum"]* `path to output to`  
@@ -94,7 +94,7 @@ scriptum.configuration(overrides)
 
 **configuration** (overrides\*)  
 
->  Modify the configuration of this module programmatically  
+> Modify the configuration of this module programmatically  
 >
 > &rarr; **overrides** (table) `each key is from a valid name, the value is the override`  
 > - codeSourceType = ".lua" `looking for these source code files`  

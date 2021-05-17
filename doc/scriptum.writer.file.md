@@ -6,7 +6,7 @@
 
 **writeVignette** (file\*, set\*)  
 
->  Write module description  
+> Write module description  
 >
 > &rarr; **file** (userdata) `io.file`  
 > &rarr; **set** ({integer=string}) `lines to write`  
