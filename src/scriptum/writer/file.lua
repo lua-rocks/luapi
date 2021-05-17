@@ -136,7 +136,6 @@ end
 --[[
 > file (userdata) io.file
 > v3 (table) document model
-> which ("pars"|"returns")
 ]]
 local function printUnpack(file, v3)
   for _, v4 in pairs(v3.unpack) do

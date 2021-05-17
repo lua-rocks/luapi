@@ -109,7 +109,7 @@ end
 
 --[[
 > lines (table)
-> startLine 0
+> startLine (integer) 0
 > data (table)
 ]]
 local function extractHeaderBlock(lines, startLine, data)

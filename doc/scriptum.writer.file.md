@@ -20,10 +20,9 @@
 > &rarr; **v3** (table) `document model`  
 > &rarr; **which** ("pars"|"returns")  
 
-**printUnpack** (file\*, v3\*, which\*)  
+**printUnpack** (file\*, v3\*)  
 > &rarr; **file** (userdata) `io.file`  
 > &rarr; **v3** (table) `document model`  
-> &rarr; **which** ("pars"|"returns")  
 
 **fileWriter.write** (rootPath\*, outPath\*, config\*, module\*, data\*)  
 > &rarr; **rootPath** (string)  

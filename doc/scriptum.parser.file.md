@@ -40,7 +40,7 @@
 
 **extractHeaderBlock** (lines\*, startLine\*, data\*)  
 > &rarr; **lines** (table)  
-> &rarr; **startLine** `0`  
+> &rarr; **startLine** (integer) `0`  
 > &rarr; **data** (table)  
 
 **readFileLines** (file\*)  
