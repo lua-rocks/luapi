@@ -15,9 +15,8 @@ function projWriter.write(outPath, module)
   if not file then return end
   file:write("# Project Code Documentation\n\n## Index\n")
   for i = 1, #module.files do
-    local data = module.fileData[module.files[i]]
-    local name = data.req
-    local link = data.req..".md"
+    local name = module.reqs[i]
+    local link = name..".md"
     file:write("\n+ ["..name.."]("..link..")\n")
   end
 end

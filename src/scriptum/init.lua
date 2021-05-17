@@ -104,19 +104,18 @@ function module.start(rootPath, outPath)
   outPath = outPath or config.outPath
   module.fileData = {}
   module.files = {}
+  module.reqs = {}
 
   -- Parse --
-  local reqs
-  module.files, reqs = projParser.getFiles(rootPath)
-  for k, f in ipairs(module.files) do
+  module.files, module.reqs = projParser.getFiles(rootPath)
+  for _, f in ipairs(module.files) do
     module.fileData[f] = fileParser.parse(f)
-    module.fileData[f]['req'] = reqs[k]
   end
 
   -- Generate markdown--
   projWriter.write(outPath, module)
   for i, _ in ipairs(module.files) do
-    fileWriter.write(rootPath, outPath, module.fileData[module.files[i]])
+    fileWriter.write(rootPath, outPath, module, i)
   end
 
   return module

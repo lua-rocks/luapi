@@ -34,9 +34,9 @@ local model = scriptum.start('/home/luarocks/repo/scriptum') -- luacheck: ignore
 -- generate minimal doc just for quick test
 -- local model = scriptum.start('/home/luarocks/repo/scriptum/test') -- luacheck: ignore
 
---for key, value in pairs(model.fileData) do
---  print(key)
---  print(inspect(value, {depth = 3})) -- luacheck: ignore
---end
+-- for key, value in pairs(model.fileData) do
+--   print(key)
+--   print(inspect(value, {depth = 3})) -- luacheck: ignore
+-- end
 
 return module

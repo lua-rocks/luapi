@@ -105,15 +105,17 @@ end
 
 --[[ Get list of all parseable files in directory.
 > root (string) root directory full path
-< files (table) list of fs-file paths
-< reqs (table) list of require-file paths
+< files ({integer=string}) list of fs-file paths
+< reqs (table) list of req-file paths
 ]]
 function projParser.getFiles(root)
   local files = filterFiles(scanDir(root), '.lua')
   table.sort(files, function(a, b) return a:upper() < b:upper() end)
   local reqs = {}
   for index, path in ipairs(files) do
-    reqs[index] = fs2reqPath(path, root)
+    path = fs2reqPath(path, root)
+    reqs[path] = index
+    reqs[index] = path
   end
   return files, reqs
 end

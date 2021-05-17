@@ -46,8 +46,8 @@
 >
 > &rarr; **root** (string) `root directory full path`  
 >
-> &larr; **files** (table) `list of fs-file paths`  
-> &larr; **reqs** (table) `list of require-file paths`  
+> &larr; **files** ({integer=string}) `list of fs-file paths`  
+> &larr; **reqs** (table) `list of req-file paths`  
 
 ## Project
 

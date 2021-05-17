@@ -172,8 +172,9 @@ end
 > config (table)
 > data (table)
 ]]
-function fileWriter.write(rootPath, outPath, data)
-  local outFilename = data.req..".md"
+function fileWriter.write(rootPath, outPath, module, i)
+  local data = module.fileData[module.files[i]]
+  local outFilename = module.reqs[i]..".md"
   outFilename = outPath.."/"..outFilename
   local file = writer.open(outFilename)
   if not file then return end
@@ -188,12 +189,17 @@ function fileWriter.write(rootPath, outPath, data)
 
   -- Requires --
   local hasREQ = false
-  for _, path in pairs(data.requires) do
+  for _, req in pairs(data.requires) do
     if not hasREQ then
       file:write("\n## Requires\n")
       hasREQ = true
     end
-    file:write("\n+ ["..path.."]("..path..".md)")
+    if module.reqs[req] then
+      file:write("\n+ ["..req.."]("..req..".md)")
+    else
+      file:write("\n+ "..req)
+    end
+
   end
   if hasREQ then
     file:write("\n")

@@ -10,7 +10,7 @@ module.start()
 
 ## Requires
 
-+ [inspect](inspect.md)
++ inspect
 + [src.scriptum](src.scriptum.md)
 
 ## API
