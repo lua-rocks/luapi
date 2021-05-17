@@ -3,7 +3,7 @@
 I'm not sure if I can find a time and superpowers to do all these things,
 can't promise anything but I'll try :)
 
-Examples and documentation are [here](doc/README.md).
+Examples and documentation [here](doc/README.md).
 
 ## Roadmap
 
