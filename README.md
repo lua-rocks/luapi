@@ -7,8 +7,10 @@ See examples and documentation [here](doc/README.md).
 
 ## Roadmap
 
-- [ ] Find and fix bugs.
+- [ ] Find and fix bugs; improve perfomance and readability.
   - [x] 2 spaces at the end of each line is a bad idea, use <br/> instead.
+  - [ ] File parser use `multilineSearch` 10 times but in can be used only once
+    for all extract functions to make parsing 10 times faster! 🙀
 - [x] Separate code to submodules for easier maintain.
   - [ ] Document every function in each module.
 - [x] Remove `love` (why do we need it if it's not required?).
