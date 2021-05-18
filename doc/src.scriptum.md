@@ -80,7 +80,6 @@ local overrides = { outPath = "doc" }
 scriptum.configuration(overrides)
 ```
 
-
 ## Requires
 
 + scriptum.parser.proj
@@ -90,21 +89,21 @@ scriptum.configuration(overrides)
 
 ## API
 
-**start** (rootPath\*, pathFilters, outPath) : model  
+**start** (rootPath\*, pathFilters, outPath) : model
 
-> Start document generation  
+> Start document generation
 >
-> &rarr; **rootPath** (string) `path to read source code from`  
-> &rarr; **pathFilters** (table) *[optional]* `search files only in these subdirs`  
-> &rarr; **outPath** (string) *["doc"]* `path to output to`  
+> &rarr; **rootPath** (string) `path to read source code from`<br/>
+> &rarr; **pathFilters** (table) *[optional]* `search files only in these subdirs`<br/>
+> &rarr; **outPath** (string) *["doc"]* `path to output to`<br/>
 >
-> &larr; **model** (table) `project model can be used for autocomlete in an IDE`  
+> &larr; **model** (table) `project model can be used for autocomlete in an IDE`<br/>
 
-**configuration** (overrides\*)  
+**configuration** (overrides\*)
 
-> Modify the configuration of this module programmatically  
+> Modify the configuration of this module programmatically
 >
-> &rarr; **overrides** (table) `each key is from a valid name, the value is the override`  
+> &rarr; **overrides** (table) `each key is from a valid name, the value is the override`<br/>
 > - rootPath = nil `search files here`  
 > - pathFilters = nil `extra search filters`  
 > - outPath = "doc" `generate output here`  

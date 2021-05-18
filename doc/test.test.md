@@ -7,7 +7,6 @@ module.start()
 ```
     I'm not a code
 
-
 ## Requires
 
 + inspect
@@ -15,14 +14,14 @@ module.start()
 
 ## API
 
-**startModule** (name\*, verbose) : success  
+**startModule** (name\*, verbose) : success
 
-> My function for documentation  
+> My function for documentation
 >
-> &rarr; **name** (typing) `file will be created and overwritten`  
-> &rarr; **verbose** (boolean) *[optional]* `more output if true`  
+> &rarr; **name** (typing) `file will be created and overwritten`<br/>
+> &rarr; **verbose** (boolean) *[optional]* `more output if true`<br/>
 >
-> &larr; **success** (boolean) `fail will be handled gracefully and return false`  
+> &larr; **success** (boolean) `fail will be handled gracefully and return false`<br/>
 
 ## Project
 

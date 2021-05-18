@@ -1,16 +1,15 @@
 # Writer
 
 
-
 ## API
 
-**writer.open** (filename\*) : file  
+**writer.open** (filename\*) : file
 
-> Open a file to write  
+> Open a file to write
 >
-> &rarr; **filename** (string) `full path to the file`  
+> &rarr; **filename** (string) `full path to the file`<br/>
 >
-> &larr; **file** (table) `io.open result`  
+> &larr; **file** (table) `io.open result`<br/>
 
 ## Project
 

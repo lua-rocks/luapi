@@ -56,7 +56,6 @@ local function writeVignette(file, set)
         end
       end
     end
-    file:write("\n")
   end
 end
 
@@ -99,7 +98,7 @@ local function printFn(file, v3)
     end
     file:write(cat)
   end
-  file:write("  \n")
+  file:write("\n")
 end
 
 
@@ -128,7 +127,7 @@ local function printParamsOrReturns(file, v3, which)
     if v4.note then
       text2 = text2.." `"..v4.note.."`"
     end
-    file:write(text2.."  \n")
+    file:write(text2.."<br/>\n")
   end
 end
 
@@ -221,7 +220,7 @@ function fileWriter.write(rootPath, outPath, module, i)
         printFn(file, v3)
       end
       if v3.desc then
-        file:write("\n> "..v3.desc.."  \n>\n")
+        file:write("\n> "..v3.desc.."\n>\n")
       end
       if v3.pars then
         printParamsOrReturns(file, v3, 'pars')

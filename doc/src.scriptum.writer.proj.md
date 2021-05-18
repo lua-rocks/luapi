@@ -1,20 +1,19 @@
 # Project Writer
 
 
-
 ## Requires
 
 + scriptum.writer
 
 ## API
 
-**projWriter.write** (rootPath\*, outPath\*, module\*)  
+**projWriter.write** (rootPath\*, outPath\*, module\*)
 
-> Write project index file  
+> Write project index file
 >
-> &rarr; **rootPath** (string)  
-> &rarr; **outPath** (string)  
-> &rarr; **module** (table)  
+> &rarr; **rootPath** (string)<br/>
+> &rarr; **outPath** (string)<br/>
+> &rarr; **module** (table)<br/>
 
 ## Project
 
