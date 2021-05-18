@@ -8,7 +8,7 @@ See examples and documentation [here](doc/README.md).
 ## Roadmap
 
 - [ ] Find and fix bugs.
-  - [ ] 2 spaces at the end of each line is a bad idea, use <br/> instead.
+  - [x] 2 spaces at the end of each line is a bad idea, use <br/> instead.
 - [x] Separate code to submodules for easier maintain.
   - [ ] Document every function in each module.
 - [x] Remove `love` (why do we need it if it's not required?).

@@ -3,9 +3,12 @@
 
 ## API
 
-**trim**
+**trim** (str\*, chars)
+
 > Remove spaces or other chars from the beginning and the end of string
 >
+> &rarr; **str** (string)<br/>
+> &rarr; **chars** (string) *[" "]*<br/>
 
 **searchForPattern** (lines\*, startLine\*, forLines\*, pattern\*) : line, result
 

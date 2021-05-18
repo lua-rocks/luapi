@@ -18,8 +18,8 @@ local patternLeadingSpace = spaceChar.."*"..anyText
 
 
 --[[ Remove spaces or other chars from the beginning and the end of string
-str (string)
-chars (string) [" "]
+> str (string)
+> chars (string) [" "]
 ]]
 local function trim(str, chars)
   if not chars then return str:match("^[%s]*(.-)[%s]*$") end
