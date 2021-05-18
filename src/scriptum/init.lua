@@ -128,24 +128,8 @@ Provide a table with keys that share the same name as the configuration paramete
 @ config
 ]]
 function module.configuration(overrides)
-  local function deepCopy(input)
-    if type(input) == "table" then
-      local output = {}
-      for i, o in next, input, nil do
-        output[deepCopy(i)] = deepCopy(o)
-      end
-      return output
-    else
-      return input
-    end
-  end
-  local safe = deepCopy(overrides)
-  for k, v in pairs(safe) do
-    if config[k] == nil then
-      print("error: override field '"..k.."' not found (configuration)")
-    else
-      config[k] = v
-    end
+  for k, v in pairs(overrides) do
+    if config[k] then config[k] = v end
   end
 end
 
