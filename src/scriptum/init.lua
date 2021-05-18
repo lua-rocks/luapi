@@ -83,6 +83,7 @@ scriptum.configuration(overrides)
 
 local config = {
   rootPath = nil, -- search files here
+  pathFilters = nil, -- extra search filters
   outPath = "doc", -- generate output here
 }
 
@@ -96,18 +97,20 @@ local module = {}
 
 --[[ Start document generation
 > rootPath (string) path to read source code from
+> pathFilters (table) [] search files only in these subdirs
 > outPath (string) ["doc"] path to output to
 < model (table) project model can be used for autocomlete in an IDE
 ]]
-function module.start(rootPath, outPath)
+function module.start(rootPath, pathFilters, outPath)
   rootPath = rootPath or config.rootPath
+  pathFilters = pathFilters or config.pathFilters
   outPath = outPath or config.outPath
   module.fileData = {}
   module.files = {}
   module.reqs = {}
 
   -- Parse --
-  module.files, module.reqs = projParser.getFiles(rootPath)
+  module.files, module.reqs = projParser.getFiles(rootPath, pathFilters)
   for _, f in ipairs(module.files) do
     module.fileData[f] = fileParser.parse(f)
   end

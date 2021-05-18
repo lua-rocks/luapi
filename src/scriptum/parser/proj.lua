@@ -103,13 +103,41 @@ local function filterFiles(fileTree, ext)
 end
 
 
+--[[ Returns a new list consisting of all the given lists concatenated into one.
+> ... ({integer=any}) lists
+< result ({integer=any}) concatenated list
+]]
+local function concat(...)
+  local rtn = {}
+  for i = 1, select("#", ...) do
+    local t = select(i, ...)
+    if t ~= nil then
+      for _, v in ipairs(t) do
+        rtn[#rtn + 1] = v
+      end
+    end
+  end
+  return rtn
+end
+
+
 --[[ Get list of all parseable files in directory.
 > rootPath (string) root directory full path
+> pathFilters (table) [] search files only in these subdirs
 < files ({integer=string}) list of fs-file paths
 < reqs (table) list of req-file paths
 ]]
-function projParser.getFiles(rootPath)
-  local files = filterFiles(scanDir(rootPath), '.lua')
+function projParser.getFiles(rootPath, pathFilters)
+  local files = {}
+  if not pathFilters or #pathFilters == 0 then
+    files = filterFiles(scanDir(rootPath), '.lua')
+  else
+    for _, filter in ipairs(pathFilters) do
+      local found = filterFiles(scanDir(rootPath .. '/' .. filter), '.lua')
+      files = concat(files, found)
+    end
+  end
+
   table.sort(files, function(a, b) return a:upper() < b:upper() end)
   local reqs = {}
   for index, path in ipairs(files) do

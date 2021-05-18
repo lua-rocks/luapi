@@ -40,11 +40,20 @@
 >
 > &larr; **fileTree** (table)  
 
-**projParser.getFiles** (rootPath\*) : files, reqs  
+**concat** (...\*) : result  
+
+> Returns a new list consisting of all the given lists concatenated into one.  
+>
+> &rarr; **...** ({integer=any}) `lists`  
+>
+> &larr; **result** ({integer=any}) `concatenated list`  
+
+**projParser.getFiles** (rootPath\*, pathFilters) : files, reqs  
 
 > Get list of all parseable files in directory.  
 >
 > &rarr; **rootPath** (string) `root directory full path`  
+> &rarr; **pathFilters** (table) *[optional]* `search files only in these subdirs`  
 >
 > &larr; **files** ({integer=string}) `list of fs-file paths`  
 > &larr; **reqs** (table) `list of req-file paths`  
