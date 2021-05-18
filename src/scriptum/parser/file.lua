@@ -36,7 +36,7 @@ end
 < line (integer) [] line number where pattern was found
 < result (string) [] matched result
 ]]
-local function searchForPattern(lines, startLine, forLines, pattern)
+local function multilineSearch(lines, startLine, forLines, pattern)
   local count = #lines
   for j = 1, forLines do
     local k = startLine + j
@@ -108,9 +108,9 @@ end
 > data (table)
 ]]
 local function extractHeaderBlock(lines, startLine, data)
-  if not searchForPattern(lines, startLine, 1, startBlockComment) then return end
+  if not multilineSearch(lines, startLine, 1, startBlockComment) then return end
 
-  local search = searchForPattern(lines, startLine, 500, endBlockComment)
+  local search = multilineSearch(lines, startLine, 500, endBlockComment)
   local set = {}
   if search then
     set.endHeader = search
@@ -137,20 +137,6 @@ end
 
 
 --[[
-> file (string) full path to lua file
-]]
-local function readFileLines(file)
-  local count = 0
-  local lines = {}
-  for line in io.lines(file) do
-    count = count + 1
-    lines[count] = line
-  end
-  return lines, count
-end
-
-
---[[
 > opt (string)
 < opt (string)
 ]]
@@ -168,7 +154,7 @@ end
 > data (table)
 ]]
 local function extractRequires(lines, startLine, data)
-  local _, result = searchForPattern(lines, startLine, 1, patternRequire)
+  local _, result = multilineSearch(lines, startLine, 1, patternRequire)
   if not result then return end
 
   result = result:match("%'"..anyText.."%'") or result:match('%"'..anyText..'%"')
@@ -186,8 +172,8 @@ end
 local function extractFunctionComments(fnSet, lines, startLine, j, which)
   local pattern
   if which == "pars" then pattern = ">" else pattern = "<" end
-  local match, line =
-    searchForPattern(lines, startLine + j, 1, pattern..spaceChar..anyText)
+  local match, line = multilineSearch(lines, startLine + j, 1,
+    pattern..spaceChar..anyText)
   if match then
     if not fnSet[which] then
       fnSet[which] = {}
@@ -220,16 +206,16 @@ end
 > j (integer)
 ]]
 local function extractUnpack(fnSet, lines, startLine, j)
-  local match, line = searchForPattern(lines, startLine + j, 1, patternUnpack)
+  local match, line = multilineSearch(lines, startLine + j, 1, patternUnpack)
   if match then
     local ret = {}
     if not fnSet.unpack then
       fnSet.unpack = {}
     end
     ret.name = line:match(patternLeadingSpace)
-    local findUnpack = searchForPattern(lines, 1, 500, "local "..line.." = {")
+    local findUnpack = multilineSearch(lines, 1, 500, "local "..line.." = {")
     if findUnpack then
-      local endUnpack = searchForPattern(lines, findUnpack + 1, 100, "^}$")
+      local endUnpack = multilineSearch(lines, findUnpack + 1, 100, "^}$")
       if endUnpack then
         ret.lines = {}
         for i = findUnpack + 2, findUnpack + endUnpack do
@@ -248,17 +234,17 @@ end
 > data (table)
 ]]
 local function extractFunctionBlock(lines, startLine, data)
-  local search2b, result2b = searchForPattern(lines, startLine, 1, startBlockComment)
+  local search2b, result2b = multilineSearch(lines, startLine, 1, startBlockComment)
   if not search2b then return end
 
-  local search3 = searchForPattern(lines, startLine, 10, endBlockComment)
+  local search3 = multilineSearch(lines, startLine, 10, endBlockComment)
   -- Functions --
   local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine,
     desc = result2b:gsub(closeBlockComment, ""):gsub(comment, "")
   }
   fnSet.desc=trim(fnSet.desc)
   if fnSet.desc == "" then fnSet.desc = nil end
-  local fnL, fnLine = searchForPattern(lines, startLine + search3, 1, patternFunction)
+  local fnL, fnLine = multilineSearch(lines, startLine + search3, 1, patternFunction)
   if fnL then
     fnSet.name = trim(fnLine)
   end
@@ -279,6 +265,15 @@ end
 < data ({"file"=string,"requires"=table,"api"=table})
 ]]
 function fileParser.parse(file)
+  local function readFileLines(f)
+    local count = 0
+    local lines = {}
+    for line in io.lines(f) do
+      count = count + 1
+      lines[count] = line
+    end
+    return lines, count
+  end
   local data = { file = file, requires = {}, api = {} }
   local lines, count = readFileLines(file)
   for i = 1, count do

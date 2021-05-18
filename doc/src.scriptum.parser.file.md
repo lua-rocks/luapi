@@ -10,7 +10,7 @@
 > &rarr; **str** (string)<br/>
 > &rarr; **chars** (string) *[" "]*<br/>
 
-**searchForPattern** (lines\*, startLine\*, forLines\*, pattern\*) : line, result
+**multilineSearch** (lines\*, startLine\*, forLines\*, pattern\*) : line, result
 
 > Search for first pattern in multiply lines.
 >
@@ -42,9 +42,6 @@
 > &rarr; **lines** (table)<br/>
 > &rarr; **startLine** (integer) `0`<br/>
 > &rarr; **data** (table)<br/>
-
-**readFileLines** (file\*)
-> &rarr; **file** (string) `full path to lua file`<br/>
 
 **correctOpt** (opt\*) : opt
 > &rarr; **opt** (string)<br/>
