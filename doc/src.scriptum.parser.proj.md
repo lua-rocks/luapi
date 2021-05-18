@@ -40,11 +40,11 @@
 >
 > &larr; **fileTree** (table)  
 
-**projParser.getFiles** (root\*) : files, reqs  
+**projParser.getFiles** (rootPath\*) : files, reqs  
 
 > Get list of all parseable files in directory.  
 >
-> &rarr; **root** (string) `root directory full path`  
+> &rarr; **rootPath** (string) `root directory full path`  
 >
 > &larr; **files** ({integer=string}) `list of fs-file paths`  
 > &larr; **reqs** (table) `list of req-file paths`  

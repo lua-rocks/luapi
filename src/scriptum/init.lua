@@ -82,7 +82,7 @@ scriptum.configuration(overrides)
 
 
 local config = {
-  rootPath = "", -- search files here
+  rootPath = nil, -- search files here
   outPath = "doc", -- generate output here
 }
 
@@ -95,8 +95,8 @@ local module = {}
 
 
 --[[ Start document generation
-> rootPath (string) [""] path to read source code from
-> outPath (string) ["scriptum"] path to output to
+> rootPath (string) path to read source code from
+> outPath (string) ["doc"] path to output to
 < model (table) project model can be used for autocomlete in an IDE
 ]]
 function module.start(rootPath, outPath)

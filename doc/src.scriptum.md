@@ -90,12 +90,12 @@ scriptum.configuration(overrides)
 
 ## API
 
-**start** (rootPath, outPath) : model  
+**start** (rootPath\*, outPath) : model  
 
 > Start document generation  
 >
-> &rarr; **rootPath** (string) *[""]* `path to read source code from`  
-> &rarr; **outPath** (string) *["scriptum"]* `path to output to`  
+> &rarr; **rootPath** (string) `path to read source code from`  
+> &rarr; **outPath** (string) *["doc"]* `path to output to`  
 >
 > &larr; **model** (table) `project model can be used for autocomlete in an IDE`  
 
@@ -104,7 +104,7 @@ scriptum.configuration(overrides)
 > Modify the configuration of this module programmatically  
 >
 > &rarr; **overrides** (table) `each key is from a valid name, the value is the override`  
-> - rootPath = "" `search files here`  
+> - rootPath = nil `search files here`  
 > - outPath = "doc" `generate output here`  
 >  
 
