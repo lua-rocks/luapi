@@ -88,9 +88,9 @@ end
 ]]
 local function searchForTitle(set, line, multilines, multilineStarted)
   local title = line:match(startBlockComment)
-    :gsub(spaceChar, "")
     :gsub(closeBlockComment, "")
     :gsub(comment, "")
+  title = trim(title)
   if title then
     if multilineStarted then
       catchMultilineEnd(set, multilines)

@@ -1,7 +1,7 @@
 --[[ File Writer ]]--
 
 
-local writer = require 'src.scriptum.writer'
+local writer = require 'scriptum.writer'
 local fileWriter = {}
 
 

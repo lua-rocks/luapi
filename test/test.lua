@@ -23,10 +23,8 @@ end
 -- luarocks install inspect
 inspect = require 'inspect' -- luacheck: ignore
 
--- just in case if your path is broken (usually this is no needed)
-package.path = package.path .. ';./?.lua;./?/init.lua;.\\?.lua;.\\?\\init.lua'
-
-local scriptum = require 'src.scriptum'
+package.path = package.path .. ';src/?.lua;src/?/init.lua'
+local scriptum = require 'scriptum'
 
 -- generate full project documetation
 scriptum.start '/home/luarocks/repo/scriptum'

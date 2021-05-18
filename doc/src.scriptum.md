@@ -83,10 +83,10 @@ scriptum.configuration(overrides)
 
 ## Requires
 
-+ [src.scriptum.parser.proj](src.scriptum.parser.proj.md)
-+ [src.scriptum.parser.file](src.scriptum.parser.file.md)
-+ [src.scriptum.writer.proj](src.scriptum.writer.proj.md)
-+ [src.scriptum.writer.file](src.scriptum.writer.file.md)
++ scriptum.parser.proj
++ scriptum.parser.file
++ scriptum.writer.proj
++ scriptum.writer.file
 
 ## API
 

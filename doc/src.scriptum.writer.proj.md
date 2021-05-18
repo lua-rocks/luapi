@@ -1,10 +1,10 @@
-# ProjectWriter
+# Project Writer
 
 
 
 ## Requires
 
-+ [src.scriptum.writer](src.scriptum.writer.md)
++ scriptum.writer
 
 ## API
 

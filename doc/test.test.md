@@ -1,4 +1,4 @@
-# TestModule
+# Test Module
 
 Import and run with start()
 ```lua
@@ -11,7 +11,7 @@ module.start()
 ## Requires
 
 + inspect
-+ [src.scriptum](src.scriptum.md)
++ scriptum
 
 ## API
 
