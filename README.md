@@ -3,7 +3,9 @@
 I'm not sure if I can find a time and superpowers to do all these things,
 can't promise anything but I'll try 🤡
 
-See examples and documentation [here](doc/README.md).
+See current examples and documentation [here](doc/README.md).
+
+See target template [here](https://github.com/lua-rocks/object)
 
 ## Roadmap
 
@@ -17,6 +19,7 @@ See examples and documentation [here](doc/README.md).
 - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
   - [ ] Multiline comments for all descriptions.
   - [ ] Links and table of contents.
+  - [ ] Returns anoniomous.
 - [x] Custom comments style.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
