@@ -15,6 +15,8 @@ See examples and documentation [here](doc/README.md).
   - [ ] Document every function in each module.
 - [x] Remove `love` (why do we need it if it's not required?).
 - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
+  - [ ] Multiline comments for all descriptions.
+  - [ ] Links and table of contents.
 - [x] Custom comments style.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
@@ -28,7 +30,6 @@ See examples and documentation [here](doc/README.md).
       specify this explicitly! If it has default value, then it's optional.
       Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
 - [ ] Show doc only for external module fields.
-- [ ] Multiline comments for fields descriptions.
 - [ ] Throw error when function argument name doesn't match with described.
 - [ ] Throw error when described argument type doesn't match with accepted !?
 - [ ] Suppport for OOP: inheritance.
