@@ -20,8 +20,9 @@ See target template example (hand made)
 - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
   - [ ] Multiline comments for all descriptions.
   - [ ] Links and table of contents.
-  - [ ] Returns anoniomous.
-- [x] Custom comments style.
+- [ ] Custom comments style.
+  - [ ] Colon for type (parentheses for arguments if the type is function).
+  - [ ] Anoniomous returns.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
   - [x] Remove **all** vignette tags - just use markdown in comments instead.
@@ -29,10 +30,10 @@ See target template example (hand made)
   - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
     I no need any other tags!
   - [x] Square brackets for default function params and nothing for comment.
-    - [x] Many brackets in one line causes bugs - use only first matched.
-    - [x] Any function param is required by default. You don't need to
-      specify this explicitly! If it has default value, then it's optional.
-      Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
+  - [x] Many brackets in one line causes bugs - use only first matched.
+  - [x] Any function param is required by default. You don't need to
+    specify this explicitly! If it has default value, then it's optional.
+    Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
 - [ ] Show doc only for external module fields.
 - [ ] Throw error when function argument name doesn't match with described.
 - [ ] Throw error when described argument type doesn't match with accepted !?
