@@ -5,7 +5,7 @@ can't promise anything but I'll try 🤡
 
 See current examples and documentation [here](doc/README.md).
 
-See target template (hand made) [here](https://github.com/lua-rocks/object)
+See target template example (hand made) [here](https://github.com/lua-rocks/object)
 
 ## Roadmap
 
