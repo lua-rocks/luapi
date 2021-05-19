@@ -14,12 +14,7 @@ See examples and documentation [here](doc/README.md).
 - [x] Separate code to submodules for easier maintain.
   - [ ] Document every function in each module.
 - [x] Remove `love` (why do we need it if it's not required?).
-- [ ] Custom markdown template:
-  - [x] H1 - Title of the current module (can be only one H1 in document)
-  - [ ] H3 - Module fields (described tables and functions)
-  - [ ] You can make links across all you files or just in one local file
-    **to it parts** in this way: `[link_name](#header_name_in_current_file)` or
-    `[link_name](other_file#header_name)`. That's why fields must be a headers.
+- [ ] [Custom markdown template](https://github.com/lua-rocks/object).
 - [x] Custom comments style.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
@@ -42,13 +37,6 @@ See examples and documentation [here](doc/README.md).
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
 - [ ] Clean markdown:
     no [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
-
-<details>
-  <summary>Spoiler warning!</summary>
-
-- [ ] Hide internal module fields under spoiler.
-
-</details>
 
 ## Style guide
 
