@@ -282,7 +282,7 @@ end
 
 --[[
 > path (string) path to file
-< data ({"file"=string,"requires"=table,"api"=table})
+< data ({"file"=string,"requires"=table,"api"=table,"header"=table})
 ]]
 function fileParser.parse(path)
   local data = {
@@ -292,11 +292,18 @@ function fileParser.parse(path)
   }
 
   local content = readFile(path)
-  local code = content:gsub('%-%-%[%[.-%]%].-', ''):gsub('%-%-.-\n', '')
 
+  -- remove comments
+  local code = content:gsub('%-%-%[%[.-%]%]', ''):gsub('%-%-.-\n', '')
+
+  -- parse requires
   for found in code:gmatch('[%G]require%s*%(?%s*[\'\"](.-)[\'\"]') do
     table.insert(data.requires, found)
   end
+
+  -- parse title
+  local title = trim(content:match('%-%-%[%[(.-)[%]\n]'))
+  print(title)
 
   -- TODO remove
   local lines, count = readFileLines(path)

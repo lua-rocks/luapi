@@ -80,7 +80,7 @@
 **fileParser.parse** (path\*) : data
 > &rarr; **path** (string) `path to file`<br/>
 >
-> &larr; **data** ({"file"=string,"requires"=table,"api"=table})<br/>
+> &larr; **data** ({"file"=string,"requires"=table,"api"=table,"header"=table})<br/>
 
 ## Project
 
