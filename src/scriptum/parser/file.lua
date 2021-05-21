@@ -261,21 +261,50 @@ end
 
 
 --[[
-> file (string) path to file
-< data ({"file"=string,"requires"=table,"api"=table})
+> file (string)
+< lines (table)
+< count (integer)
 ]]
-function fileParser.parse(file)
-  local function readFileLines(f)
-    local count = 0
-    local lines = {}
-    for line in io.lines(f) do
-      count = count + 1
-      lines[count] = line
-    end
-    return lines, count
+local function readFileLines(file)
+  local count = 0
+  local lines = {}
+  for line in io.lines(file) do
+    count = count + 1
+    lines[count] = line
   end
-  local data = { file = file, requires = {}, api = {} }
-  local lines, count = readFileLines(file)
+  return lines, count
+end
+
+
+-- Version 2 (WIP) --
+
+
+--[[
+> path (string)
+< content (string)
+]]
+local function readFile(path)
+  local file = io.open(path, 'rb')
+  if not file then return nil end
+  local content = file:read '*a'
+  file:close()
+  return content
+end
+
+
+--[[
+> path (string) path to file
+< data ({"file"=string,"requires"=table,"api"=table,"content"=string})
+]]
+function fileParser.parse(path)
+  local data = {
+    file = path, -- path to file
+    content = readFile(path),
+    requires = {},
+    api = {},
+  }
+
+  local lines, count = readFileLines(path)
   for i = 1, count do
     if i == 1 then
       extractHeaderBlock(lines, 0, data)

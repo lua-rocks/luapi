@@ -71,10 +71,21 @@
 > &rarr; **startLine** (integer)<br/>
 > &rarr; **data** (table)<br/>
 
-**fileParser.parse** (file\*) : data
-> &rarr; **file** (string) `path to file`<br/>
+**readFileLines** (file\*) : lines, count
+> &rarr; **file** (string)<br/>
 >
-> &larr; **data** ({"file"=string,"requires"=table,"api"=table})<br/>
+> &larr; **lines** (table)<br/>
+> &larr; **count** (integer)<br/>
+
+**readFile** (path\*) : content
+> &rarr; **path** (string)<br/>
+>
+> &larr; **content** (string)<br/>
+
+**fileParser.parse** (path\*) : data
+> &rarr; **path** (string) `path to file`<br/>
+>
+> &larr; **data** ({"file"=string,"requires"=table,"api"=table,"content"=string})<br/>
 
 ## Project
 

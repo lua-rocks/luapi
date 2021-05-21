@@ -10,19 +10,21 @@ See target template example (hand made)
 
 ## Roadmap
 
-- [ ] Find and fix bugs; improve code quality when possible.
+- [ ] Rewrite everything! Find and fix bugs; improve code quality when possible.
+  - [x] Separate code to submodules for easier maintain.
+    - [ ] Document every function in each module.
   - [ ] Parser
     - [ ] Store entire file in one string and use short regexps to this string
       instead of multiline search and complex extractions.
-- [x] Separate code to submodules for easier maintain.
-  - [ ] Document every function in each module.
+    - [ ] Unpack (`@`) should work with params and returns in any scope.
+  - [ ] Writer
+    - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
+      - [ ] Multiline comments for all descriptions.
+      - [ ] Table of contents.
+      - [ ] Easy links for headers.
 - [x] Remove `love` (why do we need it if it's not required?).
-- [ ] [Custom markdown template](https://github.com/lua-rocks/object).
-  - [ ] Multiline comments for all descriptions.
-  - [ ] Links and table of contents.
 - [ ] Custom comments style.
   - [ ] Colon for type (parentheses for arguments if the type is function).
-  - [ ] Anoniomous returns.
   - [x] Replace **\`** (for subpattern code) with **~**
     (because **`** is used for keywords).
   - [x] Remove **all** vignette tags - just use markdown in comments instead.
@@ -38,7 +40,6 @@ See target template example (hand made)
 - [ ] Throw error when function argument name doesn't match with described.
 - [ ] Throw error when described argument type doesn't match with accepted !?
 - [ ] Suppport for OOP: inheritance.
-- [ ] Easy links for headers.
 - [ ] Add support for
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
 - [ ] Clean markdown:
