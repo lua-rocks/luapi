@@ -298,12 +298,13 @@ end
 ]]
 function fileParser.parse(path)
   local data = {
-    file = path, -- path to file
+    file = path,
     content = readFile(path),
     requires = {},
     api = {},
   }
 
+  -- TODO remove
   local lines, count = readFileLines(path)
   for i = 1, count do
     if i == 1 then
