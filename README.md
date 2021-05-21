@@ -10,10 +10,10 @@ See target template example (hand made)
 
 ## Roadmap
 
-- [ ] Find and fix bugs; improve perfomance and readability.
-  - [x] 2 spaces at the end of each line is a bad idea, use `<br/>` instead.
-  - [ ] File parser use `multilineSearch` 10 times but it can be used in one
-    loop for all extract functions to make parsing 10 times faster! 🙀
+- [ ] Find and fix bugs; improve code quality when possible.
+  - [ ] Parser
+    - [ ] Store entire file in one string and use short regexps to this string
+      instead of multiline search and complex extractions.
 - [x] Separate code to submodules for easier maintain.
   - [ ] Document every function in each module.
 - [x] Remove `love` (why do we need it if it's not required?).
