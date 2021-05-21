@@ -7,6 +7,11 @@ module.start()
 ```
     I'm not a code
 
+## Requires
+
++ inspect
++ scriptum
+
 ## API
 
 **startModule** (name\*, verbose) : success

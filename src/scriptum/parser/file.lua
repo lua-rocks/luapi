@@ -303,7 +303,13 @@ function fileParser.parse(path)
 
   -- parse title
   local title = trim(content:match('%-%-%[%[(.-)[%]\n]'))
-  print(title)
+  -- print(title)
+
+  -- parse description
+  local description = content:match('%-%-%[%[(.-)%]%]'):gsub('^.-\n', '')
+  description = trim(description)
+  if description == title then description = nil end
+  -- print(description)
 
   -- TODO remove
   local lines, count = readFileLines(path)
