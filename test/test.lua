@@ -28,7 +28,7 @@ package.path = package.path .. ';src/?.lua;src/?/init.lua'
 local scriptum = require 'scriptum'
 
 -- generate full project documetation
--- scriptum.start '/home/luarocks/repo/scriptum'
+scriptum.start '/home/luarocks/repo/scriptum'
 
 -- custom paths test
 -- local model = scriptum.start('/home/luarocks/repo/scriptum', {
@@ -37,7 +37,7 @@ local scriptum = require 'scriptum'
 
 -- generate minimal doc just for quick test
 -- local model =
-scriptum.start('/home/luarocks/repo/scriptum/test')
+-- scriptum.start('/home/luarocks/repo/scriptum/test')
 
 
 -- for key, value in pairs(model.fileData) do

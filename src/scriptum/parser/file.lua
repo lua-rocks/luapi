@@ -4,17 +4,19 @@
 local fileParser = {}
 
 
-local comment = "%-%-"
-local anyText = "(.*)"
-local spaceChar = "%s"
-local openBlockComment = "%-%-%[%["
-local closeBlockComment = "%]%]"
-local startBlockComment = openBlockComment..anyText
-local endBlockComment = anyText..closeBlockComment
-local patternRequire = "require"..spaceChar..anyText
-local patternUnpack = "@"..spaceChar..anyText
-local patternFunction = "function"..anyText.."%("
-local patternLeadingSpace = spaceChar.."*"..anyText
+-- TODO remove
+local p = {}
+p.comment = "%-%-"
+p.anyText = "(.*)"
+p.spaceChar = "%s"
+p.openBlockComment = "%-%-%[%["
+p.closeBlockComment = "%]%]"
+p.startBlockComment = p.openBlockComment..p.anyText
+p.endBlockComment = p.anyText..p.closeBlockComment
+p.require = "require"..p.spaceChar..p.anyText
+p.unpack = "@"..p.spaceChar..p.anyText
+p.func = "function"..p.anyText.."%("
+p.leadingSpace = p.spaceChar.."*"..p.anyText
 
 
 --[[ Remove spaces or other chars from the beginning and the end of string
@@ -72,7 +74,7 @@ local function multiLineField(set, data)
   else
     set.description[#set.description + 1] = "||"
   end
-  local text = data:match(patternLeadingSpace)
+  local text = data:match(p.leadingSpace)
   if text ~= "" then
     set.description[#set.description + 1] = text
   end
@@ -87,9 +89,9 @@ end
 < found ("description"|nil)
 ]]
 local function searchForTitle(set, line, multilines, multilineStarted)
-  local title = line:match(startBlockComment)
-    :gsub(closeBlockComment, "")
-    :gsub(comment, "")
+  local title = line:match(p.startBlockComment)
+    :gsub(p.closeBlockComment, "")
+    :gsub(p.endBlockComment, "")
   title = trim(title)
   if title then
     if multilineStarted then
@@ -108,9 +110,9 @@ end
 > data (table)
 ]]
 local function extractHeaderBlock(lines, startLine, data)
-  if not multilineSearch(lines, startLine, 1, startBlockComment) then return end
+  if not multilineSearch(lines, startLine, 1, p.startBlockComment) then return end
 
-  local search = multilineSearch(lines, startLine, 500, endBlockComment)
+  local search = multilineSearch(lines, startLine, 500, p.endBlockComment)
   local set = {}
   if search then
     set.endHeader = search
@@ -124,7 +126,7 @@ local function extractHeaderBlock(lines, startLine, data)
     for j = 1, search - 2 do
       local line = lines[startLine + j + 1]
       if multilineStarted then
-        local text = line:match(patternLeadingSpace)
+        local text = line:match(p.leadingSpace)
         multilines[#multilines + 1] = text
       end
     end
@@ -149,20 +151,6 @@ end
 
 
 --[[
-> lines (table)
-> startLine (integer)
-> data (table)
-]]
-local function extractRequires(lines, startLine, data)
-  local _, result = multilineSearch(lines, startLine, 1, patternRequire)
-  if not result then return end
-
-  result = result:match("%'"..anyText.."%'") or result:match('%"'..anyText..'%"')
-  data.requires[#data.requires + 1] = result
-end
-
-
---[[
 > fnSet (table)
 > lines (table)
 > startLine (integer)
@@ -173,14 +161,14 @@ local function extractFunctionComments(fnSet, lines, startLine, j, which)
   local pattern
   if which == "pars" then pattern = ">" else pattern = "<" end
   local match, line = multilineSearch(lines, startLine + j, 1,
-    pattern..spaceChar..anyText)
+    pattern..p.spaceChar..p.anyText)
   if match then
     if not fnSet[which] then
       fnSet[which] = {}
     end
     local par = {}
     local n, m
-    n = line:find(spaceChar)
+    n = line:find(p.spaceChar)
     par.name = line:sub(1, n-1)
     m = line:find("(", n, true)
     if m then
@@ -206,13 +194,13 @@ end
 > j (integer)
 ]]
 local function extractUnpack(fnSet, lines, startLine, j)
-  local match, line = multilineSearch(lines, startLine + j, 1, patternUnpack)
+  local match, line = multilineSearch(lines, startLine + j, 1, p.unpack)
   if match then
     local ret = {}
     if not fnSet.unpack then
       fnSet.unpack = {}
     end
-    ret.name = line:match(patternLeadingSpace)
+    ret.name = line:match(p.leadingSpace)
     local findUnpack = multilineSearch(lines, 1, 500, "local "..line.." = {")
     if findUnpack then
       local endUnpack = multilineSearch(lines, findUnpack + 1, 100, "^}$")
@@ -234,17 +222,17 @@ end
 > data (table)
 ]]
 local function extractFunctionBlock(lines, startLine, data)
-  local search2b, result2b = multilineSearch(lines, startLine, 1, startBlockComment)
+  local search2b, result2b = multilineSearch(lines, startLine, 1, p.startBlockComment)
   if not search2b then return end
 
-  local search3 = multilineSearch(lines, startLine, 10, endBlockComment)
+  local search3 = multilineSearch(lines, startLine, 10, p.endBlockComment)
   -- Functions --
   local fnSet = {pars = nil, returns = nil, unpack = nil, line = startLine,
-    desc = result2b:gsub(closeBlockComment, ""):gsub(comment, "")
+    desc = result2b:gsub(p.closeBlockComment, ""):gsub(p.comment, "")
   }
   fnSet.desc=trim(fnSet.desc)
   if fnSet.desc == "" then fnSet.desc = nil end
-  local fnL, fnLine = multilineSearch(lines, startLine + search3, 1, patternFunction)
+  local fnL, fnLine = multilineSearch(lines, startLine + search3, 1, p.func)
   if fnL then
     fnSet.name = trim(fnLine)
   end
@@ -294,15 +282,21 @@ end
 
 --[[
 > path (string) path to file
-< data ({"file"=string,"requires"=table,"api"=table,"content"=string})
+< data ({"file"=string,"requires"=table,"api"=table})
 ]]
 function fileParser.parse(path)
   local data = {
     file = path,
-    content = readFile(path),
     requires = {},
     api = {},
   }
+
+  local content = readFile(path)
+  local code = content:gsub('%-%-%[%[.-%]%].-', ''):gsub('%-%-.-\n', '')
+
+  for found in code:gmatch('[%G]require%s*%(?%s*[\'\"](.-)[\'\"]') do
+    table.insert(data.requires, found)
+  end
 
   -- TODO remove
   local lines, count = readFileLines(path)
@@ -311,10 +305,10 @@ function fileParser.parse(path)
       extractHeaderBlock(lines, 0, data)
     end
     if not data.header or (not data.header.endHeader or i > data.header.endHeader) then
-      extractRequires(lines, i, data)
       extractFunctionBlock(lines, i, data)
     end
   end
+
   return data
 end
 
