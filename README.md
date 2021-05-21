@@ -16,7 +16,6 @@ See target template example (hand made)
   - [ ] Parser
     - [ ] Store entire file in one string and use short regexps to this string
       instead of multiline search and complex extractions.
-    - [ ] Unpack (`@`) should work with params and returns in any scope.
   - [ ] Writer
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
       - [ ] Multiline comments for all descriptions.
@@ -31,6 +30,8 @@ See target template example (hand made)
     First line in first comment is title; other lines for description.
   - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
     I no need any other tags!
+  - [ ] Unpack (`@`) should work with params and returns in any scope.
+    Like this: `> @conf` or `< @conf`.
   - [x] Square brackets for default function params and nothing for comment.
   - [x] Many brackets in one line causes bugs - use only first matched.
   - [x] Any function param is required by default. You don't need to
