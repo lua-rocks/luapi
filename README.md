@@ -3,7 +3,8 @@
 I'm not sure if I can find a time and superpowers to do all these things,
 can't promise anything but I'll try 🤡
 
-See current examples and documentation [here](doc/README.md).
+Examples temporary removed and current version don't write any files because
+I want to rewrite everything from scratch!
 
 See target template example (hand made)
 [here](https://github.com/lua-rocks/object).

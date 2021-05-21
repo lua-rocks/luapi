@@ -4,7 +4,7 @@ Import and run with start()
 local module = require "testmodule"
 module.start()
 ```
-~I'm not a code
+  I'm not a code
 ]]
 
 local module = {}
