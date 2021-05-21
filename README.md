@@ -51,6 +51,6 @@ See target template example (hand made)
 These rules are not currently enforced, but they should.
 
 - Maximum line number is **80** characters.
-- One line **title** comments must start with **uppercase** letter.
-- One line **parameter** comments must start with a **lowercase**.
-- One line **any** comments must **not** have a dot or semicolon at the end.
+- `One line` **title** comments must start with **uppercase** letter.
+- `One line` **parameter** comments must start with a **lowercase**.
+- `One line` **any** comments must **not** have a dot or semicolon at the end.
