@@ -38,7 +38,6 @@ See target template example (hand made)
   - [x] Any function param is required by default. You don't need to
     specify this explicitly! If it has default value, then it's optional.
     Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
-- [ ] Show doc only for external module fields.
 - [x] Throw error when function argument name doesn't match with described.
 - [ ] Suppport for OOP: inheritance.
 - [ ] Add support for
