@@ -97,7 +97,6 @@ function fileParser.parse(path)
           default = arg:match('%s%[(.-)%]'),
           description = trim((arg:gsub('^.*[%]%)]', ''))),
         })
-        last = last[#last]
 
         if last.default == ''
         or last.default == 'nil'
