@@ -20,6 +20,12 @@ function module.startModule(name, verbose)
   return success
 end
 
+--[[ Another one function
+> args (table) ololo
+> nothing this should throw error
+]]
+local function test(args) end
+
 -- luarocks install inspect
 inspect = require 'inspect' -- luacheck: ignore
 function dump(...) print(inspect(...)) end -- luacheck: ignore
