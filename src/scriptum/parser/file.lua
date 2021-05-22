@@ -61,21 +61,36 @@ function fileParser.parse(path)
   if data.description == data.title then data.description = nil end
 
   local api = {
-    functions = {}
+    names = {
+      fields = {},    -- ({integer=string}) field names by order
+      tables = {},    -- ({integer=string}) table names by order
+      functions = {}, -- ({integer=string}) func  names by order
+    },
+    args = {},        -- ({string=table}) func args by func names
+    returns = {},     -- ({string=table}) func returns by func names
   }
 
   -- iterate functions with comments
   for block in content:gmatch('[%G](%-%-%[%[.-%]%].-function.-)\n') do
 
     -- extract function name
-    table.insert(api.functions, block:match('%]%].-function%s(.-)%s?%('))
+    local name = block:match('%]%].-function%s(.-)%s?%(')
+    table.insert(api.names.functions, name)
+    api.args[name] = {}
+    api.returns[name] = {}
 
-    -- extract args from description
-    for arg in block:gmatch('\n>%s?(.-)%s') do
-      -- print(arg)
+    -- parse lines from description
+    for line in block:gmatch('\n(.*)\n') do
+
+      -- extract arg names from description
+      for arg in line:gmatch('>%s?(.-)%s') do
+        table.insert(api.args[name], {name = arg})
+      end
     end
 
     -- extract real args
+    local real = {}
+
 
   end
 
