@@ -29,6 +29,25 @@ local function readFile(path)
 end
 
 
+local function warning(warntype, name, func, path)
+  if warntype == 'WARNING' then
+    local r = '%{reset yellow}'
+    print(colors(
+      '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
+      '%{bright}' .. name .. r .. ' type not defined in function ' ..
+      '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
+    ))
+  elseif warntype == 'ERROR' then
+    local r = '%{reset red}'
+    print(colors(
+      '%{red blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
+      '%{bright}' .. name .. r .. ' mismatch in function ' ..
+      '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
+    ))
+  end
+end
+
+
 --[[
 > path (string) path to file
 < data (table) full parsed info
@@ -106,23 +125,23 @@ function fileParser.parse(path)
         end
 
         if last[name].typing == nil then
-          local r = '%{reset yellow}'
-          print(colors('%{yellow blink bright}WARNING!' .. r .. ' Argument ' ..
-          '%{bright}' .. name .. r .. ' type not defined in function ' ..
-          '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
-          data.path))
+          warning('WARNING', name, func, data.path)
         end
 
         local found = block:find('function%s.-%(%w*%s*,?%s*' ..
           name .. '[%s,)]')
         if not found then
-          local r = '%{reset red}'
-          print(colors('%{red blink bright}ERROR!' .. r .. ' Argument ' ..
-          '%{bright}' .. name .. r .. ' mismatch in function ' ..
-          '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
-          data.path))
+          warning('ERROR', name, func, data.path)
         end
+
         line_number = line_number + 1
+      end
+    end
+
+    -- check if all args described
+    for _, name in pairs(real_args) do
+      if not last[name] then
+        warning('ERROR', name, func, data.path)
       end
     end
 
@@ -131,7 +150,7 @@ function fileParser.parse(path)
 
   data.api = api
 
-  dump(data.api)
+  --dump(data.api)
   return data
 end
 

@@ -11,11 +11,11 @@ See target template example (hand made)
 
 ## Roadmap
 
-- [ ] Rewrite everything! Find and fix bugs; improve code quality when possible.
+- [ ] Rewrite everything! Find and fix bugs; improve code quality.
   - [x] Separate code to submodules for easier maintain.
     - [ ] Document every function in each module.
   - [ ] Parser
-    - [ ] Store entire file in one string and use short regexps to this string
+    - [x] Store entire file in one string and use short regexps to this string
       instead of multiline search and complex extractions.
   - [ ] Writer
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
@@ -39,7 +39,7 @@ See target template example (hand made)
     specify this explicitly! If it has default value, then it's optional.
     Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
 - [ ] Show doc only for external module fields.
-- [ ] Throw error when function argument name doesn't match with described.
+- [x] Throw error when function argument name doesn't match with described.
 - [ ] Throw error when described argument type doesn't match with accepted !?
 - [ ] Suppport for OOP: inheritance.
 - [ ] Add support for

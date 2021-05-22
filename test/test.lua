@@ -22,8 +22,9 @@ end
 
 --[[ Another one function
 > arrr (table) ololo
+> bfbf error
 ]]
-local function test(arrr, ggg) end
+local function test(arrr, hh) end
 
 -- luarocks install inspect
 inspect = require 'inspect' -- luacheck: ignore
