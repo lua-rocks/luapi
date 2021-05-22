@@ -76,7 +76,7 @@ function fileParser.parse(path)
     -- extract function name
     local func = block:match('%]%].-function%s(.-)%s?%(')
     table.insert(api.names.functions, func)
-    api.args[func] = {{}}
+    api.args[func] = {}
     api.returns[func] = {}
 
     -- parse lines from description
