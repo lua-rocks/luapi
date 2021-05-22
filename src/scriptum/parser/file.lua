@@ -74,24 +74,25 @@ function fileParser.parse(path)
   for block in content:gmatch('[%G](%-%-%[%[.-%]%].-function.-)\n') do
 
     -- extract function name
-    local name = block:match('%]%].-function%s(.-)%s?%(')
-    table.insert(api.names.functions, name)
-    api.args[name] = {}
-    api.returns[name] = {}
+    local func = block:match('%]%].-function%s(.-)%s?%(')
+    table.insert(api.names.functions, func)
+    api.args[func] = {}
+    api.returns[func] = {}
 
     -- parse lines from description
     for line in block:gmatch('\n(.*)\n') do
-
-      -- extract arg names from description
+      -- extract arg names from description lines
       for arg in line:gmatch('>%s?(.-)%s') do
-        table.insert(api.args[name], {name = arg})
+        api.args[func] = {name = arg}
+      end
+      -- extract arg types from description lines
+      for typing in line:gmatch('%((.-)%)') do
+        api.args[func].typing = typing
       end
     end
 
     -- extract real args
     local real = {}
-
-
   end
 
   data.api = api
