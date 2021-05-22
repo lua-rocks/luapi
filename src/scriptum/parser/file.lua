@@ -62,13 +62,10 @@ function fileParser.parse(path)
   if data.description == data.title then data.description = nil end
 
   local api = {
-    names = {
-      fields = {},    -- ({integer=string}) field names by order
-      tables = {},    -- ({integer=string}) table names by order
-      functions = {}, -- ({integer=string}) func  names by order
-    },
-    args = {},        -- ({string=table}) func args by func names
-    returns = {},     -- ({string=table}) func returns by func names
+    -- {integer=string,integer=table,...}
+    -- fields = {},
+    -- tables = {},
+    functions = {},
   }
 
   -- iterate functions with comments
@@ -76,22 +73,18 @@ function fileParser.parse(path)
 
     -- extract function name
     local func = block:match('%]%].-function%s(.-)%s?%(')
-    table.insert(api.names.functions, func)
-    api.args[func] = {}
-    api.returns[func] = {}
+    table.insert(api.functions, func)
+    table.insert(api.functions, {})
 
     -- parse lines from description
-    local fargs = api.args[func]
+    local last = api.functions[#api.functions]
     for line in block:gmatch('\n(.*)\n') do
       -- extract args from description lines
       for arg in line:gmatch('>%s?(.-)\n') do
-        table.insert(fargs, {
-          name = arg:match('^(.-)%s'),
-          typing = arg:match('%((.-)%)'),
-          default = arg:match('%s%[(.-)%]'),
-        })
+        last.name = arg:match('^(.-)%s')
+        last.typing = arg:match('%((.-)%)')
+        last.default = arg:match('%s%[(.-)%]')
 
-        local last = fargs[#fargs]
         if last.default == ''
         or last.default == 'nil'
         or last.default == 'opt' then
@@ -121,7 +114,7 @@ function fileParser.parse(path)
 
   data.api = api
 
-  --dump(data.api)
+  dump(data.api)
   return data
 end
 
