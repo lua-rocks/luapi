@@ -90,9 +90,12 @@ function fileParser.parse(path)
     for line in block:gmatch('\n(.*)\n') do
       -- extract args from description lines
       for arg in line:gmatch('>%s?(.-)\n') do
-        last.name = arg:match('^(.-)%s')
-        last.typing = arg:match('%((.-)%)')
-        last.default = arg:match('%s%[(.-)%]')
+        local name = arg:match('^(.-)%s')
+        table.insert(last, name)
+        table.insert(last, {
+          typing = arg:match('%((.-)%)'),
+          default = arg:match('%s%[(.-)%]'),
+        })
 
         if last.default == ''
         or last.default == 'nil'
@@ -103,17 +106,17 @@ function fileParser.parse(path)
         if last.typing == nil then
           local r = '%{reset yellow}'
           print(colors('%{yellow blink bright}WARNING!' .. r .. ' Argument ' ..
-          '%{bright}' .. last.name .. r .. ' type not defined in function ' ..
+          '%{bright}' .. name .. r .. ' type not defined in function ' ..
           '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
           data.path))
         end
 
         local found = block:find('function%s.-%(%w*%s*,?%s*' ..
-          last.name .. '[%s,)]')
+          name .. '[%s,)]')
         if not found then
           local r = '%{reset red}'
           print(colors('%{red blink bright}ERROR!' .. r .. ' Argument ' ..
-          '%{bright}' .. last.name .. r .. ' mismatch in function ' ..
+          '%{bright}' .. name .. r .. ' mismatch in function ' ..
           '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
           data.path))
         end
