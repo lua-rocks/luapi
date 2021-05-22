@@ -89,9 +89,16 @@ function fileParser.parse(path)
           typing = arg:match('%((.-)%)'),
           default = arg:match('%s%[(.-)%]'),
         })
-        local def = fargs[#fargs].default
-        if def == '' or def == 'nil' or def == 'opt' then
-          fargs[#fargs].default = 'optional'
+        local last = fargs[#fargs]
+        if last.default == ''
+        or last.default == 'nil'
+        or last.default == 'opt' then
+          last.default = 'optional'
+        end
+        if last.typing == nil then
+          print('warning: argument "' .. last.name ..
+            '" type not defined in function "' .. func .. '" at "' ..
+            data.path .. '"' )
         end
       end
     end
@@ -102,7 +109,7 @@ function fileParser.parse(path)
 
   data.api = api
 
-  dump(data.api.args)
+  dump(data.api)
   return data
 end
 
