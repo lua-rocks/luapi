@@ -76,6 +76,15 @@ function fileParser.parse(path)
     table.insert(api.functions, func)
     table.insert(api.functions, {})
 
+    -- extract args from real function definitions
+    local real_args = {}
+    for all in block:gmatch('%]%]\n.-function%s.-%((.-)%)') do
+      for real in all:gmatch('%S+') do
+        real = real:gsub('[,%s]', '')
+        table.insert(real_args, real)
+      end
+    end
+
     -- parse lines from description
     local last = api.functions[#api.functions]
     for line in block:gmatch('\n(.*)\n') do
