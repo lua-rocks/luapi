@@ -10,7 +10,7 @@ module.start()
 local module = {}
 
 --[[ My function for documentation
-> name (typing) file will be created and overwritten
+> name (typindg) file will be created and overwritten
 > verbose (boolean) [] more output if true
 < success (boolean) fail will be handled gracefully and return false
 ]]
