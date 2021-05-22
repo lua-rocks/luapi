@@ -20,12 +20,6 @@ function module.startModule(name, verbose)
   return success
 end
 
---[[ Another one function
-> arrr (table) ololo
-> bfbf error
-]]
-local function test(arrr, hh) end
-
 -- luarocks install inspect
 inspect = require 'inspect' -- luacheck: ignore
 function dump(...) print(inspect(...)) end -- luacheck: ignore
