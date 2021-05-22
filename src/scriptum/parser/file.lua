@@ -69,12 +69,12 @@ function fileParser.parse(path)
   }
 
   -- iterate functions with comments
+  local order = 1
   for block in content:gmatch('[%G](%-%-%[%[.-%]%].-function.-)\n') do
 
     -- extract function name
     local func = block:match('%]%].-function%s(.-)%s?%(')
-    table.insert(api.functions, func)
-    table.insert(api.functions, {})
+    api.functions[func] = {params = {}, order = order}
 
     -- extract args from real function definitions
     local real_args = {}
@@ -86,25 +86,26 @@ function fileParser.parse(path)
     end
 
     -- parse lines from description
-    local last = api.functions[#api.functions]
+    local last = api.functions[func].params
     for line in block:gmatch('\n(.*)\n') do
       -- extract args from description lines
+      local line_number = 1
       for arg in line:gmatch('>%s?(.-)\n') do
         local name = arg:match('^(.-)%s')
-        table.insert(last, name)
-        table.insert(last, {
+        last[name] = {
           typing = arg:match('%((.-)%)'),
           default = arg:match('%s%[(.-)%]'),
           description = trim((arg:gsub('^.*[%]%)]', ''))),
-        })
+          order = line_number
+        }
 
-        if last[#last].default == ''
-        or last[#last].default == 'nil'
-        or last[#last].default == 'opt' then
-          last[#last].default = 'optional'
+        if last[name].default == ''
+        or last[name].default == 'nil'
+        or last[name].default == 'opt' then
+          last[name].default = 'optional'
         end
 
-        if last[#last].typing == nil then
+        if last[name].typing == nil then
           local r = '%{reset yellow}'
           print(colors('%{yellow blink bright}WARNING!' .. r .. ' Argument ' ..
           '%{bright}' .. name .. r .. ' type not defined in function ' ..
@@ -121,8 +122,11 @@ function fileParser.parse(path)
           '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
           data.path))
         end
+        line_number = line_number + 1
       end
     end
+
+    order = order + 1
   end
 
   data.api = api

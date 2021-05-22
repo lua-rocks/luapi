@@ -21,9 +21,9 @@ function module.startModule(name, verbose)
 end
 
 --[[ Another one function
-> args (table) ololo
+> arrr (table) ololo
 ]]
-local function test(args, ggg) end
+local function test(arrr, ggg) end
 
 -- luarocks install inspect
 inspect = require 'inspect' -- luacheck: ignore
