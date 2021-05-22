@@ -1,7 +1,8 @@
 --[[ File Parser ]]--
-
-
 local fileParser = {}
+
+
+local colors = require 'ansicolors'
 
 
 --[[ Remove spaces or other chars from the beginning and the end of string
@@ -96,20 +97,23 @@ function fileParser.parse(path)
           last.default = 'optional'
         end
         if last.typing == nil then
-          print('warning: argument "' .. last.name ..
-            '" type not defined in function "' .. func .. '" at "' ..
-            data.path .. '"' )
+          local r = '%{reset yellow}'
+          print(colors('%{red bright}WARNING!' .. r .. ' Argument ' ..
+          '%{bright}' .. last.name .. r .. ' type not defined in function ' ..
+          '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
+          data.path .. r))
         end
       end
     end
 
     -- extract real args
+    print(block)
     local real = {}
   end
 
   data.api = api
 
-  dump(data.api)
+  -- dump(data.api)
   return data
 end
 
