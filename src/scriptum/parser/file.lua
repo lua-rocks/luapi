@@ -73,12 +73,16 @@ function fileParser.parse(path)
   end
 
   -- parse title
-  data.title = trim(content:match('%-%-%[%[(.-)[%]\n]'))
+  local str = content:match('%-%-%[%[(.-)[%]\n]')
+  if str then data.title = trim(str) end
 
   -- parse description
-  data.description = content:match('%-%-%[%[(.-)%]%]'):gsub('^.-\n', '')
-  data.description = trim(data.description)
-  if data.description == data.title then data.description = nil end
+  data.description = content:match('%-%-%[%[(.-)%]%]')
+  if data.description then
+    data.description = data.description:gsub('^.-\n', '')
+    data.description = trim(data.description)
+    if data.description == data.title then data.description = nil end
+  end
 
   local api = {
     -- {integer=string,integer=table,...}
@@ -127,9 +131,6 @@ function fileParser.parse(path)
         if last[name].typing == nil then
           warning('WARNING', name, func, data.path)
         end
-
-        local found = block:find('function%s.-%(%w*%s*,?%s*' ..name.. '[%s,)]')
-        if not found then warning('ERROR', name, func, data.path) end
 
         line_number = line_number + 1
       end

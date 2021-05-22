@@ -168,8 +168,8 @@ end
 --[[
 > rootPath (string)
 > outPath (string)
-> config (table)
-> data (table)
+> module (table)
+> i (integer)
 ]]
 function fileWriter.write(rootPath, outPath, module, i)
   local data = module.fileData[module.files[i]]

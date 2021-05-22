@@ -99,19 +99,17 @@ local module = {}
 > rootPath (string) path to read source code from
 > pathFilters (table) [] search files only in these subdirs
 > outPath (string) ["doc"] path to output to
-< model (table) project model can be used for autocomlete in an IDE
 ]]
 function module.start(rootPath, pathFilters, outPath)
   rootPath = rootPath or config.rootPath
   pathFilters = pathFilters or config.pathFilters
   outPath = outPath or config.outPath
   module.fileData = {}
-  module.files = {}
-  module.reqs = {}
 
   -- Parse --
-  module.files, module.reqs = projParser.getFiles(rootPath, pathFilters)
-  for _, f in ipairs(module.files) do
+  local files
+  files, module.reqs = projParser.getFiles(rootPath, pathFilters)
+  for _, f in ipairs(files) do
     module.fileData[f] = fileParser.parse(f)
   end
 
@@ -120,8 +118,6 @@ function module.start(rootPath, pathFilters, outPath)
   -- for i, _ in ipairs(module.files) do
   --   fileWriter.write(rootPath, outPath, module, i)
   -- end
-
-  return module
 end
 
 
