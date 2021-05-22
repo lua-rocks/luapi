@@ -95,6 +95,7 @@ function fileParser.parse(path)
         table.insert(last, {
           typing = arg:match('%((.-)%)'),
           default = arg:match('%s%[(.-)%]'),
+          description = trim((arg:gsub('^.*[%]%)]', ''))),
         })
 
         if last.default == ''
