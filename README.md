@@ -17,7 +17,7 @@ See target template example (hand made)
   - [ ] Parser
     - [x] Store entire file in one string and use short regexps to this string
       instead of multiline search and complex extractions.
-    - [ ] Returns, tables, fields...
+    - [ ] Tables and fields; external and internal.
   - [ ] Writer
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
       - [ ] Multiline comments for all descriptions.
