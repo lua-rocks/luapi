@@ -6,7 +6,6 @@ local projWriter = {}
 
 
 --[[ Write project index file
-> rootPath (string)
 > outPath (string)
 > module (table)
 ]]

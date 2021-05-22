@@ -69,7 +69,6 @@ end
 
 --[[ Select and return only those files whose extensions are '.lua'.
 > fileTree (table)
-> ext (string)
 < fileTree (table)
 ]]
 local function filterFiles(fileTree)

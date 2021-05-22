@@ -142,6 +142,17 @@ function fileParser.parse(path)
         warning('ERROR', name, func, data.path)
       end
     end
+    for name in pairs(last) do
+      local function search(t, s)
+        for index, value in ipairs(t) do
+          if value == s then return index end
+        end
+        return nil
+      end
+      if not search(real_args, name) then
+        warning('ERROR', name, func, data.path)
+      end
+    end
 
     order = order + 1
   end

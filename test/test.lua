@@ -37,7 +37,7 @@ scriptum.start '/home/luarocks/repo/scriptum'
 
 -- generate minimal doc just for quick test
 -- scriptum.start('/home/luarocks/repo/scriptum/test')
-dump(scriptum)
+-- dump(scriptum)
 
 -- for key, value in pairs(model.fileData) do
 --   print(key)
