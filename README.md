@@ -40,7 +40,6 @@ See target template example (hand made)
     Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
 - [ ] Show doc only for external module fields.
 - [x] Throw error when function argument name doesn't match with described.
-- [ ] Throw error when described argument type doesn't match with accepted !?
 - [ ] Suppport for OOP: inheritance.
 - [ ] Add support for
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
