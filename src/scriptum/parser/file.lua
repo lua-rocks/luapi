@@ -54,91 +54,6 @@ end
 
 
 --[[
-> set (table)
-> multilines (table)
-]]
-local function catchMultilineEnd(set, multilines)
-  for i = 1, #multilines do
-    set.description[#set.description + 1] = multilines[i]
-  end
-end
-
-
---[[
-> set (table)
-> data (string) module name
-]]
-local function multiLineField(set, data)
-  if not set.description then
-    set.description = {}
-  else
-    set.description[#set.description + 1] = "||"
-  end
-  local text = data:match(p.leadingSpace)
-  if text ~= "" then
-    set.description[#set.description + 1] = text
-  end
-end
-
-
---[[
-> set (table)
-> line (string)
-> multilines (table)
-> multilineStarted (boolean)
-< found ("description"|nil)
-]]
-local function searchForTitle(set, line, multilines, multilineStarted)
-  local title = line:match(p.startBlockComment)
-    :gsub(p.closeBlockComment, "")
-    :gsub(p.endBlockComment, "")
-  title = trim(title)
-  if title then
-    if multilineStarted then
-      catchMultilineEnd(set, multilines)
-    end
-    multiLineField(set, title)
-    return "description"
-  end
-  return nil
-end
-
-
---[[
-> lines (table)
-> startLine (integer) 0
-> data (table)
-]]
-local function extractHeaderBlock(lines, startLine, data)
-  if not multilineSearch(lines, startLine, 1, p.startBlockComment) then return end
-
-  local search = multilineSearch(lines, startLine, 500, p.endBlockComment)
-  local set = {}
-  if search then
-    set.endHeader = search
-    local multilineStarted = nil
-    local multilines = {}
-    local matched = searchForTitle(set, lines[1], multilines, multilineStarted)
-    if matched then
-      multilineStarted = matched
-      multilines = {}
-    end
-    for j = 1, search - 2 do
-      local line = lines[startLine + j + 1]
-      if multilineStarted then
-        local text = line:match(p.leadingSpace)
-        multilines[#multilines + 1] = text
-      end
-    end
-    if multilineStarted then -- On end block, but check if a multiline catch wasn't done --
-      catchMultilineEnd(set, multilines)
-    end
-  end
-  data.header = set
-end
-
-
---[[
 > opt (string)
 < opt (string)
 ]]
@@ -248,22 +163,6 @@ local function extractFunctionBlock(lines, startLine, data)
 end
 
 
---[[
-> file (string)
-< lines (table)
-< count (integer)
-]]
-local function readFileLines(file)
-  local count = 0
-  local lines = {}
-  for line in io.lines(file) do
-    count = count + 1
-    lines[count] = line
-  end
-  return lines, count
-end
-
-
 -- Version 2 (WIP) --
 
 
@@ -282,18 +181,19 @@ end
 
 --[[
 > path (string) path to file
-< data ({"file"=string,"requires"=table,"api"=table,"header"=table})
+< data (table) full parsed info
 ]]
 function fileParser.parse(path)
   local data = {
-    file = path,
+    path = path,
     requires = {},
     api = {},
   }
 
+  -- extract raw file content
   local content = readFile(path)
 
-  -- remove comments
+  -- create no comments version
   local code = content:gsub('%-%-%[%[.-%]%]', ''):gsub('%-%-.-\n', '')
 
   -- parse requires
@@ -302,26 +202,18 @@ function fileParser.parse(path)
   end
 
   -- parse title
-  local title = trim(content:match('%-%-%[%[(.-)[%]\n]'))
-  -- print(title)
+  data.title = trim(content:match('%-%-%[%[(.-)[%]\n]'))
 
   -- parse description
-  local description = content:match('%-%-%[%[(.-)%]%]'):gsub('^.-\n', '')
-  description = trim(description)
-  if description == title then description = nil end
-  -- print(description)
+  data.description = content:match('%-%-%[%[(.-)%]%]'):gsub('^.-\n', '')
+  data.description = trim(data.description)
+  if data.description == data.title then data.description = nil end
 
-  -- TODO remove
-  local lines, count = readFileLines(path)
-  for i = 1, count do
-    if i == 1 then
-      extractHeaderBlock(lines, 0, data)
-    end
-    if not data.header or (not data.header.endHeader or i > data.header.endHeader) then
-      extractFunctionBlock(lines, i, data)
-    end
-  end
+  -- TODO extractFunctionBlock
 
+
+
+  dump(data)
   return data
 end
 
