@@ -90,30 +90,38 @@ function fileParser.parse(path)
           typing = arg:match('%((.-)%)'),
           default = arg:match('%s%[(.-)%]'),
         })
+
         local last = fargs[#fargs]
         if last.default == ''
         or last.default == 'nil'
         or last.default == 'opt' then
           last.default = 'optional'
         end
+
         if last.typing == nil then
           local r = '%{reset yellow}'
-          print(colors('%{red bright}WARNING!' .. r .. ' Argument ' ..
+          print(colors('%{yellow blink bright}WARNING!' .. r .. ' Argument ' ..
           '%{bright}' .. last.name .. r .. ' type not defined in function ' ..
           '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
-          data.path .. r))
+          data.path))
+        end
+
+        local found = block:find('function%s.-%(%w*%s*,?%s*' ..
+          last.name .. '[%s,)]')
+        if not found then
+          local r = '%{reset red}'
+          print(colors('%{red blink bright}ERROR!' .. r .. ' Argument ' ..
+          '%{bright}' .. last.name .. r .. ' mismatch in function ' ..
+          '%{bright}'  .. func .. r .. ' at %{blue bright underline}' ..
+          data.path))
         end
       end
     end
-
-    -- extract real args
-    print(block)
-    local real = {}
   end
 
   data.api = api
 
-  -- dump(data.api)
+  --dump(data.api)
   return data
 end
 
