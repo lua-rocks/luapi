@@ -4,27 +4,18 @@
 local projParser = {}
 
 
---[[ Convert full path to relative
-> fullPath (string)
-> rootPath (string)
-< relativePath (string)
-]]
-local function stripOutRoot(fullPath, rootPath)
-  if rootPath == "" then return fullPath end
-  rootPath = rootPath:gsub("\\\\", "/"):gsub("\\", "/")
-  fullPath = fullPath:gsub(rootPath.."/", ""):gsub(rootPath, "")
-  return fullPath
-end
-
-
 --[[ Convert filesystem path to require path
 > path (string) full path to .lua file
 > rootPath (string) full path to the project root
 < path (string)
 ]]
 local function fs2reqPath(path, rootPath)
-  path = stripOutRoot(path, rootPath)
+  rootPath = rootPath
+    :gsub("\\\\", "/")
+    :gsub("\\", "/")
   path = path
+    :gsub(rootPath.."/", "")
+    :gsub(rootPath, "")
     :gsub("/", ".")
     :gsub(".lua", "")
     :gsub(".init", "")
@@ -38,66 +29,53 @@ end
 < fileTree (table) result table
 ]]
 local function scanDir(folder, fileTree)
-  local function systemCheck()
-    local check = package.config:sub(1, 1)
-    if check == "\\" or check == "\\\\" then
-      return "windows"
-    end
-    return "linux"
-  end
-  if not fileTree then
-    fileTree = {}
-  end
-  if folder then
-    folder = folder:gsub("\\\\", "/")
-    folder = folder:gsub("\\", "/")
-  end
-  local pfile
+  if not fileTree then fileTree = {} end
+  local ostype = package.config:sub(1, 1)
+  if ostype == "\\" or ostype == "\\\\" then ostype "windows"
+  else ostype = "linux" end
+  folder = folder:gsub("\\\\", "/"):gsub("\\", "/")
+
   -- Files --
+  local file
   local command
-  if systemCheck() == "windows" then
+  if ostype == "windows" then
     command = 'dir "'..folder..'" /b /a-d-h'
   else
     command = 'ls -p "'..folder..'" | grep -v /'
   end
-  pfile = io.popen(command)
-  for item in pfile:lines() do
-    fileTree[#fileTree + 1] = (folder.."/"..item):gsub("//", "/")
+  file = io.popen(command)
+  for item in file:lines() do
+    item = (folder.."/"..item):gsub("//", "/")
+    table.insert(fileTree, item)
   end
-  pfile:close()
+  file:close()
+
   -- Folders --
-  if systemCheck() == "windows" then
+  if ostype == "windows" then
     command = 'dir "'..folder..'" /b /ad-h'
   else
     command = 'ls -p "'..folder..'" | grep /'
   end
-  pfile = io.popen(command)
-  for item in pfile:lines() do
+  file = io.popen(command)
+  for item in file:lines() do
     item = item:gsub("\\", "")
     fileTree = scanDir(folder.."/"..item, fileTree)
   end
-  pfile:close()
+  file:close()
+
   return fileTree
 end
 
 
---[[ Select and return only those files whose extensions match.
+--[[ Select and return only those files whose extensions are '.lua'.
 > fileTree (table)
 > ext (string)
 < fileTree (table)
 ]]
-local function filterFiles(fileTree, ext)
+local function filterFiles(fileTree)
   local set = {}
-  local count = 0
-  local typeSize = #ext
-  for i = 1, #fileTree do
-    local name = fileTree[i]
-    local typePart = string.sub(name, #name - typeSize + 1, #name)
-    if typePart == ext then
-      name = string.sub(name, 1, #name - typeSize)
-      count = count + 1
-      set[count] = name..ext
-    end
+  for _, path in ipairs(fileTree) do
+    if path:find('%.lua$') then table.insert(set, path) end
   end
   return set
 end
@@ -130,10 +108,10 @@ end
 function projParser.getFiles(rootPath, pathFilters)
   local files = {}
   if not pathFilters or #pathFilters == 0 then
-    files = filterFiles(scanDir(rootPath), '.lua')
+    files = filterFiles(scanDir(rootPath))
   else
     for _, filter in ipairs(pathFilters) do
-      local found = filterFiles(scanDir(rootPath .. '/' .. filter), '.lua')
+      local found = filterFiles(scanDir(rootPath .. '/' .. filter))
       files = concat(files, found)
     end
   end
