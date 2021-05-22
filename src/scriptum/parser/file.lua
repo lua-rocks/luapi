@@ -86,8 +86,13 @@ function fileParser.parse(path)
       for arg in line:gmatch('>%s?(.-)\n') do
         table.insert(fargs, {
           name = arg:match('^(.-)%s'),
-          typing = arg:match('%((.-)%)')
+          typing = arg:match('%((.-)%)'),
+          default = arg:match('%s%[(.-)%]'),
         })
+        local def = fargs[#fargs].default
+        if def == '' or def == 'nil' or def == 'opt' then
+          fargs[#fargs].default = 'optional'
+        end
       end
     end
 
