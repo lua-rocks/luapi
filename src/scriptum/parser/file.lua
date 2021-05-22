@@ -128,11 +128,8 @@ function fileParser.parse(path)
           warning('WARNING', name, func, data.path)
         end
 
-        local found = block:find('function%s.-%(%w*%s*,?%s*' ..
-          name .. '[%s,)]')
-        if not found then
-          warning('ERROR', name, func, data.path)
-        end
+        local found = block:find('function%s.-%(%w*%s*,?%s*' ..name.. '[%s,)]')
+        if not found then warning('ERROR', name, func, data.path) end
 
         line_number = line_number + 1
       end
