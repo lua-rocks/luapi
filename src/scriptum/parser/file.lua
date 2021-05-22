@@ -98,13 +98,13 @@ function fileParser.parse(path)
           description = trim((arg:gsub('^.*[%]%)]', ''))),
         })
 
-        if last.default == ''
-        or last.default == 'nil'
-        or last.default == 'opt' then
-          last.default = 'optional'
+        if last[#last].default == ''
+        or last[#last].default == 'nil'
+        or last[#last].default == 'opt' then
+          last[#last].default = 'optional'
         end
 
-        if last.typing == nil then
+        if last[#last].typing == nil then
           local r = '%{reset yellow}'
           print(colors('%{yellow blink bright}WARNING!' .. r .. ' Argument ' ..
           '%{bright}' .. name .. r .. ' type not defined in function ' ..
