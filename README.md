@@ -19,7 +19,7 @@ See target template example (hand made)
       instead of multiline search and complex extractions.
     - [ ] Tables and fields; external and internal.
     - [x] Show warning when function argument name doesn't match with described.
-    - [ ] Show warning when function is not described.
+    - [x] Show warning when function is not described.
   - [ ] Writer
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
       - [ ] Multiline comments for all descriptions.
