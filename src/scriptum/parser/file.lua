@@ -77,6 +77,13 @@ function fileParser.parse(path)
     description = nil,
   }
 
+  local api = {
+    -- {integer=string,integer=table,...}
+    -- fields = {},
+    -- tables = {},
+    functions = {},
+  }
+
   -- extract raw file content
   local content = readFile(path)
 
@@ -100,13 +107,6 @@ function fileParser.parse(path)
       data.description = nil
     end
   end
-
-  local api = {
-    -- {integer=string,integer=table,...}
-    -- fields = {},
-    -- tables = {},
-    functions = {},
-  }
 
   -- iterate functions with comments
   local order = 1
