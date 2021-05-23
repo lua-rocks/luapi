@@ -20,12 +20,12 @@ function module.startModule(name, verbose)
   return success
 end
 
-
-local function test(arg1)
-end
-
 -- luarocks install inspect
 inspect = require 'inspect'
+
+--[[ Print lua-object internals
+> ... (any) thing to inspect
+]]
 function dump(...) print(inspect(...)) end
 
 package.path = package.path .. ';src/?.lua;src/?/init.lua'

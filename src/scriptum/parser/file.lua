@@ -145,9 +145,6 @@ function fileParser.parse(path)
       end
     end
 
-    -- search for undescribed functions
-
-
     -- check if all args described
     for _, name in pairs(real_args) do
       if not last[name] then
@@ -167,6 +164,18 @@ function fileParser.parse(path)
     end
 
     order = order + 1
+  end
+
+  -- search for undescribed functions
+  for func in code:gmatch('\n.-function%s(.-)%s?%(') do
+    local described
+    for key in pairs(api.functions) do
+      if key == func then
+        described = true
+        break
+      end
+    end
+    if not described then warning('WARNING', 2, nil, func, data.path) end
   end
 
   data.api = api
