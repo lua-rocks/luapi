@@ -79,6 +79,7 @@ local overrides = { outPath = "doc" }
 scriptum.configuration(overrides)
 ```
 ]]
+local module = {}
 
 
 local config = {
@@ -92,7 +93,6 @@ local projParser = require 'scriptum.parser.proj'
 local fileParser = require 'scriptum.parser.file'
 -- local projWriter = require 'scriptum.writer.proj'
 -- local fileWriter = require 'scriptum.writer.file'
-local module = {}
 
 
 --[[ Start document generation

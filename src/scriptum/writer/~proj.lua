@@ -1,8 +1,8 @@
 --[[ Project Writer ]]--
+local projWriter = {}
 
 
 local writer = require 'scriptum.writer'
-local projWriter = {}
 
 
 --[[ Write project index file

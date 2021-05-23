@@ -6,8 +6,8 @@ module.start()
 ```
   I'm not a code
 ]]
-
 local module = {}
+
 
 --[[ My function for documentation
 > name (typindg) file will be created and overwritten
@@ -19,6 +19,7 @@ function module.startModule(name, verbose)
   if verbose then print(name) end
   return success
 end
+
 
 -- luarocks install inspect
 inspect = require 'inspect' -- luacheck: ignore
@@ -43,5 +44,6 @@ scriptum.start '/home/luarocks/repo/scriptum'
 --   print(key)
 --   print(inspect(value, {depth = 3}))
 -- end
+
 
 return module

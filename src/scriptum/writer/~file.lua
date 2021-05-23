@@ -1,8 +1,8 @@
 --[[ File Writer ]]--
+local fileWriter = {}
 
 
 local writer = require 'scriptum.writer'
-local fileWriter = {}
 
 
 local anyText = "(.*)"

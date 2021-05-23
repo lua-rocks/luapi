@@ -1,6 +1,4 @@
 --[[ Project Parser ]]--
-
-
 local projParser = {}
 
 
