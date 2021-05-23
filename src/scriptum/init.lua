@@ -104,13 +104,13 @@ function module.start(rootPath, pathFilters, outPath)
   rootPath = rootPath or config.rootPath
   pathFilters = pathFilters or config.pathFilters
   outPath = outPath or config.outPath
-  module.fileData = {}
+  module.files = {}
 
   -- Parse --
   local files
   files, module.reqs = projParser.getFiles(rootPath, pathFilters)
   for _, f in ipairs(files) do
-    module.fileData[f] = fileParser.parse(f)
+    module.files[f] = fileParser.parse(f)
   end
 
   -- Generate markdown --

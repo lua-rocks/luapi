@@ -96,7 +96,9 @@ function fileParser.parse(path)
   data.description = content:match('%-%-%[%[(.-)%]%]')
   if data.description then
     data.description = trim((data.description:gsub('^.-\n', '')))
-    if data.description == data.title then data.description = nil end
+    if data.description == data.title or data.description == '' then
+      data.description = nil
+    end
   end
 
   local api = {
@@ -141,6 +143,10 @@ function fileParser.parse(path)
         or last[name].default == 'nil'
         or last[name].default == 'opt' then
           last[name].default = 'optional'
+        end
+
+        for key, value in pairs(last[name]) do
+          if value == '' then last[name][key] = nil end
         end
 
         if last[name].typing == nil then
