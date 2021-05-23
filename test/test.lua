@@ -21,29 +21,27 @@ function module.startModule(name, verbose)
 end
 
 
+local function test(arg1)
+end
+
 -- luarocks install inspect
-inspect = require 'inspect' -- luacheck: ignore
-function dump(...) print(inspect(...)) end -- luacheck: ignore
+inspect = require 'inspect'
+function dump(...) print(inspect(...)) end
 
 package.path = package.path .. ';src/?.lua;src/?/init.lua'
 local scriptum = require 'scriptum'
 
 -- generate full project documetation
-scriptum.start '/home/luarocks/repo/scriptum'
+-- scriptum.start '/home/luarocks/repo/scriptum'
+
+-- generate minimal doc just for quick test
+scriptum.start('/home/luarocks/repo/scriptum/test')
 
 -- custom paths test
--- local model = scriptum.start('/home/luarocks/repo/scriptum', {
+-- scriptum.start('/home/luarocks/repo/scriptum', {
 --   'src/scriptum/parser', 'test'
 -- })
 
--- generate minimal doc just for quick test
--- scriptum.start('/home/luarocks/repo/scriptum/test')
 -- dump(scriptum)
-
--- for key, value in pairs(model.fileData) do
---   print(key)
---   print(inspect(value, {depth = 3}))
--- end
-
 
 return module

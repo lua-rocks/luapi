@@ -79,8 +79,7 @@ function fileParser.parse(path)
   -- parse description
   data.description = content:match('%-%-%[%[(.-)%]%]')
   if data.description then
-    data.description = data.description:gsub('^.-\n', '')
-    data.description = trim(data.description)
+    data.description = trim((data.description:gsub('^.-\n', '')))
     if data.description == data.title then data.description = nil end
   end
 

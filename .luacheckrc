@@ -1,2 +1,2 @@
-new_globals = {'_'}
+new_globals = {'_', 'inspect', 'dump'}
 exclude_files = {'**/.*'}
