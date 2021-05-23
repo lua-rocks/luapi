@@ -11,7 +11,7 @@ See target template example (hand made)
 
 ## Roadmap
 
-- [ ] Rewrite everything! Find and fix bugs; improve code quality.
+- [ ] Rewrite everything from scratch! 😱
   - [x] Separate code to submodules for easier maintain.
     - [ ] Document every function in each module.
   - [ ] Parser
