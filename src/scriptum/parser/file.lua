@@ -71,7 +71,6 @@ end
 ]]
 function fileParser.parse(path)
   local data = {
-    path = path,
     requires = {},
     api = nil,
     title = nil,
