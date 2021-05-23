@@ -57,18 +57,20 @@ Where:
 - optional **[default]** is the default value; if optional put [nil], [opt] or []
 - optional **note** is any further information
 
-Additionally, the **(a)** tag can be used to automatically unpack a simple table with key/value
-pairs, where each line is one pair ah a comment describing the key. This is used, for example, with
-the module 'config'. The tag in that case is used as:
+Additionally, the **(a)** tag can be used to automatically unpack a simple table
+with key/value pairs, where each line is one pair ah a comment describing the
+key. This is used, for example, with the module 'config'. The tag in that case
+is used as:
 
   (a) config
 
-The mark-up used in this file requires escape symbols to generate the outputs properly:
-- Where **()** with **start** or **end** can be used to escape block comments open and close.
+The mark-up used in this file requires escape symbols to generate the outputs
+properly:
+- Where **()** with **start** or **end** can be used to escape block comments.
 - And **()** with **a** is used to escape the @ symbol.
 
-Override a configuration parameter programmatically; insert your override values into a
-new table using the matched key names:
+Override a configuration parameter programmatically; insert your override values
+into a new table using the matched key names:
 
 ```lua
 local overrides = { outPath = "doc" }
@@ -118,7 +120,7 @@ end
 
 
 --[[ Modify the configuration of this module programmatically
-Provide a table with keys that share the same name as the configuration parameters:
+Provide a table with keys that share the same name as the config parameters:
 > overrides (table) each key is from a valid name, the value is the override
 @ config
 ]]
