@@ -20,6 +20,12 @@ function module.startModule(name, verbose)
   return success
 end
 
+
+local function test(args)
+
+end
+
+
 -- luarocks install inspect
 inspect = require 'inspect'
 
@@ -42,6 +48,6 @@ scriptum.start '/home/luarocks/repo/scriptum/test'
 --   'src/scriptum/parser', 'test'
 -- })
 
-dump(scriptum)
+-- dump(scriptum)
 
 return module

@@ -150,7 +150,7 @@ function fileParser.parse(path)
         end
 
         if last[name].typing == nil then
-          warning('WARNING', 1, name, func, data.path)
+          warning('WARNING', 1, name, func, path)
         end
 
         line_number = line_number + 1
@@ -160,7 +160,7 @@ function fileParser.parse(path)
     -- check if all args described
     for _, name in pairs(real_args) do
       if not last[name] then
-        warning('ERROR', 1, name, func, data.path)
+        warning('ERROR', 1, name, func, path)
       end
     end
     for name in pairs(last) do
@@ -171,7 +171,7 @@ function fileParser.parse(path)
         return nil
       end
       if not search(real_args, name) then
-        warning('ERROR', 1, name, func, data.path)
+        warning('ERROR', 1, name, func, path)
       end
     end
 
@@ -187,7 +187,7 @@ function fileParser.parse(path)
         break
       end
     end
-    if not described then warning('WARNING', 2, nil, func, data.path) end
+    if not described then warning('WARNING', 2, nil, func, path) end
   end
 
   data.api = api
