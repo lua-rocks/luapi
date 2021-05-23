@@ -32,20 +32,28 @@ end
 local function warning(warntype, id, name, func, path)
   if warntype == 'WARNING' then
     local r = '%{reset yellow}'
-    if id ~= 1 then return end
-    print(colors(
-      '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
-      '%{bright}' .. name .. r .. ' type not defined in function ' ..
-      '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
-    ))
+    if id == 1 then
+      print(colors(
+        '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
+        '%{bright}' .. name .. r .. ' type not defined in function ' ..
+        '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
+      ))
+    elseif id == 2 then
+      print(colors(
+        '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Function ' ..
+        '%{bright}'  .. func .. r .. ' is not described at ' ..
+        '%{blue bright underline}' .. path
+      ))
+    end
   elseif warntype == 'ERROR' then
     local r = '%{reset red}'
-    if id ~= 1 then return end
-    print(colors(
-      '%{red blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
-      '%{bright}' .. name .. r .. ' mismatch in function ' ..
-      '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
-    ))
+    if id == 1 then
+      print(colors(
+        '%{red blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
+        '%{bright}' .. name .. r .. ' mismatch in function ' ..
+        '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
+      ))
+    end
   end
 end
 
