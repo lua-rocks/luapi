@@ -1,8 +1,8 @@
 --[[ Scriptum
 Output is in markdown.
 
-~This document was created with this module, view the source file to see example input
-~And see the raw readme.md for example output
+  This document was created with this module, view the source file to see
+  example input And see the raw readme.md for example output
 
 Generate all documentation from the root directory:
 
@@ -11,32 +11,32 @@ local scriptum = require "scriptum"
 scriptum.start()
 ```
 
-Make sure you give the absolute path to the source root, and make
-sure the output folder 'doc' in this example already exists in the source path, such as:
+Make sure you give the absolute path to the source root, and make sure the
+output folder 'doc' in this example already exists in the source path, such as:
 
 ```lua
 local scriptum = require "scriptum"
-scriptum.start("C:/Users/me/Desktop/codebase", "doc")
+scriptum.start "C:/Users/me/Desktop/codebase"
 ```
 
 Create a block comment with a tittle in the first line:
 
-~(start) Test Module
-~Import and run with start()
-~~  local module = require "testmodule"
-~~  module.start()
-~(end)
+  (start) Test Module
+  Import and run with start()
+    local module = require "testmodule"
+    module.start()
+  (end)
 
 Tilde is used to mark a line as a code block when written in markdown.
 Empty lines can be used if required as to your preference.
 
 Create an API function entry with a comment block and one of more of:
 
-~> name (typing) [default] note
+  > name (typing) [default] note
 
 and:
 
-~< name (typing) note
+  < name (typing) note
 
 Such as:
 
@@ -57,19 +57,18 @@ Where:
 
 - **name** is the parameter or return value
 - optional **(typing)** such as (boolean), (number), (function), (string)
-- optional **\[default\]** is the default value; if optional put \[nil\], \[opt\] or \[\]
+- optional **[default]** is the default value; if optional put [nil], [opt] or []
 - optional **note** is any further information
 
 Additionally, the **(a)** tag can be used to automatically unpack a simple table with key/value
 pairs, where each line is one pair ah a comment describing the key. This is used, for example, with
 the module 'config'. The tag in that case is used as:
 
-~(a) config
+  (a) config
 
 The mark-up used in this file requires escape symbols to generate the outputs properly:
 - Where **()** with **start** or **end** can be used to escape block comments open and close.
 - And **()** with **a** is used to escape the @ symbol.
-- Angled brackets are escaped with \\< and \\>
 
 Override a configuration parameter programmatically; insert your override values into a
 new table using the matched key names:
