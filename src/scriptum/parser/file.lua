@@ -29,9 +29,10 @@ local function readFile(path)
 end
 
 
-local function warning(warntype, name, func, path)
+local function warning(warntype, id, name, func, path)
   if warntype == 'WARNING' then
     local r = '%{reset yellow}'
+    if id ~= 1 then return end
     print(colors(
       '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
       '%{bright}' .. name .. r .. ' type not defined in function ' ..
@@ -39,6 +40,7 @@ local function warning(warntype, name, func, path)
     ))
   elseif warntype == 'ERROR' then
     local r = '%{reset red}'
+    if id ~= 1 then return end
     print(colors(
       '%{red blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
       '%{bright}' .. name .. r .. ' mismatch in function ' ..
@@ -128,17 +130,20 @@ function fileParser.parse(path)
         end
 
         if last[name].typing == nil then
-          warning('WARNING', name, func, data.path)
+          warning('WARNING', 1, name, func, data.path)
         end
 
         line_number = line_number + 1
       end
     end
 
+    -- search for undescribed functions
+
+
     -- check if all args described
     for _, name in pairs(real_args) do
       if not last[name] then
-        warning('ERROR', name, func, data.path)
+        warning('ERROR', 1, name, func, data.path)
       end
     end
     for name in pairs(last) do
@@ -149,7 +154,7 @@ function fileParser.parse(path)
         return nil
       end
       if not search(real_args, name) then
-        warning('ERROR', name, func, data.path)
+        warning('ERROR', 1, name, func, data.path)
       end
     end
 
