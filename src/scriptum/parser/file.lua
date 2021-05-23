@@ -29,6 +29,13 @@ local function readFile(path)
 end
 
 
+--[[ Print some colored warning in terminal
+> warntype (string)
+> id (any)
+> name (string)
+> func (string)
+> path (string)
+]]
 local function warning(warntype, id, name, func, path)
   if warntype == 'WARNING' then
     local r = '%{reset yellow}'

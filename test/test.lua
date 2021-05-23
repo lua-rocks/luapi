@@ -31,8 +31,8 @@ function dump(...) print(inspect(...)) end
 package.path = package.path .. ';src/?.lua;src/?/init.lua'
 local scriptum = require 'scriptum'
 
--- generate full project documetation
-scriptum.start '/home/luarocks/repo/scriptum'
+-- generate full project documetation (excluding libraries)
+scriptum.start('/home/luarocks/repo/scriptum', {'src/scriptum'})
 
 -- generate minimal doc just for quick test
 -- scriptum.start '/home/luarocks/repo/scriptum/test'
