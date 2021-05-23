@@ -27,9 +27,6 @@ Create a block comment with a tittle in the first line:
     module.start()
   (end)
 
-Tilde is used to mark a line as a code block when written in markdown.
-Empty lines can be used if required as to your preference.
-
 Create an API function entry with a comment block and one of more of:
 
   > name (typing) [default] note
