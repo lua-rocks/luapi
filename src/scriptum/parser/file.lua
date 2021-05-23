@@ -16,7 +16,7 @@ local function trim(str, chars)
 end
 
 
---[[
+--[[ Read file and return its content as string
 > path (string)
 < content (string)
 ]]
@@ -65,53 +65,14 @@ local function warning(warntype, id, name, func, path)
 end
 
 
---[[
-> path (string) path to file
-< data (table) full parsed info
+--[[ Iterate commented functions and extract their api
+> content (string) file content
+> api (table) save api here
+> path (string) path to the file
 ]]
-function fileParser.parse(path)
-  local data = {
-    requires = {},
-    api = nil,
-    title = nil,
-    description = nil,
-  }
-
-  local api = {
-    -- {integer=string,integer=table,...}
-    -- fields = {},
-    -- tables = {},
-    functions = {},
-  }
-
-  -- extract raw file content
-  local content = readFile(path)
-
-  -- create no comments version
-  local code = content:gsub('%-%-%[%[.-%]%]', ''):gsub('%-%-.-\n', '')
-
-  -- parse requires
-  for found in code:gmatch('[%G]require%s*%(?%s*[\'\"](.-)[\'\"]') do
-    table.insert(data.requires, found)
-  end
-
-  -- parse title
-  local str = content:match('%-%-%[%[(.-)[%]\n]')
-  if str then data.title = trim(str) end
-
-  -- parse description
-  data.description = content:match('%-%-%[%[(.-)%]%]')
-  if data.description then
-    data.description = trim((data.description:gsub('^.-\n', '')))
-    if data.description == data.title or data.description == '' then
-      data.description = nil
-    end
-  end
-
-  -- iterate functions with comments
+local function parseFunctions(content, api, path)
   local order = 1
   for block in content:gmatch('[%G](%-%-%[%[.-%]%].-function.-)\n') do
-
     -- extract function name
     local func = block:match('%]%].-function%s(.-)%s?%(')
     api.functions[func] = {params = {}, order = order}
@@ -177,6 +138,53 @@ function fileParser.parse(path)
 
     order = order + 1
   end
+end
+
+
+--[[ Parse .lua file and create a table with its detailed description
+> path (string) path to file
+< data (table) full parsed info
+]]
+function fileParser.parse(path)
+  local data = {
+    requires = {},
+    api = nil,
+    title = nil,
+    description = nil,
+  }
+
+  local api = {
+    -- {integer=string,integer=table,...}
+    -- fields = {},
+    -- tables = {},
+    functions = {},
+  }
+
+  -- extract raw file content
+  local content = readFile(path)
+
+  -- create no comments version
+  local code = content:gsub('%-%-%[%[.-%]%]', ''):gsub('%-%-.-\n', '')
+
+  -- parse requires
+  for found in code:gmatch('[%G]require%s*%(?%s*[\'\"](.-)[\'\"]') do
+    table.insert(data.requires, found)
+  end
+
+  -- parse title
+  local str = content:match('%-%-%[%[(.-)[%]\n]')
+  if str then data.title = trim(str) end
+
+  -- parse description
+  data.description = content:match('%-%-%[%[(.-)%]%]')
+  if data.description then
+    data.description = trim((data.description:gsub('^.-\n', '')))
+    if data.description == data.title or data.description == '' then
+      data.description = nil
+    end
+  end
+
+  parseFunctions(content, api, path)
 
   -- search for undescribed functions
   for func in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
