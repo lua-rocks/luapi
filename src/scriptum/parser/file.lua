@@ -167,7 +167,7 @@ function fileParser.parse(path)
   end
 
   -- search for undescribed functions
-  for func in code:gmatch('\n.-function%s(.-)%s?%(') do
+  for func in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
     local described
     for key in pairs(api.functions) do
       if key == func then
