@@ -143,7 +143,10 @@ local function parseComments(content, api, path)
   local order = 1
   for block in content:gmatch('[%G](%-%-%[%[.-%]%].-function.-)\n') do
     local func = block:match('%]%].-function%s(.-)%s?%(')
-    if func then parseFunction(api, func, block, order, path) end
+    if func then
+      api.functions = api.functions or {}
+      parseFunction(api, func, block, order, path)
+    end
     order = order + 1
   end
 end
@@ -161,12 +164,7 @@ function fileParser.parse(path)
     description = nil,
   }
 
-  local api = {
-    -- {integer=string,integer=table,...}
-    fields = {},
-    tables = {},
-    functions = {},
-  }
+  local api = {}
 
   -- extract raw file content
   local content = readFile(path)
