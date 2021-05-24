@@ -17,13 +17,13 @@ See target template example (hand made)
   - [ ] Parser
     - [x] Store entire file in one string and use short regexps to this string
       instead of multiline search and complex extractions.
-    - [ ] Tables and fields; external and internal.
-      - [ ] First described table is module and its title is module title!
+    - [ ] Tables (first described table is a module).
+    - [ ] External and internal tables/functions.
+    - [ ] Multiline comments for tables/functions.
     - [x] Show warning when function argument name doesn't match with described.
     - [x] Show warning when function is not described.
   - [ ] Writer
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
-      - [ ] Multiline comments for all descriptions.
       - [ ] Table of contents.
       - [ ] Easy links for headers.
 - [ ] Custom comments style.
