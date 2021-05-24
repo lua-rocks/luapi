@@ -65,15 +65,16 @@ local function warning(warntype, id, name, path, func)
 end
 
 
---[[ Parse description block line by line and extract tagged data
+--[[ Common operations for any description block
 > block (string) block of text description
 > path (string) path to parsed file
 > params (table) where to save data
 > func (string) [] name of the function (if it's a function)
 ]]
 local function parseUniversal(block, path, params, func)
+  -- TODO parse title and description
+  -- parse description block line by line and extract tagged data
   for line in block:gmatch('\n(.*)\n') do
-    -- extract args from description lines
     local line_number = 1
     for arg in line:gmatch('>%s?(.-)\n') do
       local name = arg:match('^(.-)%s')
@@ -147,6 +148,16 @@ local function parseFunction(api, func, block, last, order, path)
 end
 
 
+--[[ Parse table
+> api (table) save api here
+> block (string) block of comments
+> last (string) one line of code after comments
+> order (integer) number of this commented block
+> path (string) path to parsed file
+]]
+local function parseTable(api, block, last, order, path)
+end
+
 --[[ Parse comments block and extract api
 > content (string) file content
 > api (table) save api here
@@ -159,6 +170,9 @@ local function parseComments(content, api, path)
     if func then
       api.functions = api.functions or {}
       parseFunction(api, func, block, last, order, path)
+    else
+      api.tables = api.tables or {}
+      parseTable(api, block, last, order, path)
     end
     order = order + 1
   end
