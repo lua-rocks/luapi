@@ -168,7 +168,7 @@ end
 > order (integer) number of this commented block
 > path (string) path to parsed file
 ]]
-local function parseTable(api, block, last, order, path)
+local function parseTable(api, name, block, last, order, path)
   --api[name] = {params = {}, order = order}
   --local params = api[name].params
   --parseUniversal(block, path, api, params)
@@ -189,7 +189,7 @@ local function parseComments(content, api, path)
       parseFunction(api.functions, name, block, last, order, path)
     else
       api.tables = api.tables or {}
-      parseTable(api.tables, block, last, order, path)
+      parseTable(api.tables, name, block, last, order, path)
     end
     order = order + 1
   end
