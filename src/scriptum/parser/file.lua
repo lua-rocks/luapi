@@ -99,7 +99,7 @@ local function parseUniversal(block, path, params, func)
 end
 
 
-local function parseFunction(api, func, block, order, path)
+local function parseFunction(api, func, block, last, order, path)
   api.functions[func] = {params = {}, order = order}
   local params = api.functions[func].params
 
@@ -107,7 +107,7 @@ local function parseFunction(api, func, block, order, path)
 
   -- extract args from real function definitions
   local real_args = {}
-  for all in block:gmatch('%]%]\n.-function%s.-%((.-)%)') do
+  for all in last:gmatch('.-function%s.-%((.-)%)') do
     for real in all:gmatch('%S+') do
       real = real:gsub('[,%s]', '')
       table.insert(real_args, real)
@@ -141,11 +141,11 @@ end
 ]]
 local function parseComments(content, api, path)
   local order = 1
-  for block in content:gmatch('[%G](%-%-%[%[.-%]%]\n.-)\n') do
-    local func = block:match('%]%].-function%s(.-)%s?%(')
+  for block, last in content:gmatch('(%-%-%[%[.-%]%]\n)(.-)\n') do
+    local func = last:match('function%s(.-)%s?%(')
     if func then
       api.functions = api.functions or {}
-      parseFunction(api, func, block, order, path)
+      parseFunction(api, func, block, last, order, path)
     end
     order = order + 1
   end
