@@ -68,12 +68,26 @@ end
 --[[ Common operations for any description block
 > block (string) block of text description
 > path (string) path to parsed file
-> params (table) where to save data
+> api (table) where to save title and description
+> params (table) where to save parameters data
 > func (string) [] name of the function (if it's a function)
 ]]
-local function parseUniversal(block, path, params, func)
+local function parseUniversal(block, path, api, params, func)
   -- TODO parse title and description
-  print(block)
+
+  -- parse title
+  local str = block:match('%-%-%[%[(.-)[%]\n]')
+  if str then api.title = trim(str) end
+
+  -- parse description
+  api.description = block:match('%-%-%[%[(.-)[%]><]')
+  if api.description then
+    api.description = trim((api.description:gsub('^.-\n', '')))
+    if api.description == api.title or api.description == '' then
+      api.description = nil
+    end
+  end
+
   -- parse description block line by line and extract tagged data
   for line in block:gmatch('\n(.*)\n') do
     local line_number = 1
@@ -115,10 +129,10 @@ end
 > path (string) path to parsed file
 ]]
 local function parseFunction(api, func, block, last, order, path)
-  api.functions[func] = {params = {}, order = order}
-  local params = api.functions[func].params
+  api[func] = {params = {}, order = order}
+  local params = api[func].params
 
-  parseUniversal(block, path, params, func)
+  parseUniversal(block, path, api[func], params, func)
 
   -- extract args from real function definitions
   local real_args = {}
@@ -171,10 +185,10 @@ local function parseComments(content, api, path)
     local func = last:match('function%s(.-)%s?%(')
     if func then
       api.functions = api.functions or {}
-      parseFunction(api, func, block, last, order, path)
+      parseFunction(api.functions, func, block, last, order, path)
     else
       api.tables = api.tables or {}
-      parseTable(api, block, last, order, path)
+      parseTable(api.tables, block, last, order, path)
     end
     order = order + 1
   end
@@ -204,19 +218,6 @@ function fileParser.parse(path)
   -- parse requires
   for found in code:gmatch('[%G]require%s*%(?%s*[\'\"](.-)[\'\"]') do
     table.insert(data.requires, found)
-  end
-
-  -- parse title
-  local str = content:match('%-%-%[%[(.-)[%]\n]')
-  if str then data.title = trim(str) end
-
-  -- parse description
-  data.description = content:match('%-%-%[%[(.-)%]%]')
-  if data.description then
-    data.description = trim((data.description:gsub('^.-\n', '')))
-    if data.description == data.title or data.description == '' then
-      data.description = nil
-    end
   end
 
   parseComments(content, api, path)
