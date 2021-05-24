@@ -15,6 +15,7 @@ See target template example (hand made)
   - [x] Separate code to submodules for easier maintain.
     - [ ] Document every function in each module.
   - [ ] Parser
+    - [ ] Function returns.
     - [x] Store entire file in one string and use short regexps to this string
       instead of multiline search and complex extractions.
     - [x] Tables (first described table is a module).
