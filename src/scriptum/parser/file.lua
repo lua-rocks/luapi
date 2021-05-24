@@ -202,12 +202,7 @@ end
 function fileParser.parse(path)
   local data = {
     requires = {},
-    api = nil,
-    title = nil,
-    description = nil,
   }
-
-  local api = {}
 
   -- extract raw file content
   local content = readFile(path)
@@ -220,18 +215,16 @@ function fileParser.parse(path)
     table.insert(data.requires, found)
   end
 
-  parseComments(content, api, path)
+  parseComments(content, data, path)
 
   -- search for undescribed functions
   for func in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
     local described
-    for key in pairs(api.functions) do
+    for key in pairs(data.functions) do
       if key == func then described = true break end
     end
     if not described then warning('WARNING', 2, nil, func, path) end
   end
-
-  data.api = api
 
   return data
 end

@@ -100,7 +100,7 @@ end
 > rootPath (string) root directory full path
 > pathFilters (table) [] search files only in these subdirs
 < files ({integer=string}) list of fs-file paths
-< reqs (table) list of req-file paths
+< requires (table) list of req-file paths
 ]]
 function projParser.getFiles(rootPath, pathFilters)
   local files = {}
@@ -114,14 +114,14 @@ function projParser.getFiles(rootPath, pathFilters)
   end
 
   table.sort(files, function(a, b) return a:upper() < b:upper() end)
-  local reqs = {}
+  local requires = {}
   for index, path in ipairs(files) do
     path = fs2reqPath(path, rootPath)
     -- FIXME
-    reqs[path] = index
-    reqs[index] = path
+    requires[path] = index
+    requires[index] = path
   end
-  return files, reqs
+  return files, requires
 end
 
 

@@ -106,7 +106,7 @@ function module.start(rootPath, pathFilters, outPath)
 
   -- Parse --
   local files
-  files, module.reqs = projParser.getFiles(rootPath, pathFilters)
+  files, module.requires = projParser.getFiles(rootPath, pathFilters)
   for _, f in ipairs(files) do
     module.files[f] = fileParser.parse(f)
   end

@@ -173,7 +173,7 @@ end
 ]]
 function fileWriter.write(rootPath, outPath, module, i)
   local data = module.fileData[module.files[i]]
-  local outFilename = module.reqs[i]..".md"
+  local outFilename = module.requires[i]..".md"
   outFilename = outPath.."/"..outFilename
   local file = writer.open(outFilename)
   if not file then return end
@@ -193,7 +193,7 @@ function fileWriter.write(rootPath, outPath, module, i)
       file:write("\n## Requires\n")
       hasREQ = true
     end
-    if module.reqs[req] then
+    if module.requires[req] then
       file:write("\n+ ["..req.."]("..req..".md)")
     else
       file:write("\n+ "..req)
