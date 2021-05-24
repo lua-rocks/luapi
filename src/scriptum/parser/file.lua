@@ -32,23 +32,23 @@ end
 --[[ Print some colored warning in terminal
 > warntype (string)
 > id (any)
+> argname (string)
 > name (string)
-> func (string)
 > path (string)
 ]]
-local function warning(warntype, id, name, path, func)
+local function warning(warntype, id, argname, path, name)
   if warntype == 'WARNING' then
     local r = '%{reset yellow}'
     if id == 1 then
       print(colors(
         '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
-        '%{bright}' .. name .. r .. ' type not defined in function ' ..
-        '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
+        '%{bright}' .. argname .. r .. ' type not defined in function ' ..
+        '%{bright}'  .. name .. r .. ' at %{blue bright underline}' .. path
       ))
     elseif id == 2 then
       print(colors(
         '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Function ' ..
-        '%{bright}'  .. func .. r .. ' is not described at ' ..
+        '%{bright}'  .. name .. r .. ' is not described at ' ..
         '%{blue bright underline}' .. path
       ))
     end
@@ -57,8 +57,8 @@ local function warning(warntype, id, name, path, func)
     if id == 1 then
       print(colors(
         '%{red blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
-        '%{bright}' .. name .. r .. ' mismatch in function ' ..
-        '%{bright}'  .. func .. r .. ' at %{blue bright underline}' .. path
+        '%{bright}' .. argname .. r .. ' mismatch in function ' ..
+        '%{bright}'  .. name .. r .. ' at %{blue bright underline}' .. path
       ))
     end
   end
@@ -70,16 +70,14 @@ end
 > path (string) path to parsed file
 > api (table) where to save title and description
 > params (table) where to save parameters data
-> func (string) [] name of the function (if it's a function)
+> name (string) [] name of the described variable
 ]]
-local function parseUniversal(block, path, api, params, func)
-  -- TODO parse title and description
-
+local function parseUniversal(block, path, api, params, name)
   -- parse title
   local str = block:match('%-%-%[%[(.-)[%]\n]')
   if str then api.title = trim(str) end
 
-  -- parse description
+  -- parse muliline markdown description
   api.description = block:match('%-%-%[%[(.-)[%]><]')
   if api.description then
     api.description = trim((api.description:gsub('^.-\n', '')))
@@ -92,26 +90,26 @@ local function parseUniversal(block, path, api, params, func)
   for line in block:gmatch('\n(.*)\n') do
     local line_number = 1
     for arg in line:gmatch('>%s?(.-)\n') do
-      local name = arg:match('^(.-)%s')
-      params[name] = {
+      local argname = arg:match('^(.-)%s')
+      params[argname] = {
         typing = arg:match('%((.-)%)'),
         default = arg:match('%s%[(.-)%]'),
         description = trim((arg:gsub('^.*[%]%)]', ''))),
         order = line_number
       }
 
-      if params[name].default == ''
-      or params[name].default == 'nil'
-      or params[name].default == 'opt' then
-        params[name].default = 'optional'
+      if params[argname].default == ''
+      or params[argname].default == 'nil'
+      or params[argname].default == 'opt' then
+        params[argname].default = 'optional'
       end
 
-      for key, value in pairs(params[name]) do
-        if value == '' then params[name][key] = nil end
+      for key, value in pairs(params[argname]) do
+        if value == '' then params[argname][key] = nil end
       end
 
-      if params[name].typing == nil then
-        warning('WARNING', 1, name, func, path)
+      if params[argname].typing == nil then
+        warning('WARNING', 1, name, name, path)
       end
 
       line_number = line_number + 1
@@ -122,17 +120,17 @@ end
 
 --[[ Parse function
 > api (table) save api here
-> func (string) name of the function
+> name (string) name of the function
 > block (string) block of comments
 > last (string) one line of code after comments
 > order (integer) number of this commented block
 > path (string) path to parsed file
 ]]
-local function parseFunction(api, func, block, last, order, path)
-  api[func] = {params = {}, order = order}
-  local params = api[func].params
+local function parseFunction(api, name, block, last, order, path)
+  api[name] = {params = {}, order = order}
+  local params = api[name].params
 
-  parseUniversal(block, path, api[func], params, func)
+  parseUniversal(block, path, api[name], params, name)
 
   -- extract args from real function definitions
   local real_args = {}
@@ -144,20 +142,20 @@ local function parseFunction(api, func, block, last, order, path)
   end
 
   -- check if all args described
-  for _, name in pairs(real_args) do
-    if not params[name] then
-      warning('ERROR', 1, name, func, path)
+  for _, argname in pairs(real_args) do
+    if not params[argname] then
+      warning('ERROR', 1, argname, name, path)
     end
   end
-  for name in pairs(params) do
+  for argname in pairs(params) do
     local function search(t, s)
       for index, value in ipairs(t) do
         if value == s then return index end
       end
       return nil
     end
-    if not search(real_args, name) then
-      warning('ERROR', 1, name, func, path)
+    if not search(real_args, argname) then
+      warning('ERROR', 1, argname, name, path)
     end
   end
 end
@@ -171,6 +169,9 @@ end
 > path (string) path to parsed file
 ]]
 local function parseTable(api, block, last, order, path)
+  --api[name] = {params = {}, order = order}
+  --local params = api[name].params
+  --parseUniversal(block, path, api, params)
 end
 
 
@@ -182,10 +183,10 @@ end
 local function parseComments(content, api, path)
   local order = 1
   for block, last in content:gmatch('(%-%-%[%[.-%]%]\n)(.-)\n') do
-    local func = last:match('function%s(.-)%s?%(')
-    if func then
+    local name = last:match('function%s(.-)%s?%(')
+    if name then
       api.functions = api.functions or {}
-      parseFunction(api.functions, func, block, last, order, path)
+      parseFunction(api.functions, name, block, last, order, path)
     else
       api.tables = api.tables or {}
       parseTable(api.tables, block, last, order, path)
@@ -218,12 +219,12 @@ function fileParser.parse(path)
   parseComments(content, data, path)
 
   -- search for undescribed functions
-  for func in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
+  for name in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
     local described
     for key in pairs(data.functions) do
-      if key == func then described = true break end
+      if key == name then described = true break end
     end
-    if not described then warning('WARNING', 2, nil, func, path) end
+    if not described then warning('WARNING', 2, nil, name, path) end
   end
 
   return data
