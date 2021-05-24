@@ -41,7 +41,8 @@ local scriptum = require 'scriptum'
 -- generate minimal doc just for quick test
 scriptum.start '/home/luarocks/repo/scriptum/test'
 
--- dump(scriptum)
+
+if ({...})[1] == 'dump' then dump(scriptum) end
 
 
 return module
