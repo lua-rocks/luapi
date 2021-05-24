@@ -18,6 +18,7 @@ See target template example (hand made)
     - [x] Store entire file in one string and use short regexps to this string
       instead of multiline search and complex extractions.
     - [ ] Tables and fields; external and internal.
+      - [ ] First described table is module and its title is module title!
     - [x] Show warning when function argument name doesn't match with described.
     - [x] Show warning when function is not described.
   - [ ] Writer

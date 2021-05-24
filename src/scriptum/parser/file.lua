@@ -209,10 +209,7 @@ function fileParser.parse(path)
   for func in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
     local described
     for key in pairs(api.functions) do
-      if key == func then
-        described = true
-        break
-      end
+      if key == func then described = true break end
     end
     if not described then warning('WARNING', 2, nil, func, path) end
   end
