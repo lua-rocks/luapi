@@ -12,8 +12,19 @@ See target template example (hand made)
 ## Roadmap
 
 - [ ] Rewrite everything from scratch! 😱
+  - [ ] Custom comments style.
+    - [x] Remove **all** vignette tags - just use markdown in comments instead.
+      First line in first comment is title; other lines for description.
+    - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
+      I no need any other tags!
+    - [ ] Unpack (`@`) should work with params and returns in any scope.
+      Like this: `> @conf` or `< @conf`.
+    - [x] Square brackets for default function params and nothing for comment.
+    - [x] Any function param is required by default. You don't need to
+      specify this explicitly! If it has default value, then it's optional.
+      Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
   - [x] Separate code to submodules for easier maintain.
-    - [ ] Document every function in each module.
+    - [x] Document every function in each module.
   - [ ] Parser
     - [ ] Function returns.
     - [ ] Table returns can be used for class name and optional is super class.
@@ -28,18 +39,6 @@ See target template example (hand made)
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
       - [ ] Table of contents.
       - [ ] Easy links for headers.
-- [ ] Custom comments style.
-  - [ ] Colon for type (parentheses for arguments if the type is function).
-  - [x] Remove **all** vignette tags - just use markdown in comments instead.
-    First line in first comment is title; other lines for description.
-  - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
-    I no need any other tags!
-  - [ ] Unpack (`@`) should work with params and returns in any scope.
-    Like this: `> @conf` or `< @conf`.
-  - [x] Square brackets for default function params and nothing for comment.
-  - [x] Any function param is required by default. You don't need to
-    specify this explicitly! If it has default value, then it's optional.
-    Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
 - [x] Remove `love` (why do we need it if it's not required?).
 - [ ] Suppport for OOP: inheritance.
 - [ ] Add support for
