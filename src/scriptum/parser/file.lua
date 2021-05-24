@@ -206,7 +206,6 @@ function fileParser.parse(path)
 
   data.api = api
 
-  --dump(data.api)
   return data
 end
 
