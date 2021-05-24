@@ -36,7 +36,7 @@ end
 > func (string)
 > path (string)
 ]]
-local function warning(warntype, id, name, func, path)
+local function warning(warntype, id, name, path, func)
   if warntype == 'WARNING' then
     local r = '%{reset yellow}'
     if id == 1 then
@@ -65,77 +65,85 @@ local function warning(warntype, id, name, func, path)
 end
 
 
---[[ Iterate commented functions and extract their api
+-- parse lines from description
+local function parseUniversal(block, path, params, func)
+  for line in block:gmatch('\n(.*)\n') do
+    -- extract args from description lines
+    local line_number = 1
+    for arg in line:gmatch('>%s?(.-)\n') do
+      local name = arg:match('^(.-)%s')
+      params[name] = {
+        typing = arg:match('%((.-)%)'),
+        default = arg:match('%s%[(.-)%]'),
+        description = trim((arg:gsub('^.*[%]%)]', ''))),
+        order = line_number
+      }
+
+      if params[name].default == ''
+      or params[name].default == 'nil'
+      or params[name].default == 'opt' then
+        params[name].default = 'optional'
+      end
+
+      for key, value in pairs(params[name]) do
+        if value == '' then params[name][key] = nil end
+      end
+
+      if params[name].typing == nil then
+        warning('WARNING', 1, name, func, path)
+      end
+
+      line_number = line_number + 1
+    end
+  end
+end
+
+
+local function parseFunction(api, func, block, order, path)
+  api.functions[func] = {params = {}, order = order}
+  local params = api.functions[func].params
+
+  parseUniversal(block, path, params, func)
+
+  -- extract args from real function definitions
+  local real_args = {}
+  for all in block:gmatch('%]%]\n.-function%s.-%((.-)%)') do
+    for real in all:gmatch('%S+') do
+      real = real:gsub('[,%s]', '')
+      table.insert(real_args, real)
+    end
+  end
+
+  -- check if all args described
+  for _, name in pairs(real_args) do
+    if not params[name] then
+      warning('ERROR', 1, name, func, path)
+    end
+  end
+  for name in pairs(params) do
+    local function search(t, s)
+      for index, value in ipairs(t) do
+        if value == s then return index end
+      end
+      return nil
+    end
+    if not search(real_args, name) then
+      warning('ERROR', 1, name, func, path)
+    end
+  end
+end
+
+
+--[[ Parse comments block and extract api
 > content (string) file content
 > api (table) save api here
 > path (string) path to the file
 ]]
-local function parseFunctions(content, api, path)
+local function parseComments(content, api, path)
   local order = 1
   for block in content:gmatch('[%G](%-%-%[%[.-%]%].-function.-)\n') do
-    -- extract function name
     local func = block:match('%]%].-function%s(.-)%s?%(')
-    api.functions[func] = {params = {}, order = order}
-
-    -- extract args from real function definitions
-    local real_args = {}
-    for all in block:gmatch('%]%]\n.-function%s.-%((.-)%)') do
-      for real in all:gmatch('%S+') do
-        real = real:gsub('[,%s]', '')
-        table.insert(real_args, real)
-      end
-    end
-
-    -- parse lines from description
-    local last = api.functions[func].params
-    for line in block:gmatch('\n(.*)\n') do
-      -- extract args from description lines
-      local line_number = 1
-      for arg in line:gmatch('>%s?(.-)\n') do
-        local name = arg:match('^(.-)%s')
-        last[name] = {
-          typing = arg:match('%((.-)%)'),
-          default = arg:match('%s%[(.-)%]'),
-          description = trim((arg:gsub('^.*[%]%)]', ''))),
-          order = line_number
-        }
-
-        if last[name].default == ''
-        or last[name].default == 'nil'
-        or last[name].default == 'opt' then
-          last[name].default = 'optional'
-        end
-
-        for key, value in pairs(last[name]) do
-          if value == '' then last[name][key] = nil end
-        end
-
-        if last[name].typing == nil then
-          warning('WARNING', 1, name, func, path)
-        end
-
-        line_number = line_number + 1
-      end
-    end
-
-    -- check if all args described
-    for _, name in pairs(real_args) do
-      if not last[name] then
-        warning('ERROR', 1, name, func, path)
-      end
-    end
-    for name in pairs(last) do
-      local function search(t, s)
-        for index, value in ipairs(t) do
-          if value == s then return index end
-        end
-        return nil
-      end
-      if not search(real_args, name) then
-        warning('ERROR', 1, name, func, path)
-      end
-    end
-
+    if func then parseFunction(api, func, block, order, path) end
     order = order + 1
   end
 end
@@ -155,8 +163,8 @@ function fileParser.parse(path)
 
   local api = {
     -- {integer=string,integer=table,...}
-    -- fields = {},
-    -- tables = {},
+    fields = {},
+    tables = {},
     functions = {},
   }
 
@@ -184,7 +192,7 @@ function fileParser.parse(path)
     end
   end
 
-  parseFunctions(content, api, path)
+  parseComments(content, api, path)
 
   -- search for undescribed functions
   for func in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
