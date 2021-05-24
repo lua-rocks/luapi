@@ -141,7 +141,7 @@ end
 ]]
 local function parseComments(content, api, path)
   local order = 1
-  for block in content:gmatch('[%G](%-%-%[%[.-%]%].-function.-)\n') do
+  for block in content:gmatch('[%G](%-%-%[%[.-%]%]\n.-)\n') do
     local func = block:match('%]%].-function%s(.-)%s?%(')
     if func then
       api.functions = api.functions or {}
