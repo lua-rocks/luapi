@@ -26,6 +26,8 @@ inspect = require 'inspect'
 
 
 --[[ Print lua-object internals
+additional **muliline** description
+in `markdown` _format_ supported in any block.
 > ... (any) thing to inspect
 ]]
 function dump(...) print(inspect(...)) end

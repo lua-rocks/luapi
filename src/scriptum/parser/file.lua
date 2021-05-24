@@ -73,6 +73,7 @@ end
 ]]
 local function parseUniversal(block, path, params, func)
   -- TODO parse title and description
+  print(block)
   -- parse description block line by line and extract tagged data
   for line in block:gmatch('\n(.*)\n') do
     local line_number = 1
@@ -157,6 +158,7 @@ end
 ]]
 local function parseTable(api, block, last, order, path)
 end
+
 
 --[[ Parse comments block and extract api
 > content (string) file content
