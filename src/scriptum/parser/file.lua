@@ -76,8 +76,8 @@ local function parseUniversal(block, path, api, name, order)
   api[name] = {params = {}, returns = {}, order = order}
 
   -- parse title
-  local str = block:match('%-%-%[%[(.-)[%]\n]')
-  if str then api.title = trim(str) end
+  local title = block:match('%-%-%[%[(.-)[%]\n]')
+  if title then api.title = trim(title) end
 
   -- parse muliline markdown description
   api.description = block:match('%-%-%[%[(.-)[%]><]')
@@ -110,6 +110,7 @@ local function parseUniversal(block, path, api, name, order)
     if def == '' or def == 'nil' or def == 'opt' then
       tagged_table[tagged_name].default = ''
     end
+
     -- correct all
     for key, value in pairs(tagged_table[tagged_name]) do
       if value == '' and key ~= 'default' then
