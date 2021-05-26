@@ -5,8 +5,8 @@ local module = require "testmodule"
 module.start()
 ```
   I'm not a code
-> test (string) some module field
-< error object have no returns
+> test (string) [] some module field
+< Module (Object) `module` is a class `Module` extended from class `Object`
 ]]
 local module = {}
 
