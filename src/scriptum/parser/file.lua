@@ -68,11 +68,13 @@ end
 --[[ Common operations for any description block
 > block (string) block of text description
 > path (string) path to parsed file
-> api (table) where to save title and description
-> params (table) where to save parameters data
+> api (table) where to save data
 > name (string) [] name of the described variable
 ]]
-local function parseUniversal(block, path, api, params, name)
+local function parseUniversal(block, path, api, name, order)
+  -- initialize structure
+  api[name] = {params = {}, returns = {}, order = order}
+
   -- parse title
   local str = block:match('%-%-%[%[(.-)[%]\n]')
   if str then api.title = trim(str) end
@@ -88,29 +90,40 @@ local function parseUniversal(block, path, api, params, name)
 
   -- parse description block line by line and extract tagged data
   local line_number = 1
-  for param_line in block:gmatch('>%s?(.-)\n') do
-    -- TODO param_line > tagged_line
-    -- TODO parse returns
-    local argname = param_line:match('^(.-)%s')
-    params[argname] = {
-      typing = param_line:match('%((.-)%)'),
-      default = param_line:match('%s%[(.-)%]'),
-      description = trim((param_line:gsub('^.*[%]%)]', ''))),
+  for tag, tagged_line in block:gmatch('([><])%s?(.-)\n') do
+    local tagged_name = tagged_line:match('^(.-)%s')
+    local tagged_table
+    if tag == '>' then
+      tagged_table = api[name].params
+    elseif tag == '<' then
+      tagged_table = api[name].returns
+    end
+
+    tagged_table[tagged_name] = {
+      typing = tagged_line:match('%((.-)%)'),
+      default = tagged_line:match('%s%[(.-)%]'),
+      description = trim((tagged_line:gsub('^.*[%]%)]', ''))),
       order = line_number
     }
 
-    if params[argname].default == ''
-    or params[argname].default == 'nil'
-    or params[argname].default == 'opt' then
-      params[argname].default = 'optional'
+    if tagged_table and tagged_name then
+      -- correct defaults
+      if tagged_table[tagged_name].default == ''
+      or tagged_table[tagged_name].default == 'nil'
+      or tagged_table[tagged_name].default == 'opt' then
+        tagged_table[tagged_name].default = 'optional'
+      end
+      -- correct all
+      for key, value in pairs(tagged_table[tagged_name]) do
+        if value == '' then tagged_table[tagged_name][key] = nil end
+      end
     end
 
-    for key, value in pairs(params[argname]) do
-      if value == '' then params[argname][key] = nil end
-    end
-
-    if params[argname].typing == nil then
-      warning('WARNING', 1, name, name, path)
+    -- check undescribed params
+    if tag == '>' then
+      if tagged_table[tagged_name].typing == nil then
+        warning('WARNING', 1, name, name, path)
+      end
     end
 
     line_number = line_number + 1
@@ -127,10 +140,8 @@ end
 > path (string) path to parsed file
 ]]
 local function parseFunction(api, name, block, last, order, path)
-  api[name] = {params = {}, order = order}
+  parseUniversal(block, path, api, name, order)
   local params = api[name].params
-
-  parseUniversal(block, path, api[name], params, name)
 
   -- extract args from real function definitions
   local real_args = {}
@@ -169,9 +180,7 @@ end
 > path (string) path to parsed file
 ]]
 local function parseTable(api, name, block, order, path)
-  api[name] = {params = {}, order = order}
-  local params = api[name].params
-  parseUniversal(block, path, api, params)
+  parseUniversal(block, path, api, name, order)
 end
 
 
