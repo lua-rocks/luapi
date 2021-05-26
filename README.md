@@ -30,13 +30,12 @@ See target template example (hand made)
       Values `[]`, `[nil]` and `[opt]` are synonims to `[optional]`.
   - [x] Separate code to submodules for easier maintain.
     - [x] Document every function in each module.
-  - [ ] Parser
+  - [x] Parser
     - [x] Function returns.
     - [x] Table returns can be used for class names (type is super class).
     - [x] Store entire file in one string and use short pattern matchers
       to this string, instead of multiline search and complex extractions.
     - [x] Tables (first described table is a module).
-    - [ ] External and internal tables/functions.
     - [x] Multiline comments for tables/functions.
     - [x] Show warning when function argument name doesn't match with described.
     - [x] Show warning when function is not described.
@@ -44,6 +43,7 @@ See target template example (hand made)
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
       - [ ] Table of contents.
       - [ ] Easy links for headers.
+      - [ ] External and internal tables/functions.
 - [x] Remove `love` (why do we need it if it's not required?).
 - [ ] Suppport for OOP: inheritance.
 - [ ] Add support for
