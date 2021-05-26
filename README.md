@@ -22,8 +22,10 @@ See target template example (hand made)
       First line in first comment is title; other lines for description.
     - [x] Replace `@param`, `@return` and `@unpack` tags with `>`, `<` and `@`.
       I no need any other tags!
-    - [ ] Unpack (`@`) should work with params and returns in any scope.
-      Like this: `> @conf` or `< @conf`.
+    - [ ] Unpack (`@`)
+      - [ ] I like the idea of unpack but it is not implemented yet in my fork.
+      - [ ] Unpack should work with params and returns in any scope.
+        Like this: `> @conf` or `< @conf`.
     - [x] Square brackets for default function params and nothing for comment.
     - [x] Any function param is required by default. You don't need to
       specify this explicitly! If it has default value, then it's optional.
