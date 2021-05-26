@@ -4,8 +4,9 @@ The main goal of this project is to make Scriptum simplier by following KISS
 principle, to make it easier to read and modify its source for everyone
 (first at all for me. lol).
 
-I'm not sure if I can find a time and superpowers to do all these things,
-can't promise anything but I'll try 🤡
+Also I want to make it much better by adding more functionality, improving
+markdown templates and comments api. But at the same time I dont want to bloat
+it. I will try to focus only on the essentials!
 
 Examples temporary removed and current version don't write any files because
 I want to rewrite everything from scratch!
