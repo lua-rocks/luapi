@@ -42,7 +42,7 @@ local function warning(warntype, id, name, argname, path)
     if id == 1 then
       print(colors(
         '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
-        '%{bright}' .. argname .. r .. ' type not defined in function ' ..
+        '%{bright}' .. argname .. r .. ' type not defined in ' ..
         '%{bright}'  .. name .. r .. ' at %{blue bright underline}' .. path
       ))
     elseif id == 2 then
@@ -119,7 +119,7 @@ local function parseUniversal(block, path, api, name, order)
       end
     end
 
-    -- check undescribed params
+    -- warn params with undescribed type
     if tag == '>' then
       if tagged_table[tagged_name].typing == nil then
         warning('WARNING', 1, name, tagged_name, path)
