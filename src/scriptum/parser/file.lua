@@ -81,11 +81,11 @@ local function parseUniversal(block, path, api, name, order)
   if title then api[name].title = trim(title) end
 
   -- parse muliline markdown description
-  api.description = block:match('%-%-%[%[(.-)[%]><]')
-  if api.description then
-    api.description = trim((api.description:gsub('^.-\n', '')))
-    if api.description == api.title or api.description == '' then
-      api.description = nil
+  api[name].description = block:match('%-%-%[%[(.-)[%]><]')
+  if api[name].description then
+    api[name].description = trim((api[name].description:gsub('^.-\n', '')))
+    if api[name].description == api[name].title or api[name].description == '' then
+      api[name].description = nil
     end
   end
 
