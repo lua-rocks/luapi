@@ -89,12 +89,12 @@ local function parseUniversal(block, path, api, params, name)
   -- parse description block line by line and extract tagged data
   for line in block:gmatch('\n(.*)\n') do
     local line_number = 1
-    for arg in line:gmatch('>%s?(.-)\n') do
-      local argname = arg:match('^(.-)%s')
+    for param_line in line:gmatch('>%s?(.-)\n') do
+      local argname = param_line:match('^(.-)%s')
       params[argname] = {
-        typing = arg:match('%((.-)%)'),
-        default = arg:match('%s%[(.-)%]'),
-        description = trim((arg:gsub('^.*[%]%)]', ''))),
+        typing = param_line:match('%((.-)%)'),
+        default = param_line:match('%s%[(.-)%]'),
+        description = trim((param_line:gsub('^.*[%]%)]', ''))),
         order = line_number
       }
 
