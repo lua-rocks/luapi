@@ -41,7 +41,7 @@ local function warning(warntype, id, name, argname, path)
     local r = '%{reset yellow}'
     if id == 1 then
       print(colors(
-        '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
+        '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Parameter ' ..
         '%{bright}' .. argname .. r .. ' type not defined in ' ..
         '%{bright}'  .. name .. r .. ' at %{blue bright underline}' .. path
       ))
