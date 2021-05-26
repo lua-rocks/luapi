@@ -32,11 +32,11 @@ end
 --[[ Print some colored warning in terminal
 > warntype (string)
 > id (any)
-> argname (string)
 > name (string)
+> argname (string)
 > path (string)
 ]]
-local function warning(warntype, id, argname, path, name)
+local function warning(warntype, id, name, argname, path)
   if warntype == 'WARNING' then
     local r = '%{reset yellow}'
     if id == 1 then
@@ -121,7 +121,7 @@ local function parseUniversal(block, path, api, name, order)
     -- check undescribed params
     if tag == '>' then
       if tagged_table[tagged_name].typing == nil then
-        warning('WARNING', 1, name, name, path)
+        warning('WARNING', 1, name, tagged_name, path)
       end
     end
 
@@ -154,7 +154,7 @@ local function parseFunction(api, name, block, last, order, path)
   -- check if all args described
   for _, argname in pairs(real_args) do
     if not params[argname] then
-      warning('ERROR', 1, argname, name, path)
+      warning('ERROR', 1, name, argname, path)
     end
   end
   for argname in pairs(params) do
@@ -165,7 +165,7 @@ local function parseFunction(api, name, block, last, order, path)
       return nil
     end
     if not search(real_args, argname) then
-      warning('ERROR', 1, argname, name, path)
+      warning('ERROR', 1, name, argname, path)
     end
   end
 end
@@ -235,7 +235,7 @@ function fileParser.parse(path)
     for key in pairs(data.functions) do
       if key == name then described = true break end
     end
-    if not described then warning('WARNING', 2, nil, name, path) end
+    if not described then warning('WARNING', 2, name, nil, path) end
   end
 
   return data
