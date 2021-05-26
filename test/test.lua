@@ -17,6 +17,8 @@ local module = {}
 < success (boolean) fail will be handled gracefully and return false
 ]]
 function module.startModule(name, verbose)
+  --[[ Function in function ]]--
+  local function funcInFunc() end
   local success = false
   if verbose then print(name) end
   return success
@@ -40,13 +42,13 @@ local scriptum = require 'scriptum'
 
 
 -- generate full project documetation (excluding libraries)
-scriptum.start('/home/luarocks/repo/scriptum', {'src/scriptum'})
+-- scriptum.start('/home/luarocks/repo/scriptum', {'src/scriptum'})
 
 -- generate minimal doc just for quick test
--- scriptum.start '/home/luarocks/repo/scriptum/test'
+scriptum.start '/home/luarocks/repo/scriptum/test'
 
 -- run "lua test.lua dump" for dump
-if ({...})[1] == 'dump' then dump(scriptum) end
+if ({...})[1] == 'dump' then dump(scriptum, {depth = 7}) end
 
 
 return module

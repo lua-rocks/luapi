@@ -78,7 +78,7 @@ local function parseUniversal(block, path, api, name, order)
 
   -- parse title
   local title = block:match('%-%-%[%[(.-)[%]\n]')
-  if title then api.title = trim(title) end
+  if title then api[name].title = trim(title) end
 
   -- parse muliline markdown description
   api.description = block:match('%-%-%[%[(.-)[%]><]')
