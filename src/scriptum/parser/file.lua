@@ -120,10 +120,8 @@ local function parseUniversal(block, path, api, name, order)
     end
 
     -- warn params with undescribed type
-    if tag == '>' then
-      if tagged_table[tagged_name].typing == nil then
-        warning('WARNING', 1, name, tagged_name, path)
-      end
+    if tagged_table[tagged_name].typing == nil then
+      warning('WARNING', 1, name, tagged_name, path)
     end
 
     line_number = line_number + 1
