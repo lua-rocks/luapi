@@ -117,8 +117,6 @@ function projParser.getFiles(rootPath, pathFilters)
   local requires = {}
   for index, path in ipairs(files) do
     path = fs2reqPath(path, rootPath)
-    -- FIXME
-    requires[path] = index
     requires[index] = path
   end
   return files, requires

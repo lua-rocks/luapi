@@ -89,7 +89,7 @@ local config = {
 
 local projParser = require 'scriptum.parser.proj'
 local fileParser = require 'scriptum.parser.file'
--- local projWriter = require 'scriptum.writer.proj'
+local projWriter = require 'scriptum.writer.proj'
 -- local fileWriter = require 'scriptum.writer.file'
 
 
@@ -105,14 +105,14 @@ function module.start(rootPath, pathFilters, outPath)
   module.files = {}
 
   -- Parse --
-  local files
-  files, module.requires = projParser.getFiles(rootPath, pathFilters)
-  for _, f in ipairs(files) do
-    module.files[f] = fileParser.parse(f)
+  local files, requires = projParser.getFiles(rootPath, pathFilters)
+  for index, path in ipairs(files) do
+    module.files[path] = fileParser.parse(path)
+    module.files[path].reqpath = requires[index]
   end
 
   -- Generate markdown --
-  -- projWriter.write(outPath, module)
+  projWriter.write(outPath, module)
   -- for i, _ in ipairs(module.files) do
   --   fileWriter.write(rootPath, outPath, module, i)
   -- end
