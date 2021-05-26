@@ -112,7 +112,9 @@ local function parseUniversal(block, path, api, name, order)
     end
     -- correct all
     for key, value in pairs(tagged_table[tagged_name]) do
-      if value == '' then tagged_table[tagged_name][key] = nil end
+      if value == '' and key ~= 'default' then
+        tagged_table[tagged_name][key] = nil
+      end
     end
 
     -- check undescribed params
