@@ -70,6 +70,7 @@ end
 > path (string) path to parsed file
 > api (table) where to save data
 > name (string) [] name of the described variable
+> order (integer) order to print in writer module
 ]]
 local function parseUniversal(block, path, api, name, order)
   -- initialize structure
@@ -173,8 +174,8 @@ end
 
 --[[ Parse table
 > api (table) save api here
+> name (string) real name of the table
 > block (string) block of comments
-> last (string) one line of code after comments
 > order (integer) number of this commented block
 > path (string) path to parsed file
 ]]
