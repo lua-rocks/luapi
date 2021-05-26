@@ -87,33 +87,31 @@ local function parseUniversal(block, path, api, params, name)
   end
 
   -- parse description block line by line and extract tagged data
-  for line in block:gmatch('\n(.*)\n') do
-    local line_number = 1
-    for param_line in line:gmatch('>%s?(.-)\n') do
-      local argname = param_line:match('^(.-)%s')
-      params[argname] = {
-        typing = param_line:match('%((.-)%)'),
-        default = param_line:match('%s%[(.-)%]'),
-        description = trim((param_line:gsub('^.*[%]%)]', ''))),
-        order = line_number
-      }
+  local line_number = 1
+  for param_line in block:gmatch('>%s?(.-)\n') do
+    local argname = param_line:match('^(.-)%s')
+    params[argname] = {
+      typing = param_line:match('%((.-)%)'),
+      default = param_line:match('%s%[(.-)%]'),
+      description = trim((param_line:gsub('^.*[%]%)]', ''))),
+      order = line_number
+    }
 
-      if params[argname].default == ''
-      or params[argname].default == 'nil'
-      or params[argname].default == 'opt' then
-        params[argname].default = 'optional'
-      end
-
-      for key, value in pairs(params[argname]) do
-        if value == '' then params[argname][key] = nil end
-      end
-
-      if params[argname].typing == nil then
-        warning('WARNING', 1, name, name, path)
-      end
-
-      line_number = line_number + 1
+    if params[argname].default == ''
+    or params[argname].default == 'nil'
+    or params[argname].default == 'opt' then
+      params[argname].default = 'optional'
     end
+
+    for key, value in pairs(params[argname]) do
+      if value == '' then params[argname][key] = nil end
+    end
+
+    if params[argname].typing == nil then
+      warning('WARNING', 1, name, name, path)
+    end
+
+    line_number = line_number + 1
   end
 end
 
