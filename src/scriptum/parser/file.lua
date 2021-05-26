@@ -189,7 +189,7 @@ end
 ]]
 local function parseComments(content, api, path)
   local order = 1
-  for block, last in content:gmatch('(%-%-%[%[.-%]%]\n)(.-)\n') do
+  for block, last in content:gmatch('(%-%-%[%[.-%]%].-\n)(.-)\n') do
     local name = last:match('function%s(.-)%s?%(')
     if name then
       api.functions = api.functions or {}

@@ -17,7 +17,7 @@ local module = {}
 < success (boolean) fail will be handled gracefully and return false
 ]]
 function module.startModule(name, verbose)
-  --[[ FIXME Function in function ]]--
+  --[[ Function in function ]]--
   local function funcInFunc() end
   local success = false
   if verbose then print(name) end
