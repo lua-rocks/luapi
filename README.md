@@ -27,9 +27,9 @@ See target template example (hand made)
     - [x] Document every function in each module.
   - [ ] Parser
     - [ ] Function returns.
-    - [ ] Table returns can be used for class name and optional is super class.
-    - [x] Store entire file in one string and use short regexps to this string
-      instead of multiline search and complex extractions.
+    - [ ] Table returns can be used for class names (type is super class).
+    - [x] Store entire file in one string and use short pattern matchers
+      to this string, instead of multiline search and complex extractions.
     - [x] Tables (first described table is a module).
     - [ ] External and internal tables/functions.
     - [x] Multiline comments for tables/functions.
