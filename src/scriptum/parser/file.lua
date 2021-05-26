@@ -92,13 +92,12 @@ local function parseUniversal(block, path, api, name, order)
   local line_number = 1
   for tag, tagged_line in block:gmatch('([><])%s?(.-)\n') do
     local tagged_name = tagged_line:match('^(.-)%s')
-    local tagged_table
-    if tag == '>' then
-      tagged_table = api[name].params
-    elseif tag == '<' then
-      tagged_table = api[name].returns
-    end
 
+    local tagged_table -- where to save tagged line data
+    if tag == '>' then tagged_table = api[name].params
+    elseif tag == '<' then tagged_table = api[name].returns end
+
+    -- extract data for any tags
     tagged_table[tagged_name] = {
       typing = tagged_line:match('%((.-)%)'),
       default = tagged_line:match('%s%[(.-)%]'),
@@ -106,17 +105,14 @@ local function parseUniversal(block, path, api, name, order)
       order = line_number
     }
 
-    if tagged_table and tagged_name then
-      -- correct defaults
-      if tagged_table[tagged_name].default == ''
-      or tagged_table[tagged_name].default == 'nil'
-      or tagged_table[tagged_name].default == 'opt' then
-        tagged_table[tagged_name].default = 'optional'
-      end
-      -- correct all
-      for key, value in pairs(tagged_table[tagged_name]) do
-        if value == '' then tagged_table[tagged_name][key] = nil end
-      end
+    -- correct defaults
+    local def = tagged_table[tagged_name].default
+    if def == '' or def == 'nil' or def == 'opt' then
+      tagged_table[tagged_name].default = ''
+    end
+    -- correct all
+    for key, value in pairs(tagged_table[tagged_name]) do
+      if value == '' then tagged_table[tagged_name][key] = nil end
     end
 
     -- check undescribed params
