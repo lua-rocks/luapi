@@ -18,9 +18,9 @@ function fileWriter.write(filePath, outPath, module)
 
   for tname, t in pairs(data.tables) do
     if t.order == 1 then
+      data.name = tname
       output.title = t.title
       output.description = t.description
-      data.name = tname
     end
   end
 
