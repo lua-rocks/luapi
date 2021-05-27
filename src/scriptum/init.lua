@@ -90,7 +90,7 @@ local config = {
 local projParser = require 'scriptum.parser.proj'
 local fileParser = require 'scriptum.parser.file'
 local projWriter = require 'scriptum.writer.proj'
--- local fileWriter = require 'scriptum.writer.file'
+local fileWriter = require 'scriptum.writer.file'
 
 
 --[[ Start document generation
@@ -113,9 +113,9 @@ function module.start(rootPath, pathFilters, outPath)
 
   -- Generate markdown --
   projWriter.write(outPath, module)
-  -- for i, _ in ipairs(module.files) do
-  --   fileWriter.write(rootPath, outPath, module, i)
-  -- end
+  for filePath in pairs(module.files) do
+    fileWriter.write(filePath, outPath, module)
+  end
 end
 
 
