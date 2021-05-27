@@ -43,12 +43,12 @@ local function warning(warntype, id, name, argname, path)
       print(colors(
         '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Parameter ' ..
         '%{bright}' .. argname .. r .. ' type not defined in ' ..
-        '%{bright}'  .. name .. r .. ' at %{blue bright underline}' .. path
+        '%{bright}'  .. name .. r .. ' at:\n%{blue bright underline}' .. path
       ))
     elseif id == 2 then
       print(colors(
         '%{yellow blink bright}' .. warntype .. '!' .. r .. ' Function ' ..
-        '%{bright}'  .. name .. r .. ' is not described at ' ..
+        '%{bright}'  .. name .. r .. ' is not described at:\n' ..
         '%{blue bright underline}' .. path
       ))
     end
@@ -58,7 +58,7 @@ local function warning(warntype, id, name, argname, path)
       print(colors(
         '%{red blink bright}' .. warntype .. '!' .. r .. ' Argument ' ..
         '%{bright}' .. argname .. r .. ' mismatch in function ' ..
-        '%{bright}'  .. name .. r .. ' at %{blue bright underline}' .. path
+        '%{bright}'  .. name .. r .. ' at:\n%{blue bright underline}' .. path
       ))
     end
   end
@@ -231,7 +231,7 @@ function fileParser.parse(path)
   -- search for undescribed functions
   for name in code:gmatch('\nl?o?c?a?l?%s?function%s(.-)%s?%(') do
     local described
-    for key in pairs(data.functions) do
+    for key in pairs(data.functions or {}) do
       if key == name then described = true break end
     end
     if not described then warning('WARNING', 2, name, nil, path) end
