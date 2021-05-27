@@ -47,6 +47,7 @@ See target template example (hand made)
       - [ ] Easy links for headers.
       - [ ] External and internal tables/functions.
 - [x] Remove `love` (why do we need it if it's not required?).
+- [ ] Replace all full paths to relative.
 - [ ] Suppport for OOP: inheritance.
 - [ ] Add support for
     [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).

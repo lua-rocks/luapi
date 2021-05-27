@@ -170,18 +170,6 @@ local function parseFunction(api, name, block, last, order, path)
 end
 
 
---[[ Parse table
-> api (table) save api here
-> name (string) real name of the table
-> block (string) block of comments
-> order (integer) number of this commented block
-> path (string) path to parsed file
-]]
-local function parseTable(api, name, block, order, path)
-  parseUniversal(block, path, api, name, order)
-end
-
-
 --[[ Parse comments block and extract api
 > content (string) file content
 > api (table) save api here
@@ -198,7 +186,7 @@ local function parseComments(content, api, path)
       name = last:match('[%s\n](.-)%s?=%s?{')
       if name then
         api.tables = api.tables or {}
-        parseTable(api.tables, name, block, order, path)
+        parseUniversal(block, path, api.tables, name, order)
       end
     end
     order = order + 1
