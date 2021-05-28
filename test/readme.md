@@ -7,8 +7,7 @@ Key features of this library:
 - Can subtly identify class membership
 - Very tiny and fast, readable source
 
-<details>
-  <summary><b>Example</b></summary>
+<details><summary><b>Example</b></summary>
 
 ```lua
 local Object = require 'object'
