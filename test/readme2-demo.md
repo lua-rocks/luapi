@@ -7,27 +7,23 @@ Key features of this library:
 - Can subtly identify class membership
 - Very tiny and fast, readable source
 
-## Dependencies
-
-- Parent: **[table][]**
-- Required: nothing
-
 ## Fields
 
-### Öbject.classname : [string][] = `"Öbject"`
+### Öbject : [table][]
+
+No requirements
+
+### Öbject.classname : [string][] = "Öbject"
 
 Name of the class
 
-### Öbject.super
+### Öbject.super : Öbject | {} = {}
 
 Parent class
 
-- Type: **Öbject** _or_ **{}**
-- _Default_: `{}`
-
 ## Methods
 
-### Öbject:new
+### Öbject:new (...\*) : Öbject
 
 Creates an instance of the class
 
@@ -35,7 +31,7 @@ Creates an instance of the class
 
 &larr; `instance` : **Öbject**
 
-### Öbject:init
+### Öbject:init (fields)
 
 Initializes the class
 
@@ -44,7 +40,7 @@ Initializes the class
 
 &rarr; `fields` : **[table][]** *[optional]* `new fields`
 
-### Öbject:extend
+### Öbject:extend (name\*, ...) : Öbject
 
 Creates a new class by inheritance
 
@@ -54,13 +50,13 @@ Creates a new class by inheritance
 
 &larr; `cls` : **Öbject**
 
-### Öbject:implement
+### Öbject:implement (...\*)
 
 Sets someone else's methods
 
 &rarr; `...` : **[table][]** _or_ **Öbject** `methods`
 
-### Öbject:has
+### Öbject:has (Test\*, limit) : integer | boolean
 
 Returns the range of kinship between itself and the checking class
 
@@ -72,7 +68,7 @@ Returns the range of kinship between itself and the checking class
 
 &larr; `kinship` : **integer** _or_ **boolean**
 
-### Öbject:is
+### Öbject:is (Test\*) : boolean
 
 Identifies affiliation to class
 
@@ -80,7 +76,7 @@ Identifies affiliation to class
 
 &larr; `result` : **boolean**
 
-### Öbject:each
+### Öbject:each (etype\*, action\*, ...) : {integer=table}
 
 Loops through all elements, performing an action on each
 
@@ -97,7 +93,7 @@ Loops through all elements, performing an action on each
 
 ## Internals
 
-### applyMetaFromParents
+### applyMetaFromParents (self\*, apply_here\*)
 
 Adds all metamethods from itself and all parents to the specified table
 
@@ -107,7 +103,7 @@ Adds all metamethods from itself and all parents to the specified table
 
 &rarr; `apply_here` : **[table][]** `apply to`
 
-### applyMetaIndexFromParents
+### applyMetaIndexFromParents (self\*, apply_here\*)
 
 Adds __index metamethods from itself or closest parent to the table
 
