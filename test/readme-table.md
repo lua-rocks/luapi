@@ -8,13 +8,13 @@ Key features of this library:
 - Very tiny and fast, readable source
 
 | Fields | |
-|:-|-:|
+|-|-|
 | **Öbject : [table][]** | No requirements |
 | **Öbject.classname : [string][] = "Öbject"** | Name of the class |
 | **Öbject.super : Öbject \| {} = {}** | Parent class |
 
 | Methods | |
-|:-|-:|
+|-|-|
 | **Öbject:new (...\*) : Öbject** | Creates an instance of the class |
 | **Öbject:init (fields)** | Initializes the class |
 | **Öbject:extend (name\*, ...) : Öbject** | Creates a new class by inheritance |
@@ -24,7 +24,7 @@ Key features of this library:
 | **Öbject:each (etype\*, action\*, ...) : {integer=table}** | Loops through all elements, performing an action on each |
 
 | Internals | |
-|:-|-:|
+|-|-|
 | **applyMetaFromParents (self\*, apply_here\*)** | Adds all metamethods from itself and all parents to the specified table |
 | **applyMetaIndexFromParents (self\*, apply_here\*)** | Adds __index metamethods from itself or closest parent to the table |
 
