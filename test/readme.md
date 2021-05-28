@@ -118,7 +118,7 @@ end
 
 Name of the class
 
-- type: **[table][]**
+- type: **[string][]**
 - default: `"Öbject"`
 
 ### Öbject.super
