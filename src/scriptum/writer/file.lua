@@ -32,18 +32,22 @@ function fileWriter.write(filePath, outPath, module)
     }
     for tname, t in pairs(data.tables) do
       t.name = tname
-      if tname:find(data.name) == 1 then
-        output.h2.int.t[t.order] = t
-      else
+      if t.order == 1 then
         output.h2.ext.t[t.order] = t
+      else
+        if tname:find(data.name .. '%p') == 1 then
+          output.h2.ext.t[t.order] = t
+        else
+          output.h2.int.t[t.order] = t
+        end
       end
     end
     for fname, f in pairs(data.functions) do
       f.name = fname
-      if fname:find(data.name) == 1 then
-        output.h2.int.f[f.order] = f
-      else
+      if fname:find(data.name .. '%p') == 1 then
         output.h2.ext.f[f.order] = f
+      else
+        output.h2.int.f[f.order] = f
       end
     end
   end
