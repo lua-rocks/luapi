@@ -13,9 +13,13 @@ Key features of this library:
 
 No requirements
 
+---
+
 #### Öbject.classname : [string][] = "Öbject"
 
 Name of the class
+
+---
 
 #### Öbject.super : Öbject | {} = {}
 
@@ -31,6 +35,8 @@ Creates an instance of the class
 
 &larr; `instance` : **Öbject**
 
+---
+
 #### Öbject:init (fields)
 
 Initializes the class
@@ -39,6 +45,8 @@ Initializes the class
 > but descendants are expected to replace this method with another.
 
 &rarr; `fields` : **[table][]** *[optional]* `new fields`
+
+---
 
 #### Öbject:extend (name\*, ...) : Öbject
 
@@ -50,11 +58,15 @@ Creates a new class by inheritance
 
 &larr; `cls` : **Öbject**
 
+---
+
 #### Öbject:implement (...\*)
 
 Sets someone else's methods
 
 &rarr; `...` : **[table][]** _or_ **Öbject** `methods`
+
+---
 
 #### Öbject:has (Test\*, limit) : integer | boolean
 
@@ -68,6 +80,8 @@ Returns the range of kinship between itself and the checking class
 
 &larr; `kinship` : **integer** _or_ **boolean**
 
+---
+
 #### Öbject:is (Test\*) : boolean
 
 Identifies affiliation to class
@@ -75,6 +89,8 @@ Identifies affiliation to class
 &rarr; `Test` : **[string][]** _or_ **Öbject**
 
 &larr; `result` : **boolean**
+
+---
 
 #### Öbject:each (etype\*, action\*, ...) : {integer=table}
 
@@ -102,6 +118,8 @@ Adds all metamethods from itself and all parents to the specified table
 &rarr; `self` : **Öbject** `apply from`
 
 &rarr; `apply_here` : **[table][]** `apply to`
+
+---
 
 #### applyMetaIndexFromParents (self\*, apply_here\*)
 
