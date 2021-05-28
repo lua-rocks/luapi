@@ -14,7 +14,7 @@ Key features of this library:
 
 ## Fields
 
-### Öbject.classname : [string][] = "Öbject"
+### Öbject.classname : [string][] = `"Öbject"`
 
 Name of the class
 
