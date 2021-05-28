@@ -81,7 +81,7 @@ end
 
 - _Fields_
   - **[Öbject][] : [table][]**
-    - `This module`
+    - `No requirements`
   - **[Öbject.classname][] : [string][] = "Öbject"**
     - `Name of the class`
   - **[Öbject.super][] : [Öbject][] | {} = {}**
