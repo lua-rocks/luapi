@@ -111,7 +111,7 @@ end
 
 ### Öbject
 
-- type: **[table][]**
+- type: **[this module][]**
 - requirements: **none**
 
 ### Öbject.classname
@@ -220,6 +220,8 @@ Adds __index metamethods from itself or closest parent to the table
 
 [string]: https://www.lua.org/manual/5.1/manual.html#5.4
 [table]: https://www.lua.org/manual/5.1/manual.html#5.5
+
+[this module]: #contents
 
 [Öbject]: #öbject
 [Öbject.classname]: #öbjectclassname
