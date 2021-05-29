@@ -5,7 +5,8 @@ local fileWriter = {}
 local writer = require 'scriptum.writer'
 
 
-local function prepareModule(output, classname, returns, t)
+local function prepareModule(output, returns, t)
+  local classname = output.classname
   output.fields = t.params
   output.header.text = '# ' .. t.title .. '\n\n' .. t.description .. '\n' ..
   '\n## Contents\n'
@@ -48,8 +49,8 @@ function fileWriter.write(filePath, outPath, module)
     if t.order == 1 then
       data.name = tname
       for classname, returns in pairs(t.returns) do -- luacheck: ignore
-        data.classname = classname or data.name
-        prepareModule(output, classname, returns, t)
+        output.classname = classname or data.name
+        prepareModule(output, returns, t)
         break
       end
       -- extract methods
