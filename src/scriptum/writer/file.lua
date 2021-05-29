@@ -10,8 +10,13 @@ local function prepareModule(output, returns, t)
   output.fields = t.params
   output.header.text = '# ' .. t.title .. '\n\n' .. t.description .. '\n' ..
   '\n## Contents\n'
-  output.header:write('\n- _Fields_\n  - **[' .. classname .. '][] : [' ..
-  returns.typing .. '][]**\n    - `No requirements`')
+  output.header:write('\n- _Fields_\n  - **[' .. classname .. '][]')
+  if returns.typing then
+    output.header:write(' : [' .. returns.typing .. '][]**')
+  else
+    output.header:write('**')
+  end
+  output.header:write('\n    - `No requirements`')
   output.body.text = '\n### ' .. classname .. '\n'
   output.footer.text = '\n[' .. classname .. ']: #' .. classname:lower() ..
   '\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n' ..
