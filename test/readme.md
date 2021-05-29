@@ -100,34 +100,16 @@ end
     - `Identifies affiliation to class`
   - **[Öbject:each][] (etype\*, action\*, ...) : {integer=table}**
     - `Loops through all elements, performing an action on each`
-- _Functions_
-  - **[applyMetaFromParents][] (self\*, apply_here\*)**
-    - `Adds all metamethods from itself and all parents to the specified table`
-  - **[applyMetaIndexFromParents][] (self\*, apply_here\*)**
-    - `Adds __index metamethods from itself or closest parent to the table`
-
-## Fields
 
 ### Öbject
 
-- type: **[this module][]**
-- requirements: **none**
+Extends: **[table][]**
 
-### Öbject.classname
+Requires: **none**
 
-Name of the class
+&rarr; `classname` **[string][]** *["Object"]* `name of the class`
 
-- type: **[string][]**
-- default: `"Öbject"`
-
-### Öbject.super
-
-Parent class
-
-- type: **[Öbject][] | {}**
-- default: `{}`
-
-## Methods
+&rarr; `super` **[Öbject][]** or **{}** *[{}]* `parent class`
 
 ### Öbject:new
 
@@ -196,26 +178,6 @@ Loops through all elements, performing an action on each
 &rarr; `...` *[optional]* `additional arguments for the action`
 
 &larr; `result` : **{integer=table}** `results of all actions`
-
-## Internals
-
-### applyMetaFromParents
-
-Adds all metamethods from itself and all parents to the specified table
-
-> Maintains the order of the hierarchy: Rect > Point > Object.
-
-&rarr; `self` : **[Öbject][]** `apply from`
-
-&rarr; `apply_here` : **[table][]** `apply to`
-
-### applyMetaIndexFromParents
-
-Adds __index metamethods from itself or closest parent to the table
-
-&rarr; `self` : **[Öbject][]** `apply from`
-
-&rarr; `apply_here` : **[table][]** `apply to`
 
 [string]: https://www.lua.org/manual/5.1/manual.html#5.4
 [table]: https://www.lua.org/manual/5.1/manual.html#5.5
