@@ -63,6 +63,20 @@ function fileWriter.write(filePath, outPath, module)
       output:write('\n### ' .. element.name .. '\n')
       if element_index == 1 then
         output:write '\n- type: **[this module][]**\n- requirements: **none**\n'
+        for param_name, param in pairs(element.params) do
+          if param.description then
+            output:write('\n### ' .. element.name .. '.' .. param_name ..
+            '\n\n> ' .. param.description:gsub('\n', '\n> ') .. '\n\n')
+          end
+          if param.typing then
+            output:write('- type: **' .. param.typing .. '**\n')
+          end
+          if param.default == '' then
+            output:write('- _optional_\n')
+          else
+            output:write('- default: `' .. param.default .. '`\n')
+          end
+        end
         goto next
       end
       if element.title then
@@ -70,6 +84,9 @@ function fileWriter.write(filePath, outPath, module)
       end
       if element.description then
         output:write('\n> ' .. element.description:gsub('\n', '\n> ') .. '\n')
+      end
+      if h2index == 1 or h2index == 3 then -- tables
+      else -- functions
       end
       ::next::
     end
@@ -80,6 +97,7 @@ function fileWriter.write(filePath, outPath, module)
 
   file:write(output.text)
   file:close()
+  dump(output.h2)
 end
 
 
