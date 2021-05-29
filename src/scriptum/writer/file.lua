@@ -26,10 +26,7 @@ function fileWriter.write(filePath, outPath, module)
   end
 
   do -- separate external/internal tables/functions
-    output.h2 = {
-      {}, {}, {}, {},
-      'Fields', 'Methods', 'Tables', 'Functions'
-    }
+    output.h2 = { {}, {}, {}, {}, 'Fields', 'Methods', 'Tables', 'Functions' }
     for tname, t in pairs(data.tables) do
       t.name = tname
       if t.order == 1 then
