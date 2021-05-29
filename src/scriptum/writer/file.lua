@@ -53,12 +53,12 @@ function fileWriter.write(filePath, outPath, module)
   end
 
   for h2index = 1, 4 do
-    if table.maxn(output.h2[h2index]) > 0 then
-      output.text = output.text .. '\n## ' .. output.h2[h2index+4] .. '\n'
-      for _, element in pairs(output.h2[h2index]) do
-        output.text = output.text .. '\n### ' .. element.name .. '\n'
-      end
+    if table.maxn(output.h2[h2index]) == 0 then goto next end
+    output.text = output.text .. '\n## ' .. output.h2[h2index+4] .. '\n'
+    for _, element in pairs(output.h2[h2index]) do
+      output.text = output.text .. '\n### ' .. element.name .. '\n'
     end
+    ::next::
   end
 
   file:write(output.text)
