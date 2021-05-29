@@ -5,20 +5,19 @@ local fileWriter = {}
 local writer = require 'scriptum.writer'
 
 
-local function prepareModule(output, returns, t)
-  local classname = output.classname
-  output.fields = t.params
-  output.header.text = '# ' .. t.title .. '\n\n' .. t.description .. '\n' ..
+local function prepareModule(o, r, t)
+  o.fields = t.params
+  o.header.text = '# ' .. t.title .. '\n\n' .. t.description .. '\n' ..
   '\n## Contents\n'
-  output.header:write('\n- _Fields_\n  - **[' .. classname .. '][]')
-  if returns.typing then
-    output.header:write(' : [' .. returns.typing .. '][]**')
+  o.header:write('\n- _Fields_\n  - **[' .. o.classname .. '][]')
+  if r.typing then
+    o.header:write(' : [' .. r.typing .. '][]**')
   else
-    output.header:write('**')
+    o.header:write('**')
   end
-  output.header:write('\n    - `No requirements`')
-  output.body.text = '\n### ' .. classname .. '\n'
-  output.footer.text = '\n[' .. classname .. ']: #' .. classname:lower() ..
+  o.header:write('\n    - `No requirements`')
+  o.body.text = '\n### ' .. o.classname .. '\n'
+  o.footer.text = '\n[' .. o.classname .. ']: #' .. o.classname:lower() ..
   '\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n' ..
   '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n'
 end
