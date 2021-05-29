@@ -47,16 +47,16 @@ function fileWriter.write(filePath, outPath, module)
   -- search for module table and handle it
   for tname, t in pairs(data.tables) do
     if t.order == 1 then
-      data.name = tname
+      output.modname = tname
       for classname, returns in pairs(t.returns) do -- luacheck: ignore
-        output.classname = classname or data.name
+        output.classname = classname or tname
         prepareModule(output, returns, t)
         break
       end
       -- extract methods
       for fname, f in pairs(data.functions) do
         f.name = fname
-        if fname:find(data.name .. '%p') == 1 then
+        if fname:find(output.modname .. '%p') == 1 then
           output.methods[f.order] = f
         end
       end
