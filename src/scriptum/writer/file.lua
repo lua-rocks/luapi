@@ -25,34 +25,41 @@ function fileWriter.write(filePath, outPath, module)
     end
   end
 
-  do -- separate internal and external tables and functions
+  do -- separate external/internal tables/functions
     output.h2 = {
-      int = {f = {}, t = {}},
-      ext = {f = {}, t = {}}
+      {}, {}, {}, {},
+      'Fields', 'Methods', 'Tables', 'Functions'
     }
     for tname, t in pairs(data.tables) do
       t.name = tname
       if t.order == 1 then
-        output.h2.ext.t[t.order] = t
+        output.h2[1][t.order] = t
       else
         if tname:find(data.name .. '%p') == 1 then
-          output.h2.ext.t[t.order] = t
+          output.h2[1][t.order] = t
         else
-          output.h2.int.t[t.order] = t
+          output.h2[3][t.order] = t
         end
       end
     end
     for fname, f in pairs(data.functions) do
       f.name = fname
       if fname:find(data.name .. '%p') == 1 then
-        output.h2.ext.f[f.order] = f
+        output.h2[2][f.order] = f
       else
-        output.h2.int.f[f.order] = f
+        output.h2[4][f.order] = f
       end
     end
   end
 
-  dump(output)
+  for h2index = 1, 4 do
+    if table.maxn(output.h2[h2index]) > 0 then
+      output.text = output.text .. '\n## ' .. output.h2[h2index+4] .. '\n'
+      for _, element in pairs(output.h2[h2index]) do
+        output.text = output.text .. '\n### ' .. element.name .. '\n'
+      end
+    end
+  end
 
   file:write(output.text)
   file:close()
