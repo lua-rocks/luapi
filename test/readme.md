@@ -182,8 +182,6 @@ Loops through all elements, performing an action on each
 [string]: https://www.lua.org/manual/5.1/manual.html#5.4
 [table]: https://www.lua.org/manual/5.1/manual.html#5.5
 
-[this module]: #contents
-
 [Öbject]: #öbject
 [Öbject.classname]: #öbjectclassname
 [Öbject.super]: #öbjectsuper
