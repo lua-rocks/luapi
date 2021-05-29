@@ -57,15 +57,15 @@ function fileWriter.write(filePath, outPath, module)
             output.methods[f.order] = f
           end
         end
-        -- prepare output
-        for _, field in pairs(output.fields) do
-          prepareField(output, field)
-        end
-        output.header:write('\n- _Methods_\n')
-        for _, method in pairs(output.methods) do
-          prepareMethod(output, method)
-        end
         break
+      end
+      -- prepare output
+      for _, field in pairs(output.fields) do
+        prepareField(output, field)
+      end
+      output.header:write('\n- _Methods_\n')
+      for _, method in pairs(output.methods) do
+        prepareMethod(output, method)
       end
       break
     end
