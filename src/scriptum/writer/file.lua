@@ -5,9 +5,14 @@ local fileWriter = {}
 local writer = require 'scriptum.writer'
 
 
-local function prepareModule(o, r, t)
-  o.fields = t.params
-  o.header.text = '# ' .. t.title .. '\n\n' .. t.description .. '\n' ..
+--[[ First prep
+> o (table) object
+> r (table) return
+> m (table) module
+]]
+local function prepareModule(o, r, m)
+  o.fields = m.params
+  o.header.text = '# ' .. m.title .. '\n\n' .. m.description .. '\n' ..
   '\n## Contents\n'
   o.body.text = '\n### ' .. o.classname .. '\n'
   o.footer.text = '\n[' .. o.classname .. ']: #' .. o.classname:lower() ..
