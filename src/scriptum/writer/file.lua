@@ -50,14 +50,14 @@ function fileWriter.write(filePath, outPath, module)
       for classname, returns in pairs(t.returns) do -- luacheck: ignore
         data.classname = classname or data.name
         prepareModule(output, classname, returns, t)
-        -- extract methods
-        for fname, f in pairs(data.functions) do
-          f.name = fname
-          if fname:find(data.name .. '%p') == 1 then
-            output.methods[f.order] = f
-          end
-        end
         break
+      end
+      -- extract methods
+      for fname, f in pairs(data.functions) do
+        f.name = fname
+        if fname:find(data.name .. '%p') == 1 then
+          output.methods[f.order] = f
+        end
       end
       -- prepare output
       for _, field in pairs(output.fields) do
