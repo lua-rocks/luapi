@@ -9,17 +9,19 @@ local function prepareModule(o, r, t)
   o.fields = t.params
   o.header.text = '# ' .. t.title .. '\n\n' .. t.description .. '\n' ..
   '\n## Contents\n'
-  o.header:write('\n- _Fields_\n  - **[' .. o.classname .. '][]')
-  if r.typing then
-    o.header:write(' : [' .. r.typing .. '][]**')
-  else
-    o.header:write('**')
-  end
-  o.header:write('\n    - `No requirements`')
   o.body.text = '\n### ' .. o.classname .. '\n'
   o.footer.text = '\n[' .. o.classname .. ']: #' .. o.classname:lower() ..
   '\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n' ..
   '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n'
+  o.header:write('\n- _Fields_\n  - **[' .. o.classname .. '][]')
+  if r.typing then
+    o.header:write(' : [' .. r.typing .. '][]**')
+    o.body:write('\nExtends: **[' .. r.typing .. '][]**\n')
+    o.body:write('\nRequires: **none**\n')
+  else
+    o.header:write('**')
+  end
+  o.header:write('\n    - `No requirements`')
 end
 
 
