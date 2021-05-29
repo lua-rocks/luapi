@@ -14,7 +14,12 @@ function fileWriter.write(filePath, outPath, module)
   local data = module.files[filePath]
   local file = writer.open(outPath .. '/' .. data.reqpath .. '.md')
   if not file then return end
-  local output = {}
+  local output = {
+    write = function(self, text)
+      self.text = self.text .. text
+      return self.text
+    end
+  }
 
   -- search for module table
   for tname, t in pairs(data.tables) do
@@ -49,14 +54,22 @@ function fileWriter.write(filePath, outPath, module)
     end
   end
 
+  output:write('\n## Contents\n')
+
   for h2index = 1, 4 do
     if table.maxn(output.h2[h2index]) == 0 then goto next end
-    output.text = output.text .. '\n## ' .. output.h2[h2index+4] .. '\n'
-    for _, element in pairs(output.h2[h2index]) do
-      output.text = output.text .. '\n### ' .. element.name .. '\n'
+    output:write('\n## ' .. output.h2[h2index+4] .. '\n')
+    for element_index, element in pairs(output.h2[h2index]) do
+      output:write('\n### ' .. element.name .. '\n')
+      if element_index == 1 then
+        output:write('\n- type: **[this module][]**\n' ..
+        '- requirements: **none**\n')
+      end
     end
     ::next::
   end
+
+  output:write('\n[this module]: #contents\n')
 
   file:write(output.text)
   file:close()
