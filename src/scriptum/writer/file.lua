@@ -54,7 +54,7 @@ function fileWriter.write(filePath, outPath, module)
     end
   end
 
-  output:write('\n## Contents\n')
+  output:write '\n## Contents\n'
 
   for h2index = 1, 4 do
     if table.maxn(output.h2[h2index]) == 0 then goto next end
@@ -62,14 +62,21 @@ function fileWriter.write(filePath, outPath, module)
     for element_index, element in pairs(output.h2[h2index]) do
       output:write('\n### ' .. element.name .. '\n')
       if element_index == 1 then
-        output:write('\n- type: **[this module][]**\n' ..
-        '- requirements: **none**\n')
+        output:write '\n- type: **[this module][]**\n- requirements: **none**\n'
+        goto next
       end
+      if element.title then
+        output:write('\n' .. element.title .. '\n')
+      end
+      if element.description then
+        output:write('\n> ' .. element.description:gsub('\n', '\n> ') .. '\n')
+      end
+      ::next::
     end
     ::next::
   end
 
-  output:write('\n[this module]: #contents\n')
+  output:write '\n[this module]: #contents\n'
 
   file:write(output.text)
   file:close()
