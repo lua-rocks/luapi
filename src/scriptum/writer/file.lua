@@ -15,10 +15,11 @@ local function prepareModule(o, r, m, module)
   o.header.text = '# ' .. m.title .. '\n\n' .. m.description .. '\n' ..
   '\n## Contents\n'
   o.body.text = '\n### ' .. o.classname .. '\n'
-  o.footer.text = '\n## Footer\n\n[Back to root](' .. module.paths.root .. '/' ..
-  module.paths.out .. '/README.md)\n\n[' .. o.classname .. ']: #' .. o.classname:lower() ..
-  '\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n' ..
-  '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n'
+  o.footer.text = '\n## Footer\n\n[Back to root](' .. module.paths.root ..
+  '/' .. module.paths.out ..
+  '/README.md)\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n' ..
+  '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n\n' ..
+  '[' .. o.classname .. ']: #' .. o.classname:lower()
   o.header:write('\n- _Fields_\n  - **[' .. o.classname .. '][]')
   if r.typing then
     o.header:write(' : [' .. r.typing .. '][]**')
@@ -36,7 +37,6 @@ end
 > f (table) field
 ]]
 local function prepareField(o, f)
-  --dump(o)
   o.header:write('\n  - **[' .. o.classname .. '][].' .. f.name)
   o.body:write('\n&rarr; `' .. f.name .. '`')
   if f.typing then
@@ -44,7 +44,7 @@ local function prepareField(o, f)
     o.body:write(' **[' .. f.typing .. '][]**')
   end
   if f.default then
-    if f.default == "" then
+    if f.default == '' then
       o.header:write(' = _nil_')
       o.body:write(' _[optional]_')
     else
@@ -53,9 +53,11 @@ local function prepareField(o, f)
     end
   end
   if f.description then
-    o.body:write(' `' .. f.description .. '`')
+    o.header:write('**\n    - `' .. f.description .. '`')
+    o.body:write('\n`' .. f.description .. '`')
+  else
+    o.header:write('**')
   end
-  o.header:write('**\n')
   o.body:write('\n')
 end
 
@@ -65,7 +67,29 @@ end
 > m (table) method
 ]]
 local function prepareMethod(o, m)
-  --dump(m)
+  m.name = m.name:gsub('^' .. o.modname, o.classname)
+  o.header:write('  - **[' .. m.name .. '][]**')
+  o.body:write('\n### ' .. m.name .. '\n')
+  o.footer:write('\n[' .. m.name .. ']: #' ..
+    m.name:lower():gsub('%.', '') .. '\n')
+  if m.typing then
+    o.header:write('')
+    o.body:write('')
+  end
+  if m.default then
+    if m.default == '' then
+      o.header:write('')
+      o.body:write('')
+    else
+      o.header:write('')
+      o.body:write('')
+    end
+  end
+  if m.description then
+    o.body:write('')
+  end
+  o.header:write('')
+  o.body:write('')
 end
 
 

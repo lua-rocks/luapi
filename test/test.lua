@@ -6,7 +6,7 @@ module.start()
 ```
   I'm not a code
 > test (string) [] some module field
-< Module (Object) `module` is a class `Module` extended from class `Object`
+< Module (table) `module` is a class `Module` extended from `table`
 ]]
 local module = {}
 
