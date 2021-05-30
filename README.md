@@ -37,7 +37,7 @@ See target template example (hand made)
     - [x] Multiline comments for tables/functions.
     - [x] Show warning when function argument name doesn't match with described.
     - [x] Show warning when function is not described.
-    - [ ] First table must be separated to `module`.
+    - [x] First table must be separated to `module`.
     - [ ] Better requirements (`{reqpath = classname,...}`).
   - [x] Writer
     - [x] [Custom markdown template](https://github.com/lua-rocks/object).
