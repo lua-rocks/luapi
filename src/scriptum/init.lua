@@ -22,11 +22,11 @@ scriptum.start "C:/Users/me/Desktop/codebase"
 
 Create a block comment with a tittle in the first line:
 
-($t)($s) Test Module
-($t)Import and run with start()
-($t)($t)local module = require "testmodule"
-($t)($t)module.start()
-($t)($e)
+  (start) Test Module
+  Import and run with start()
+    local module = require "testmodule"
+    module.start()
+  (end)
 
 Create an API function entry with a comment block and one of more of:
 
