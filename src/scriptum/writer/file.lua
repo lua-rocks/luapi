@@ -67,8 +67,7 @@ end
 > m (table) method
 ]]
 local function prepareMethods(o, m)
-  --dump(m)
-  --TODO probably I must add sorting here but it looks like already sorted
+  -- WARNING probably I must add sorting here but it looks like already sorted
   local orderedReturns = {}
   for name, ret in pairs(m.returns) do
     orderedReturns[ret.order] = ret
