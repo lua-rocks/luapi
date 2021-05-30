@@ -11,23 +11,23 @@ local writer = require 'scriptum.writer'
 ]]
 local function prepareModule(o, m)
   o.fields = m.params
+  o.body.text = '\n### ' .. m.returns.name .. '\n'
   o.header.text = '# ' .. m.title .. '\n'
   if m.description then o.header:write('\n' .. m.description .. '\n') end
   o.header:write('\n## Contents\n')
-  o.body.text = '\n### ' .. m.returns.name .. '\n'
   o.footer:write(
     '/README.md)\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n'
     .. '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n\n'
   )
   o.footer:write('[' .. m.returns.name .. ']: #' .. m.returns.name:lower())
   o.header:write('\n- _Fields_\n  - **[' .. m.returns.name .. '][]')
-  if o.modreturns and o.modreturns.typing then
-    o.header:write(' : [' .. o.modreturns.typing .. '][]**')
-    o.body:write('\nExtends: **[' .. o.modreturns.typing .. '][]**\n')
-    o.body:write('\nRequires: **none**\n')
+  if m.returns.typing then
+    o.header:write(' : [' .. m.returns.typing .. '][]**')
+    o.body:write('\nExtends: **[' .. m.returns.typing .. '][]**\n')
   else
     o.header:write('**')
   end
+  o.body:write('\nRequires: **none**\n')
   o.header:write('\n    - `No requirements`')
 end
 
