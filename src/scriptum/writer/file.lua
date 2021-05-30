@@ -152,8 +152,6 @@ function fileWriter.write(filePath, module)
     footer = { write = write },
   }
 
-  dump(data.module)
-
   output.footer.text = '\n## Footer\n\n[Back to root](' ..
   module.paths.root .. '/' .. module.paths.out
   data.module.returns.name = data.module.returns.name or data.module.name
@@ -165,7 +163,6 @@ function fileWriter.write(filePath, module)
       output.methods[f.order] = f
     end
   end
-  -- prepare output
   for name, field in pairs(output.fields or {}) do
     field.name = name
     prepareField(output, field, data.module)
