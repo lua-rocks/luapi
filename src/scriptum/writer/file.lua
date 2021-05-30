@@ -11,8 +11,7 @@ local writer = require 'scriptum.writer'
 ]]
 local function prepareMain(o, m)
   o.fields = m.params
-  if m.title then o.header.text = '# ' .. m.title .. '\n'
-  else o.header.text = '# ' .. o.classname .. '\n' end
+  o.header.text = '# ' .. (m.title or o.classname) .. '\n'
   if m.description then o.header:write(m.description .. '\n') end
   o.header:write('\n## Contents\n')
   o.body.text = '\n### ' .. o.classname .. '\n'
@@ -25,7 +24,6 @@ end
 
 --[[ First prep
 > o (table) output
-> r (table) return
 ]]
 local function prepareModule(o)
   o.footer:write('[' .. o.classname .. ']: #' .. o.classname:lower())
@@ -145,7 +143,6 @@ end
 
 --[[ Write file
 > filePath (string)
-> outPath (string)
 > module (table)
 ]]
 function fileWriter.write(filePath, module)

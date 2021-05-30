@@ -29,19 +29,19 @@ Create a block comment with a tittle in the first line:
 
 Create an API function entry with a comment block and one of more of:
 
-  > name (typing) [default] note
+  (param) name (typing) [default] note
 
 and:
 
-  < name (typing) note
+  (return) name (typing) note
 
 Such as:
 
 ```lua
 (start) My function for documentation
-> name (typing) file will be created and overwritten
-> verbose (boolean) [true] more output if true
-< success (boolean) fail will be handled gracefully and return false
+(param) name (typing) file will be created and overwritten
+(param) verbose (boolean) [true] more output if true
+(return) success (boolean) fail will be handled gracefully and return false
 (end)
 function module.startModule(name, verbose)
   local success = false
