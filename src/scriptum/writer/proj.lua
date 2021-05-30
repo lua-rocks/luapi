@@ -14,7 +14,8 @@ function projWriter.write(outPath, module)
   if not file then return end
   file:write("# Project Code Documentation\n\n## Index\n")
   for path in pairs(module.files) do
-    file:write("\n+ ["..module.files[path].reqpath.."]("..path..".md)\n")
+    file:write("\n+ [" .. module.files[path].reqpath .. "](" ..
+    path:gsub('%.lua', '') .. ".md)\n")
   end
 end
 

@@ -103,6 +103,10 @@ function module.start(rootPath, pathFilters, outPath)
   pathFilters = pathFilters or config.pathFilters
   outPath = outPath or config.outPath
   module.files = {}
+  module.paths = {
+    root = rootPath,
+    out = outPath
+  }
 
   -- Parse --
   local files, requires = projParser.getFiles(rootPath, pathFilters)
@@ -114,7 +118,7 @@ function module.start(rootPath, pathFilters, outPath)
   -- Generate markdown --
   projWriter.write(outPath, module)
   for filePath in pairs(module.files) do
-    fileWriter.write(filePath, outPath, module)
+    fileWriter.write(filePath, module)
   end
 end
 

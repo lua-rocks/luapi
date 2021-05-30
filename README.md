@@ -40,6 +40,7 @@ See target template example (hand made)
     - [x] Multiline comments for tables/functions.
     - [x] Show warning when function argument name doesn't match with described.
     - [x] Show warning when function is not described.
+    - [ ] Remove `order` params if they are not used anywhere.
   - [ ] Writer
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
       - [ ] Table of contents.
