@@ -7,9 +7,6 @@ Also I want to make it much better by adding more functionality, improving
 markdown templates and comments api. But at the same time I dont want to bloat
 it. I will try to focus only on the essentials!
 
-Examples temporary removed and current version don't write any files because
-I want to rewrite everything from scratch!
-
 See target template example (hand made)
 [here](https://github.com/lua-rocks/object).
 
@@ -42,11 +39,11 @@ See target template example (hand made)
     - [x] Show warning when function is not described.
     - [ ] First table must be separated to `module`.
     - [ ] Better requirements (`{reqpath = classname,...}`).
-  - [ ] Writer
-    - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
-      - [ ] Table of contents.
-      - [ ] Easy links for headers.
-      - [ ] External and internal tables/functions.
+  - [x] Writer
+    - [x] [Custom markdown template](https://github.com/lua-rocks/object).
+      - [x] Table of contents.
+      - [x] Easy links for headers.
+      - [x] External and internal tables/functions.
 - [x] Remove `love` (why do we need it if it's not required?).
 - [ ] Replace all full paths with relative.
 - [ ] Lua files in `doc` folder automaticaly includes in md-files as examples.
