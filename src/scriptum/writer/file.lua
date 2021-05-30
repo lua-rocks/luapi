@@ -68,6 +68,13 @@ end
 ]]
 local function prepareMethods(o, m)
   --dump(m)
+  --TODO probably I must add sorting here but it looks like already sorted
+  local orderedReturns = {}
+  for name, ret in pairs(m.returns) do
+    orderedReturns[ret.order] = ret
+    orderedReturns[ret.order].name = name
+  end
+
   m.name = m.name:gsub('^' .. o.modname, o.classname)
   o.header:write('  - **[' .. m.name .. '][] (')
   local first = true
@@ -79,7 +86,7 @@ local function prepareMethods(o, m)
   end
   o.header:write(')')
   first = true
-  for _, ret in pairs(m.returns) do
+  for _, ret in pairs(orderedReturns) do
     if first then
       o.header:write(' : ')
     else
@@ -120,9 +127,9 @@ local function prepareMethods(o, m)
     universal(name, arg)
     o.body:write('\n')
   end
-  for name, ret in pairs(m.returns) do
+  for _, ret in pairs(orderedReturns) do
     o.body:write('\n&larr; ')
-    universal(name, ret)
+    universal(ret.name, ret)
     o.body:write('\n')
   end
 end
