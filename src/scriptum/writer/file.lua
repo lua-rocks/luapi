@@ -36,18 +36,26 @@ end
 > f (table) field
 ]]
 local function prepareField(o, f)
-  --dump(f)
+  --dump(o)
+  o.header:write('\n  - **[' .. o.classname .. '][].' .. f.name)
   o.body:write('\n&rarr; `' .. f.name .. '`')
   if f.typing then
+    o.header:write(' : [' .. f.typing .. '][]')
     o.body:write(' **[' .. f.typing .. '][]**')
   end
   if f.default then
-    if f.default == "" then o.body:write(' _[optional]_')
-    else o.body:write(' _[' .. f.default .. ']_') end
+    if f.default == "" then
+      o.header:write(' = _nil_')
+      o.body:write(' _[optional]_')
+    else
+      o.header:write(' = ' .. f.default)
+      o.body:write(' _[' .. f.default .. ']_')
+    end
   end
   if f.description then
     o.body:write(' `' .. f.description .. '`')
   end
+  o.header:write('**\n')
   o.body:write('\n')
 end
 

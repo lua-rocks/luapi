@@ -11,6 +11,10 @@ module.start()
 local module = {}
 
 
+--[[ Some table ]]--
+local sometable = {}
+
+
 --[[ My function for documentation
 > name (typindg) file will be created and overwritten
 > verbose (boolean) [] more output if true
