@@ -1,4 +1,5 @@
 --[[ Scriptum
+
 Output is in markdown.
 
   This document was created with this module, view the source file to see
@@ -21,19 +22,19 @@ scriptum.start "C:/Users/me/Desktop/codebase"
 
 Create a block comment with a tittle in the first line:
 
-  (start) Test Module
-  Import and run with start()
-    local module = require "testmodule"
-    module.start()
-  (end)
+($t)($s) Test Module
+($t)Import and run with start()
+($t)($t)local module = require "testmodule"
+($t)($t)module.start()
+($t)($e)
 
 Create an API function entry with a comment block and one of more of:
 
-  (param) name (typing) [default] note
+  > name (typing) [default] note
 
 and:
 
-  (return) name (typing) note
+  < name (typing) note
 
 Such as:
 
