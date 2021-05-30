@@ -67,9 +67,28 @@ end
 > m (table) method
 ]]
 local function prepareMethods(o, m)
-  dump(m)
+  --dump(m)
   m.name = m.name:gsub('^' .. o.modname, o.classname)
-  o.header:write('  - **[' .. m.name .. '][]**')
+  o.header:write('  - **[' .. m.name .. '][] (')
+  local first = true
+  for name, arg in pairs(m.params) do
+    if not first then o.header:write(', ') end
+    o.header:write(name)
+    if not arg.default then o.header:write('\\*') end
+    first = nil
+  end
+  o.header:write(')')
+  first = true
+  for name, ret in pairs(m.returns) do
+    if first then
+      o.header:write(' : ')
+    else
+      o.header:write(', ')
+    end
+    o.header:write(ret.typing)
+    first = nil
+  end
+  o.header:write('**')
   o.body:write('\n### ' .. m.name .. '\n')
   o.footer:write('\n[' .. m.name .. ']: #' ..
     m.name:lower():gsub('%p', '') .. '\n')
@@ -84,7 +103,7 @@ local function prepareMethods(o, m)
   local function universal(name, any)
     o.body:write('`' .. name .. '`')
     if any.typing then
-      o.body:write(': **' .. any.typing .. '**')
+      o.body:write(' : **' .. any.typing .. '**')
     end
     if any.default then
       if any.default == '' then
