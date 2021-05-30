@@ -114,7 +114,7 @@ function module.start(rootPath, pathFilters, outPath)
     module.files[path] = fileParser.parse(path)
     module.files[path].reqpath = requires[index]
     module.files[path].mdpath = rootPath .. '/' .. outPath .. '/' ..
-      module.files[path].reqpath .. '.md'
+      requires[index] .. '.md'
   end
 
   -- Generate markdown --
