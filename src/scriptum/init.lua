@@ -22,19 +22,18 @@ scriptum.start "C:/Users/me/Desktop/codebase"
 
 Create a block comment with a tittle in the first line:
 
-  (start) Test Module
-  Import and run with start()
+    Test Module
+    Import and run with start()
     local module = require "testmodule"
     module.start()
-  (end)
 
 Create an API function entry with a comment block and one of more of:
 
-  > name (typing) [default] note
+    (param) name (typing) [default] note
 
 and:
 
-  < name (typing) note
+    (return) name (typing) note
 
 Such as:
 
@@ -63,7 +62,7 @@ with key/value pairs, where each line is one pair ah a comment describing the
 key. This is used, for example, with the module 'config'. The tag in that case
 is used as:
 
-  (a) config
+    (a) config
 
 The mark-up used in this file requires escape symbols to generate the outputs
 properly:
