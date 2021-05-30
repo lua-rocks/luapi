@@ -30,11 +30,19 @@ local function prepareModule(o, r, m)
 end
 
 
-local function prepareField(output, field)
+--[[ Second prep
+> o (table) output
+> f (table) field
+]]
+local function prepareField(o, f)
 end
 
 
-local function prepareMethod(output, method)
+--[[ Third prep
+> o (table) output
+> m (table) method
+]]
+local function prepareMethod(o, m)
 end
 
 
