@@ -75,18 +75,18 @@ local function prepareMethods(o, m)
     if not first then o.header:write(', ') end
     o.header:write(name)
     if not arg.default then o.header:write('\\*') end
-    first = nil
+    first = false
   end
   o.header:write(')')
   first = true
-  for name, ret in pairs(m.returns) do
+  for _, ret in pairs(m.returns) do
     if first then
       o.header:write(' : ')
     else
       o.header:write(', ')
     end
     o.header:write(ret.typing)
-    first = nil
+    first = false
   end
   o.header:write('**')
   o.body:write('\n### ' .. m.name .. '\n')
