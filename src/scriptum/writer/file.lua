@@ -81,7 +81,30 @@ local function prepareMethods(o, m)
   if m.description then
     o.body:write('\n> ' .. m.description:gsub('\n', '\n> ') .. '\n')
   end
-  for name, method in pairs(m.params) do
+  local function universal(name, any)
+    o.body:write('`' .. name .. '`')
+    if any.typing then
+      o.body:write(': **' .. any.typing .. '**')
+    end
+    if any.default then
+      if any.default == '' then
+        any.default = 'optional'
+      end
+      o.body:write(' _[' .. any.default .. ']_')
+    end
+    if any.description then
+      o.body:write('\n`' .. any.description .. '`')
+    end
+  end
+  for name, arg in pairs(m.params) do
+    o.body:write('\n&rarr; ')
+    universal(name, arg)
+    o.body:write('\n')
+  end
+  for name, ret in pairs(m.returns) do
+    o.body:write('\n&larr; ')
+    universal(name, ret)
+    o.body:write('\n')
   end
 end
 
