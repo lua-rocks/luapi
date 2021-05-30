@@ -66,30 +66,20 @@ end
 > o (table) output
 > m (table) method
 ]]
-local function prepareMethod(o, m)
+local function prepareMethods(o, m)
+  dump(m)
   m.name = m.name:gsub('^' .. o.modname, o.classname)
   o.header:write('  - **[' .. m.name .. '][]**')
   o.body:write('\n### ' .. m.name .. '\n')
   o.footer:write('\n[' .. m.name .. ']: #' ..
-    m.name:lower():gsub('%.', '') .. '\n')
-  if m.typing then
-    o.header:write('')
-    o.body:write('')
+    m.name:lower():gsub('%p', '') .. '\n')
+  o.header:write('\n')
+  if m.title then
+    o.header:write('    - `' .. m.title .. '`\n')
+    o.body:write('\n' .. m.title .. '\n')
   end
-  if m.default then
-    if m.default == '' then
-      o.header:write('')
-      o.body:write('')
-    else
-      o.header:write('')
-      o.body:write('')
-    end
+  for name, method in pairs(m.params) do
   end
-  if m.description then
-    o.body:write('')
-  end
-  o.header:write('')
-  o.body:write('')
 end
 
 
@@ -133,7 +123,7 @@ function fileWriter.write(filePath, module)
       end
       output.header:write('\n- _Methods_\n')
       for _, method in pairs(output.methods) do
-        prepareMethod(output, method)
+        prepareMethods(output, method)
       end
       break
     end
