@@ -183,8 +183,8 @@ local function parseComments(content, api, path)
       parseFunction(api.functions, name, block, last, order, path)
     else
       name = last:match('.-(.+)%s?=%s?{')
-      name = trim((name:gsub('local ', '')))
       if name then
+        name = trim((name:gsub('local ', '')))
         api.tables = api.tables or {}
         parseUniversal(block, path, api.tables, name, order)
       end

@@ -5,25 +5,34 @@ local fileWriter = {}
 local writer = require 'scriptum.writer'
 
 
---[[ First prep
-> o (table) object
-> r (table) return
+--[[ Zero prep
+> o (table) output
 > m (table) module
 ]]
-local function prepareModule(o, r, m, module)
+local function prepareMain(o, m)
   o.fields = m.params
-  o.header.text = '# ' .. m.title .. '\n\n' .. m.description .. '\n' ..
-  '\n## Contents\n'
+  if m.title then o.header.text = '# ' .. m.title .. '\n'
+  else o.header.text = '# ' .. o.classname .. '\n' end
+  if m.description then o.header:write(m.description .. '\n') end
+  o.header:write('\n## Contents\n')
   o.body.text = '\n### ' .. o.classname .. '\n'
-  o.footer.text = '\n## Footer\n\n[Back to root](' .. module.paths.root ..
-  '/' .. module.paths.out ..
-  '/README.md)\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n' ..
-  '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n\n' ..
-  '[' .. o.classname .. ']: #' .. o.classname:lower()
+  o.footer:write(
+    '/README.md)\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n'
+    .. '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n\n'
+  )
+end
+
+
+--[[ First prep
+> o (table) output
+> r (table) return
+]]
+local function prepareModule(o)
+  o.footer:write('[' .. o.classname .. ']: #' .. o.classname:lower())
   o.header:write('\n- _Fields_\n  - **[' .. o.classname .. '][]')
-  if r.typing then
-    o.header:write(' : [' .. r.typing .. '][]**')
-    o.body:write('\nExtends: **[' .. r.typing .. '][]**\n')
+  if o.modreturns and o.modreturns.typing then
+    o.header:write(' : [' .. o.modreturns.typing .. '][]**')
+    o.body:write('\nExtends: **[' .. o.modreturns.typing .. '][]**\n')
     o.body:write('\nRequires: **none**\n')
   else
     o.header:write('**')
@@ -155,11 +164,16 @@ function fileWriter.write(filePath, module)
   for tname, t in pairs(data.tables) do
     if t.order == 1 then
       output.modname = tname
+      output.classname = tname
       for classname, returns in pairs(t.returns) do -- luacheck: ignore
-        output.classname = classname or tname
-        prepareModule(output, returns, t, module)
+        output.classname = classname
+        output.modreturns = returns
         break
       end
+      output.footer.text = '\n## Footer\n\n[Back to root](' ..
+      module.paths.root .. '/' .. module.paths.out
+      prepareMain(output, module)
+      prepareModule(output)
       -- extract methods
       for name, f in pairs(data.functions) do
         f.name = name
@@ -168,12 +182,12 @@ function fileWriter.write(filePath, module)
         end
       end
       -- prepare output
-      for name, field in pairs(output.fields) do
+      for name, field in pairs(output.fields or {}) do
         field.name = name
         prepareField(output, field)
       end
       output.header:write('\n- _Methods_\n')
-      for _, method in pairs(output.methods) do
+      for _, method in pairs(output.methods or {}) do
         prepareMethods(output, method)
       end
       break
