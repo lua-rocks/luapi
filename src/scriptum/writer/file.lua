@@ -174,7 +174,6 @@ function fileWriter.write(filePath, module)
 
   file:write(output.header.text .. output.body.text .. output.footer.text)
   file:close()
-  --dump(output)
 end
 
 
