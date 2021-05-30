@@ -42,6 +42,7 @@ See target template example (hand made)
     - [x] Show warning when function is not described.
     - [ ] First table must be separated to `module`.
     - [ ] Better requirements (`{reqpath = classname,...}`).
+    - [ ] +indexing; -ordering.
   - [ ] Writer
     - [ ] [Custom markdown template](https://github.com/lua-rocks/object).
       - [ ] Table of contents.
