@@ -95,8 +95,8 @@ local fileWriter = require 'scriptum.writer.file'
 
 --[[ Start document generation
 > rootPath (string) path to read source code from
-> pathFilters (table) [] search files only in these subdirs
-> outPath (string) ["doc"] path to output to
+> pathFilters (table) [] search files only in these subdirs (relative to root)
+> outPath (string) ["doc"] path to output to (relative to root)
 ]]
 function module.start(rootPath, pathFilters, outPath)
   rootPath = rootPath or config.rootPath
