@@ -78,6 +78,9 @@ local function prepareMethods(o, m)
     o.header:write('    - `' .. m.title .. '`\n')
     o.body:write('\n' .. m.title .. '\n')
   end
+  if m.description then
+    o.body:write('\n> ' .. m.description:gsub('\n', '\n> ') .. '\n')
+  end
   for name, method in pairs(m.params) do
   end
 end
