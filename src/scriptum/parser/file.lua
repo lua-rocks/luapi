@@ -187,6 +187,21 @@ local function parseComments(content, api, path)
         name = trim((name:gsub('local ', '')))
         api.tables = api.tables or {}
         parseUniversal(block, path, api.tables, name, order)
+        for n, t in pairs(api.tables) do
+          if t.order == 1 then
+            api.module = t
+            api.module.name = n
+            for rn, r in pairs(api.module.returns) do -- luacheck: ignore
+              r.order = nil
+              api.module.returns = r
+              api.module.returns.name = rn
+              break
+            end
+            api.module.order = nil
+            api.tables[n] = nil
+            break
+          end
+        end
       end
     end
     order = order + 1

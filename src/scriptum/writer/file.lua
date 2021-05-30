@@ -5,29 +5,22 @@ local fileWriter = {}
 local writer = require 'scriptum.writer'
 
 
---[[ Zero prep
+--[[ First prep
 > o (table) output
 > m (table) module
 ]]
-local function prepareMain(o, m)
+local function prepareModule(o, m)
   o.fields = m.params
-  o.header.text = '# ' .. (m.title or o.classname) .. '\n'
-  if m.description then o.header:write(m.description .. '\n') end
+  o.header.text = '# ' .. m.title .. '\n'
+  if m.description then o.header:write('\n' .. m.description .. '\n') end
   o.header:write('\n## Contents\n')
-  o.body.text = '\n### ' .. o.classname .. '\n'
+  o.body.text = '\n### ' .. m.returns.name .. '\n'
   o.footer:write(
     '/README.md)\n\n[string]: https://www.lua.org/manual/5.1/manual.html#5.4\n'
     .. '[table]: https://www.lua.org/manual/5.1/manual.html#5.5\n\n'
   )
-end
-
-
---[[ First prep
-> o (table) output
-]]
-local function prepareModule(o)
-  o.footer:write('[' .. o.classname .. ']: #' .. o.classname:lower())
-  o.header:write('\n- _Fields_\n  - **[' .. o.classname .. '][]')
+  o.footer:write('[' .. m.returns.name .. ']: #' .. m.returns.name:lower())
+  o.header:write('\n- _Fields_\n  - **[' .. m.returns.name .. '][]')
   if o.modreturns and o.modreturns.typing then
     o.header:write(' : [' .. o.modreturns.typing .. '][]**')
     o.body:write('\nExtends: **[' .. o.modreturns.typing .. '][]**\n')
@@ -42,9 +35,10 @@ end
 --[[ Second prep
 > o (table) output
 > f (table) field
+> m (table) module
 ]]
-local function prepareField(o, f)
-  o.header:write('\n  - **[' .. o.classname .. '][].' .. f.name)
+local function prepareField(o, f, m)
+  o.header:write('\n  - **[' .. m.returns.name .. '][].' .. f.name)
   o.body:write('\n&rarr; `' .. f.name .. '`')
   if f.typing then
     o.header:write(' : [' .. f.typing .. '][]')
@@ -72,8 +66,9 @@ end
 --[[ Third prep
 > o (table) output
 > m (table) method
+> mod (table) module
 ]]
-local function prepareMethods(o, m)
+local function prepareMethods(o, m, mod)
   -- WARNING probably I must add sorting here but it looks like already sorted
   local orderedReturns = {}
   for name, ret in pairs(m.returns) do
@@ -81,7 +76,7 @@ local function prepareMethods(o, m)
     orderedReturns[ret.order].name = name
   end
 
-  m.name = m.name:gsub('^' .. o.modname, o.classname)
+  m.name = m.name:gsub('^' .. mod.name, mod.returns.name)
   o.header:write('  - **[' .. m.name .. '][] (')
   local first = true
   for name, arg in pairs(m.params) do
@@ -157,38 +152,27 @@ function fileWriter.write(filePath, module)
     footer = { write = write },
   }
 
-  -- search for module table and handle it
-  for tname, t in pairs(data.tables) do
-    if t.order == 1 then
-      output.modname = tname
-      output.classname = tname
-      for classname, returns in pairs(t.returns) do -- luacheck: ignore
-        output.classname = classname
-        output.modreturns = returns
-        break
-      end
-      output.footer.text = '\n## Footer\n\n[Back to root](' ..
-      module.paths.root .. '/' .. module.paths.out
-      prepareMain(output, module)
-      prepareModule(output)
-      -- extract methods
-      for name, f in pairs(data.functions) do
-        f.name = name
-        if name:find(output.modname .. '%p') == 1 then
-          output.methods[f.order] = f
-        end
-      end
-      -- prepare output
-      for name, field in pairs(output.fields or {}) do
-        field.name = name
-        prepareField(output, field)
-      end
-      output.header:write('\n- _Methods_\n')
-      for _, method in pairs(output.methods or {}) do
-        prepareMethods(output, method)
-      end
-      break
+  dump(data.module)
+
+  output.footer.text = '\n## Footer\n\n[Back to root](' ..
+  module.paths.root .. '/' .. module.paths.out
+  data.module.returns.name = data.module.returns.name or data.module.name
+  prepareModule(output, data.module)
+  -- extract methods
+  for name, f in pairs(data.functions) do
+    f.name = name
+    if name:find(data.module.name .. '%p') == 1 then
+      output.methods[f.order] = f
     end
+  end
+  -- prepare output
+  for name, field in pairs(output.fields or {}) do
+    field.name = name
+    prepareField(output, field, data.module)
+  end
+  output.header:write('\n- _Methods_\n')
+  for _, method in pairs(output.methods or {}) do
+    prepareMethods(output, method, data.module)
   end
 
   file:write(output.header.text .. output.body.text .. output.footer.text)
