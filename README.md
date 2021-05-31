@@ -6,7 +6,7 @@ documentation tools I know, such as [ldoc][], [luadoc][], [emmylua][] and
 
 In my work I try to adhere to the [KISS][] principle, so that documenting your
 code and modifying the source code for this utility does not cause difficulties
-for anyone.
+for anyone (but knowledge of lua patterns is still required).
 
 This product was originally a fork of `scriptum`, but I rewrote it completely,
 so now there is little in common between `scriptum` and `luapi`.
