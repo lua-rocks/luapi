@@ -4,10 +4,7 @@ Import and run with start()
 local module = require "testmodule"
 module.start()
 ```
-
-FIXME: escape symbols !
-
-    I'm not a [code] removed?
+    I'm <not> a [code]
 > test (string) [] some module field
 < Module (table) `module` is a class `Module` extended from `table`
 ]]
@@ -15,6 +12,8 @@ local module = {}
 
 
 --[[ My function for documentation
+Additional **muliline** description
+in `markdown` _format_ supported in any block.
 > name (typindg) file will be created and overwritten
 > verbose (boolean) [] more output if true
 < success (boolean) fail will be handled gracefully and return false
@@ -32,8 +31,6 @@ inspect = require 'inspect'
 
 
 --[[ Print lua-object internals
-additional **muliline** description
-in `markdown` _format_ supported in any block.
 > ... (any) thing to inspect
 ]]
 function dump(...) print(inspect(...)) end

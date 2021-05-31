@@ -142,6 +142,8 @@ end
 ]]
 function fileWriter.write(filePath, module)
   local data = module.files[filePath]
+  if not data.module then return end
+
   local file = writer.open(module.paths.out .. '/' .. data.reqpath .. '.md')
   if not file then return end
   local write = function(self, text) self.text = self.text .. text end
