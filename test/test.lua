@@ -4,7 +4,10 @@ Import and run with start()
 local module = require "testmodule"
 module.start()
 ```
-  I'm not a code
+
+FIXME: escape symbols !
+
+    I'm not a [code] removed?
 > test (string) [] some module field
 < Module (table) `module` is a class `Module` extended from `table`
 ]]
@@ -41,10 +44,10 @@ local scriptum = require 'scriptum'
 
 
 -- generate full project documetation (excluding libraries)
-scriptum.start('/home/luarocks/repo/scriptum', {'src/scriptum'})
+-- scriptum.start('/home/luarocks/repo/scriptum', {'src/scriptum'})
 
 -- generate minimal doc just for quick test
--- scriptum.start('/home/luarocks/repo/scriptum', {'test'})
+scriptum.start('/home/luarocks/repo/scriptum', {'test'})
 
 -- run "lua test.lua dump" for dump
 if ({...})[1] == 'dump' then dump(scriptum, {depth = 7}) end

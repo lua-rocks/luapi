@@ -80,14 +80,16 @@ local function parseUniversal(block, path, api, name, order)
   local title = block:match('%-%-%[%[(.-)[%]\n]')
   if title then api[name].title = trim(title) end
 
-  -- parse muliline markdown description
-  api[name].description = block:match('%-%-%[%[(.-)[%]><]')
-  if api[name].description then
-    api[name].description = trim((api[name].description:gsub('^.-\n', '')))
-    if api[name].description == api[name].title or api[name].description == '' then
-      api[name].description = nil
-    end
+  local desc -- parse muliline markdown description
+  desc = block:match('%-%-%[%[(.-)%]%]')
+  if desc then
+    desc = desc:match('(.-)\n[><]')
   end
+  if desc then
+    desc = trim((desc:gsub('^.-\n', '')))
+    if desc == api[name].title or desc == '' then desc = nil end
+  end
+  api[name].description = desc
 
   -- parse description block line by line and extract tagged data
   local line_number = 1
