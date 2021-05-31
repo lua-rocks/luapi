@@ -4,7 +4,7 @@
 documentation tools I know, such as [ldoc][], [luadoc][], [emmylua][] and
 [scriptum][].
 
-In my work, I try to adhere to the [KISS][] principle, so that documenting your
+In my work I try to adhere to the [KISS][] principle, so that documenting your
 code and modifying the source code for this utility does not cause difficulties
 for anyone.
 
