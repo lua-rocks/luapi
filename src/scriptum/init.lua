@@ -29,16 +29,16 @@ Create a block comment with a tittle in the first line:
 
 Create an API function entry with a comment block and one of more of:
 
-    (param) name (typing) [default] note
+    > name (typing) [default] note
 
 and:
 
-    (return) name (typing) note
+    < name (typing) note
 
 Such as:
 
 ```lua
-(start) My function for documentation
+--[\[ My function for documentation
 (param) name (typing) file will be created and overwritten
 (param) verbose (boolean) [true] more output if true
 (return) success (boolean) fail will be handled gracefully and return false
@@ -47,25 +47,27 @@ function module.startModule(name, verbose)
   local success = false
   -- sample code --
   return success
-end
+--]\]
 ```
 
 Where:
 
 - **name** is the parameter or return value
 - optional **(typing)** such as (boolean), (number), (function), (string)
-- optional **[default]** is the default value; if optional put [nil], [opt] or []
+- optional **[default]** is the default value;
+  if optional put [nil], [opt] or []
 - optional **note** is any further information
 
-Additionally, the **(a)** tag can be used to automatically unpack a simple table
+Additionally, the **@** tag can be used to automatically unpack a simple table
 with key/value pairs, where each line is one pair ah a comment describing the
 key. This is used, for example, with the module 'config'. The tag in that case
 is used as:
 
-    (a) config
+    @ config
 
 The mark-up used in this file requires escape symbols to generate the outputs
 properly:
+
 - Where **()** with **start** or **end** can be used to escape block comments.
 - And **()** with **a** is used to escape the @ symbol.
 

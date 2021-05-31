@@ -81,9 +81,11 @@ local function parseUniversal(block, path, api, name, order)
   if title then api[name].title = trim(title) end
 
   local desc -- parse muliline markdown description
+
   desc = block:match('%-%-%[%[(.-)%]%]')
 
   if desc then
+    desc = desc:gsub('\\(.)', '%1')
     desc = desc:match('(.-)\n[><]') or desc
   end
 
