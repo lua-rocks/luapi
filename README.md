@@ -47,6 +47,9 @@ so now there is little in common between `scriptum` and `luapi`.
 - Like `emmylua`, I plan to implement smart hints for the `atom` editor. Perhaps
   the list of editors will expand, but at the moment even `atom` is not
   supported yet, so it's too early to promise anything here.
+- Unlike `scriptum` and like `ldoc`, only **external** module fields and methods
+  will be written to markdown, but internal tables and functions still parsed
+  and will be used for smart hints in IDE.
 - Like `ldoc`, if your tags mismatch with real params or if you started comment
   block but not commented some fields, you will get warnings in the terminal.
 - Keep in mind that my project is still very young and poorly tested, so bugs
