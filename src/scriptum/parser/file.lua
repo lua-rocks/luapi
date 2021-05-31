@@ -91,7 +91,8 @@ local function parseUniversal(block, path, api, name, order)
 
   -- parse description block line by line and extract tagged data
   local line_number = 1
-  for tag, tagged_line in block:gmatch('\n([><])%s?(.-)\n') do
+  for tag, tagged_line in block:gmatch('([><])%s?(.-)\n') do
+    print(tag, tagged_line)
     local tagged_name = tagged_line:match('^(.-)%s') or tagged_line
     local tagged_table -- where to save tagged line data
     if tag == '>' then tagged_table = api[name].params
