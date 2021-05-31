@@ -60,7 +60,7 @@ so now there is little in common between `scriptum` and `luapi`.
 - Update comments in sources.
 - Parse and keep list of all classes in project.
 - Unpack (`@`).
-  - I like the idea of `scriptum`:`@unpack` but it is not implemented yet.
+  - I like the idea of `scriptum`:`unpack` but it is not implemented yet.
   - Unpack should work with params and returns in any scope.
     Like this: `> @conf` or `< @conf`.
 - Returns list.
