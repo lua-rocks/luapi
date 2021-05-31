@@ -39,11 +39,12 @@ See target template example (hand made)
     - [x] Show warning when function is not described.
     - [x] First table must be separated to `module`.
     - [ ] Better requirements (`{reqpath = classname,...}`).
-  - [x] Writer
+  - [ ] Writer
     - [x] [Custom markdown template](https://github.com/lua-rocks/object).
       - [x] Table of contents.
       - [x] Easy links for headers.
       - [x] External and internal tables/functions.
+      - [ ] Escape symbols.
 - [x] Remove `love` (why do we need it if it's not required?).
 - [ ] Replace all full paths with relative.
 - [ ] Lua files in `doc` folder automaticaly includes in md-files as examples.
