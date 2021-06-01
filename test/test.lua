@@ -6,6 +6,7 @@ module.start()
 ```
     I'm <not> a [code]
 > test (string) [] some module field
+> files ({string=table...}) [{}] [files paths] = <parsed> (file) tables FIXME
 < Module (table) `module` is a class `Module` extended from `table`
 ]]
 local module = {}
@@ -41,10 +42,10 @@ local luapi = require 'luapi'
 
 
 -- generate full project documetation (excluding libraries)
-luapi.start('/home/luarocks/repo/luapi', {'src/luapi'})
+-- luapi.start('/home/luarocks/repo/luapi', {'src/luapi'})
 
 -- generate minimal doc just for quick test
--- luapi.start('/home/luarocks/repo/luapi', {'test'})
+luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
 if ({...})[1] == 'dump' then dump(luapi, {depth = 7}) end
