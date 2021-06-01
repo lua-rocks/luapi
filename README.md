@@ -15,9 +15,9 @@ so now there is little in common between `scriptum` and `luapi`.
 ## Similarities and differences
 
 - Just like `scriptum`, `luapi` generates markdown documentation that you can
-  easily convert to any other format styling it as you like, or just view it
-  through a browser using the .md file viewer extension. Even in notepad, this
-  documentation is quite readable.
+  easily convert to any other format styling it as you like, or post on
+  github/bitbucket etc, or just view it through a browser using the .md file
+  viewer extension. Even in notepad, this documentation is quite readable.
 - Unlike most analogs, you are not required to memorize a set of tags and
   complex rules for their use. My tool is extremely simple, it only uses 3
   single-character tags and 2 kinds of brackets:
