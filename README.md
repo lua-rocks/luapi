@@ -82,7 +82,8 @@ These rules are optional, but highly recommended:
 - Maximum line number is **80** characters.
 - `One line` **title** comments must start with **uppercase** letter.
 - `One line` **parameter** comments must start with a **lowercase**.
-- `One line` **any** comments must **not** have a dot or semicolon at the end.
+- `One line` (**any**) comments must **not** have a dot or semicolon at the end.
+- `Muliline` (**any**) comments must **have** a dot or semicolon at the end.
 
 Of course, I can correct everything automatically in docgen, but don't forget
 that your source code is also a documentation.
