@@ -27,7 +27,7 @@ so now there is little in common between `scriptum` and `luapi`.
   - `>`: function argument or table field
   - `<`: function return or describing table as class
   - `(parentheses)`: the type or parent class of the variable
-  - `[square brackets]`: default value of the variable
+  - `[square brackets]`: default value of the variable (makes it _optional_)
   - _So you have learned all the api!_
   - Example:
   ```lua
