@@ -25,7 +25,7 @@ so now there is little in common between `scriptum` and `luapi`.
   complex rules for their use. My tool is extremely simple, it only uses 2
   single-character tags and 2 kinds of brackets:
   - `>`: table field or function argument
-  - `<`: function return or parent class of the table
+  - `<`: function return or class description
   - `(parentheses)`: the type or class of the variable
   - `[square brackets]`: default value of the variable
   - _So you have learned all the api!_
