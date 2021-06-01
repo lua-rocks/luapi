@@ -9,14 +9,14 @@ local projParser = {}
 ]]
 local function fs2reqPath(path, rootPath)
   rootPath = rootPath
-    :gsub("\\\\", "/")
-    :gsub("\\", "/")
+    :gsub('\\\\', '/')
+    :gsub('\\', '/')
   path = path
-    :gsub(rootPath.."/", "")
-    :gsub(rootPath, "")
-    :gsub("%.lua", "")
-    :gsub("%.init", "")
-    :gsub("/", ".")
+    :gsub(rootPath..'/', '')
+    :gsub(rootPath, '')
+    :gsub('%.lua', '')
+    :gsub('/init', '')
+    :gsub('/', '.')
   return path
 end
 
