@@ -6,7 +6,7 @@ module.start()
 ```
     I'm <not> a [code]
 > test (string) [] some module field
-> files ({string=table...}) [{}] [files paths] = <parsed> (file) tables FIXME
+> files ({string=table...}) [{}] [files paths] = <parsed> (file) tables
 < Module (table) `module` is a class `Module` extended from `table`
 ]]
 local module = {}
