@@ -69,10 +69,8 @@ so now there is little in common between `scriptum` and `luapi`.
 - Better requirements (`{reqpath = classname,...}`).
 - Lua files in `doc` folder automaticaly includes in md-files as examples.
 - Suppport for OOP: inheritance.
-- Add support for
-  [this Atom extension](https://github.com/dapetcu21/atom-autocomplete-lua).
-- Clean markdown:
-  no [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
+- Add support for [atom-autocomplete][].
+- Clean markdown: no [markdownlint][] warnings.
 - Combine all modules into one file and remove debug garbage.
 - Squash my crazy commits.
 - Publish to luarocks.
@@ -91,3 +89,5 @@ These rules are optional, but highly recommended:
 [luadoc]: https://keplerproject.github.io/luadoc
 [scriptum]: https://github.com/charlesmallah/lua-scriptum
 [emmylua]: https://github.com/EmmyLua
+[markdownlint]: https://github.com/DavidAnson/markdownlint
+[atom-autocomplete]: https://github.com/dapetcu21/atom-autocomplete-lua
