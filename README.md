@@ -18,6 +18,9 @@ so now there is little in common between `scriptum` and `luapi`.
   easily convert to any other format styling it as you like, or post on
   github/bitbucket etc, or just view it through a browser using the .md file
   viewer extension. Even in notepad, this documentation is quite readable.
+- Unlike `scriptum`, `luapi` keeps all file in one string and search patterns
+  in this string or its chunks, but not loops through each file line and it also
+  writes each file only once so it should be much faster.
 - Unlike most analogs, you are not required to memorize a set of tags and
   complex rules for their use. My tool is extremely simple, it only uses 3
   single-character tags and 2 kinds of brackets:
@@ -49,7 +52,7 @@ so now there is little in common between `scriptum` and `luapi`.
   supported yet, so it's too early to promise anything here.
 - Unlike `scriptum` and like `ldoc`, only **external** module fields and methods
   will be written to markdown, but internal tables and functions still parsed
-  and will be used for smart hints in IDE.
+  and can be used for smart hints in IDE or somewhere else.
 - Like `ldoc`, if your tags mismatch with real params or if you started comment
   block but not commented some fields, you will get warnings in the terminal.
 - Keep in mind that my project is still very young and poorly tested, so bugs
@@ -72,7 +75,7 @@ so now there is little in common between `scriptum` and `luapi`.
 - Clean markdown:
   no [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
 - Combine all modules into one file and remove debug garbage.
-- Squash my crazy commits. 
+- Squash my crazy commits.
 - Publish to luarocks.
 
 ## Style guide
