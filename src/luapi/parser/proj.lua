@@ -14,9 +14,9 @@ local function fs2reqPath(path, rootPath)
   path = path
     :gsub(rootPath.."/", "")
     :gsub(rootPath, "")
+    :gsub("%.lua", "")
+    :gsub("%.init", "")
     :gsub("/", ".")
-    :gsub(".lua", "")
-    :gsub(".init", "")
   return path
 end
 
