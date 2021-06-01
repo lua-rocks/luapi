@@ -72,6 +72,7 @@ so now there is little in common between `scriptum` and `luapi`.
 - Clean markdown:
   no [markdownlint](https://github.com/DavidAnson/markdownlint) warnings.
 - Combine all modules into one file and remove debug garbage.
+- Squash my crazy commits. 
 - Publish to luarocks.
 
 ## Style guide
