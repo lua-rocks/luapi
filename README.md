@@ -84,6 +84,9 @@ These rules are optional, but highly recommended:
 - `One line` **parameter** comments must start with a **lowercase**.
 - `One line` **any** comments must **not** have a dot or semicolon at the end.
 
+Of course, I can correct everything automatically in docgen, but don't forget
+that your source code is also a documentation.
+
 [KISS]: https://en.wikipedia.org/wiki/KISS_principle
 [ldoc]: https://stevedonovan.github.io/ldoc/manual/doc.md.html
 [luadoc]: https://keplerproject.github.io/luadoc
