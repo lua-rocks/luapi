@@ -22,11 +22,10 @@ so now there is little in common between `scriptum` and `luapi`.
   in this string or its chunks, but not loops through each file line and it also
   writes each file only once so it should be much faster.
 - Unlike most analogs, you are not required to memorize a set of tags and
-  complex rules for their use. My tool is extremely simple, it only uses 3
+  complex rules for their use. My tool is extremely simple, it only uses 2
   single-character tags and 2 kinds of brackets:
   - `>`: table field or function argument
   - `<`: function return or parent class of the table
-  - `@`: unpacking table content (not yet implemented)
   - `(parentheses)`: the type or class of the variable
   - `[square brackets]`: default value of the variable
   - _So you have learned all the api!_
