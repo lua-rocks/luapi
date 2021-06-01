@@ -1,4 +1,4 @@
-# LUAPI
+# LUAPI (WIP)
 
 **LUAPI** is an attempt to bring together the best features of all lua
 documentation tools I know, such as: [ldoc][], [luadoc][], [emmylua][] and

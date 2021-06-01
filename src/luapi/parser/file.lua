@@ -95,7 +95,6 @@ local function parseUniversal(block, path, api, name, order)
   end
   api[name].description = desc
 
-
   -- parse description block line by line and extract tagged data
   local line_number = 1
   for tag, tagged_line in block:gmatch('\n([><])%s?(%C+)') do
@@ -104,11 +103,17 @@ local function parseUniversal(block, path, api, name, order)
     if tag == '>' then tagged_table = api[name].params
     elseif tag == '<' then tagged_table = api[name].returns end
 
+    local descStartAt = math.max(
+      (tagged_line:find('%s') or 0),
+      (tagged_line:find('%)') or 0),
+      (tagged_line:find('%]') or 0)
+    ) + 1
+
     -- extract data for any tags
     tagged_table[tagged_name] = {
       typing = tagged_line:match('%((.-)%)'),
       default = tagged_line:match('%s%[(.-)%]'),
-      description = trim((tagged_line:gsub('^.*[%]%)]', ''))),
+      description = trim((tagged_line:sub(descStartAt, -1))),
       order = line_number
     }
 
