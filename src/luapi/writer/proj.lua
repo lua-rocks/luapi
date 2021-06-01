@@ -14,8 +14,10 @@ function projWriter.write(outPath, module)
   if not file then return end
   file:write("# Project Code Documentation\n\n## Index\n\n")
   for path in pairs(module.files) do
-    file:write("- [" .. module.files[path].reqpath .. "](" ..
-    module.files[path].mdpath .. ")\n")
+    if module.files[path].module then
+      file:write("- [" .. module.files[path].reqpath .. "](" ..
+      module.files[path].mdpath .. ")\n")
+    end
   end
 end
 

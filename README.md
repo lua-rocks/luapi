@@ -59,7 +59,6 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 
 ## Todo
 
-- Do not generate links to not described modules.
 - Update comments in sources.
 - Parse and keep list of all classes in project.
 - Document `do ... end` blocks as sections.
