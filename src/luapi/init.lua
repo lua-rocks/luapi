@@ -1,3 +1,10 @@
+--[[ LUAPI
+
+    This document was created with this module, view the source file to see
+    example input And see the raw readme.md for example output.
+
+]]
+
 --[[ Scriptum
 
 Output is in markdown.
@@ -89,10 +96,10 @@ local config = {
 }
 
 
-local projParser = require 'scriptum.parser.proj'
-local fileParser = require 'scriptum.parser.file'
-local projWriter = require 'scriptum.writer.proj'
-local fileWriter = require 'scriptum.writer.file'
+local projParser = require 'luapi.parser.proj'
+local fileParser = require 'luapi.parser.file'
+local projWriter = require 'luapi.writer.proj'
+local fileWriter = require 'luapi.writer.file'
 
 
 --[[ Start document generation

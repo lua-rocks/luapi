@@ -2,7 +2,7 @@
 local projWriter = {}
 
 
-local writer = require 'scriptum.writer'
+local writer = require 'luapi.writer'
 
 
 --[[ Write project index file

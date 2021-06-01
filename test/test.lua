@@ -37,17 +37,17 @@ function dump(...) print(inspect(...)) end
 
 
 package.path = package.path .. ';src/?.lua;src/?/init.lua'
-local scriptum = require 'scriptum'
+local luapi = require 'luapi'
 
 
 -- generate full project documetation (excluding libraries)
-scriptum.start('/home/luarocks/repo/scriptum', {'src/scriptum'})
+luapi.start('/home/luarocks/repo/luapi', {'src/luapi'})
 
 -- generate minimal doc just for quick test
--- scriptum.start('/home/luarocks/repo/scriptum', {'test'})
+-- luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
-if ({...})[1] == 'dump' then dump(scriptum, {depth = 7}) end
+if ({...})[1] == 'dump' then dump(luapi, {depth = 7}) end
 
 
 return module
