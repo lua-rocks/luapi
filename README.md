@@ -77,7 +77,7 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 
 ## Style guide
 
-These rules are optional, but highly recommended:
+These rules are _optional_, but highly recommended:
 
 - Maximum line number is **80** characters.
 - `One line` **title** comments must start with **uppercase** letter.
@@ -86,7 +86,7 @@ These rules are optional, but highly recommended:
 - `Muliline` (**any**) comments must **have** a dot or semicolon at the end.
 
 Of course, I can correct everything automatically in docgen, but don't forget
-that your source code is also a documentation.
+that your source code is also a documentation!
 
 [KISS]: https://en.wikipedia.org/wiki/KISS_principle
 [ldoc]: https://stevedonovan.github.io/ldoc/manual/doc.md.html
