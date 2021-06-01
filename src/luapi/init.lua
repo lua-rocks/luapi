@@ -1,90 +1,10 @@
 --[[ LUAPI
+This document was created with this module. View the lua source file to see
+example input and see the raw markdown file for example output.
 
-    This document was created with this module, view the source file to see
-    example input And see the raw readme.md for example output.
-
-]]
-
---[[ Scriptum
-
-Output is in markdown.
-
-  This document was created with this module, view the source file to see
-  example input And see the raw readme.md for example output
-
-Generate all documentation from the root directory:
-
-```lua
-local scriptum = require "scriptum"
-scriptum.start()
-```
-
-Make sure you give the absolute path to the source root, and make sure the
-output folder 'doc' in this example already exists in the source path, such as:
-
-```lua
-local scriptum = require "scriptum"
-scriptum.start "C:/Users/me/Desktop/codebase"
-```
-
-Create a block comment with a tittle in the first line:
-
-    Test Module
-    Import and run with start()
-    local module = require "testmodule"
-    module.start()
-
-Create an API function entry with a comment block and one of more of:
-
-    > name (typing) [default] note
-
-and:
-
-    < name (typing) note
-
-Such as:
-
-```lua
---[\[ My function for documentation
-(param) name (typing) file will be created and overwritten
-(param) verbose (boolean) [true] more output if true
-(return) success (boolean) fail will be handled gracefully and return false
-(end)
-function module.startModule(name, verbose)
-  local success = false
-  -- sample code --
-  return success
---]\]
-```
-
-Where:
-
-- **name** is the parameter or return value
-- optional **(typing)** such as (boolean), (number), (function), (string)
-- optional **[default]** is the default value;
-  if optional put [nil], [opt] or []
-- optional **note** is any further information
-
-Additionally, the **@** tag can be used to automatically unpack a simple table
-with key/value pairs, where each line is one pair ah a comment describing the
-key. This is used, for example, with the module 'config'. The tag in that case
-is used as:
-
-    @ config
-
-The mark-up used in this file requires escape symbols to generate the outputs
-properly:
-
-- Where **()** with **start** or **end** can be used to escape block comments.
-- And **()** with **a** is used to escape the @ symbol.
-
-Override a configuration parameter programmatically; insert your override values
-into a new table using the matched key names:
-
-```lua
-local overrides = { outPath = "doc" }
-scriptum.configuration(overrides)
-```
+> files ({string=table...}) files paths = parsed file tables
+> paths (table) project paths
+< luapi (table)
 ]]
 local module = {}
 

@@ -41,8 +41,8 @@ local function prepareField(o, f, m)
   o.header:write('\n  - **[' .. m.returns.name .. '][].' .. f.name)
   o.body:write('\n&rarr; `' .. f.name .. '`')
   if f.typing then
-    o.header:write(' : [' .. f.typing .. '][]')
-    o.body:write(' **[' .. f.typing .. '][]**')
+    o.header:write(' : ' .. f.typing .. '')
+    o.body:write(' **' .. f.typing .. '**')
   end
   if f.default then
     if f.default == '' then
