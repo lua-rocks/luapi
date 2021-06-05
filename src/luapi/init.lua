@@ -58,7 +58,7 @@ end
 Provide a table with keys that share the same name as the config parameters:
 > overrides (table) each key is from a valid name, the value is the override
 ]]
-function module.configuration(overrides)
+function module.config(overrides)
   for k, v in pairs(overrides) do
     if config[k] then config[k] = v end
   end

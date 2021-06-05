@@ -48,7 +48,7 @@ luapi.start('/home/luarocks/repo/luapi', {'src/luapi'})
 -- luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
-if ({...})[1] == 'dump' then dump(luapi, {depth = 3}) end
+if ({...})[1] == 'dump' then dump(luapi, {depth = 4}) end
 
 
 return module
