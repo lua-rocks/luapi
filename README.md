@@ -59,7 +59,8 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 
 ## Todo
 
-- Requires list.
+- Module is a returned table (not a first commented).
+- Requires named list (`{reqpath = classname,...}`).
 - Update comments in sources.
 - Parse and keep list of all classes in project.
 - Document `do ... end` blocks as sections.
@@ -67,7 +68,6 @@ completely, so now there is little in common between `scriptum` and `luapi`.
   - I like the idea of `scriptum`:`unpack` but it is not implemented yet.
   - Unpack should work with params and returns in any scope.
     Like this: `> @conf` or `< @conf`.
-- Better requirements (`{reqpath = classname,...}`).
 - Lua files in `doc` folder automaticaly includes in md-files as examples.
 - Suppport for OOP: inheritance.
 - Add support for [atom-autocomplete][].
