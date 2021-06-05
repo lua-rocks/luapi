@@ -63,6 +63,7 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 - Tables (including module) can have only one "return" line.
 - Parse and keep list of all classes in project.
   - Requires named list (`{reqpath = classname,...}`).
+- Escape whatever you want with `\` (partitially done).
 - Update comments in sources.
 - Document `do ... end` blocks as sections.
 - Unpack (`@`).
