@@ -27,6 +27,16 @@ function module.startModule(name, verbose)
 end
 
 
+--[[ Test table
+> a (number)
+> b (number)
+< c (number) dwdwd
+]]
+local testTable = {
+
+}
+
+
 -- luarocks install inspect
 inspect = require 'inspect'
 
@@ -48,7 +58,7 @@ local luapi = require 'luapi'
 luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
-if ({...})[1] == 'dump' then dump(luapi, {depth = 4}) end
+if ({...})[1] == 'dump' then dump(luapi, {depth = 7}) end
 
 
 return module
