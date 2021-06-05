@@ -200,11 +200,11 @@ local function parseComments(content, api, path)
         api.tables = api.tables or {}
         parseUniversal(block, path, api.tables, name, order)
         for n, t in pairs(api.tables) do
-          -- better returns format for tables
+          -- tables can have only one return
           for rn, r in pairs(t.returns) do -- luacheck: ignore
+            t.returns = r
+            t.returns.name = rn
             r.order = nil
-            api.tables[n].returns = r
-            api.tables[n].returns.name = rn
             break
           end
           -- module is a special table

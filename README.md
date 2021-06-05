@@ -60,7 +60,6 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 ## Todo
 
 - Module is a returned table (not a first commented).
-- Tables (including module) can have only one "return" line.
 - Parse and keep list of all classes in project.
   - Requires named list (`{reqpath = classname,...}`).
 - Escape whatever you want with `\` (partitially done).
