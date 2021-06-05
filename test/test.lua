@@ -27,14 +27,14 @@ function module.startModule(name, verbose)
 end
 
 
---[[ Test table
+--[[ Test table field
+TODO: add such fields in output documentation.
 > a (number)
 > b (number)
 < c (number) dwdwd
 ]]
-local testTable = {
+module.testTable = {}
 
-}
 
 
 -- luarocks install inspect
