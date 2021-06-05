@@ -64,6 +64,7 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 - Parse and keep list of all classes in project.
   - Requires named list (`{reqpath = classname,...}`).
 - Escape whatever you want with `\` (partitially done).
+- No empty values (including `{}`) in output module table.
 - Update comments in sources.
 - Document `do ... end` blocks as sections.
 - Unpack (`@`).
