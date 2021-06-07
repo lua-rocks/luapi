@@ -36,7 +36,6 @@ TODO: add such fields in output documentation.
 module.testTable = {}
 
 
-
 -- luarocks install inspect
 inspect = require 'inspect'
 
