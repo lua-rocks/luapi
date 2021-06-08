@@ -71,7 +71,7 @@ end
 local function prepareMethods(o, m, mod)
   -- WARNING probably I must add sorting here but it looks like already sorted
   local orderedReturns = {}
-  for name, ret in pairs(m.returns) do
+  for name, ret in pairs(m.returns or {}) do
     orderedReturns[ret.order] = ret
     orderedReturns[ret.order].name = name
   end
@@ -79,7 +79,7 @@ local function prepareMethods(o, m, mod)
   m.name = m.name:gsub('^' .. mod.name, mod.returns.name)
   o.header:write('  - **[' .. m.name .. '][] (')
   local first = true
-  for name, arg in pairs(m.params) do
+  for name, arg in pairs(m.params or {}) do
     if not first then o.header:write(', ') end
     o.header:write(name)
     if not arg.default then o.header:write('\\*') end
@@ -123,7 +123,7 @@ local function prepareMethods(o, m, mod)
       o.body:write('\n`' .. any.description .. '`')
     end
   end
-  for name, arg in pairs(m.params) do
+  for name, arg in pairs(m.params or {}) do
     o.body:write('\n&rarr; ')
     universal(name, arg)
     o.body:write('\n')
@@ -156,6 +156,7 @@ function fileWriter.write(filePath, module)
 
   output.footer.text = '\n## Footer\n\n[Back to root](' ..
   module.paths.root .. '/' .. module.paths.out
+  data.module.returns = data.module.returns or {}
   data.module.returns.name = data.module.returns.name or data.module.name
   prepareModule(output, data.module)
   -- extract methods

@@ -137,6 +137,10 @@ local function parseUniversal(block, path, api, name, order)
 
     line_number = line_number + 1
   end
+
+  -- clean up
+  if #api[name].params == 0 then api[name].params = nil end
+  if #api[name].returns == 0 then api[name].returns = nil end
 end
 
 
@@ -163,11 +167,11 @@ local function parseFunction(api, name, block, last, order, path)
 
   -- check if all args described
   for _, argname in pairs(real_args) do
-    if not params[argname] then
+    if params and not params[argname] then
       warning('ERROR', 1, name, argname, path)
     end
   end
-  for argname in pairs(params) do
+  for argname in pairs(params or {}) do
     local function search(t, s)
       for index, value in ipairs(t) do
         if value == s then return index end
@@ -201,7 +205,7 @@ local function parseComments(content, api, path)
         parseUniversal(block, path, api.tables, name, order)
         for n, t in pairs(api.tables) do
           -- tables can have only one return
-          for rn, r in pairs(t.returns) do -- luacheck: ignore
+          for rn, r in pairs(t.returns or {}) do -- luacheck: ignore
             t.returns = r
             t.returns.name = rn
             r.order = nil
@@ -254,6 +258,7 @@ function fileParser.parse(path)
     if not described then warning('WARNING', 2, name, nil, path) end
   end
 
+  if #data.requires == 0 then data.requires = nil end
   return data
 end
 
