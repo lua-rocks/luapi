@@ -31,7 +31,7 @@ end
 TODO: add such fields in output documentation.
 > a (number)
 > b (number)
-< c (number) dwdwd
+< Test (table) example class Test, extended from table, inserted into module
 ]]
 module.testTable = {}
 
