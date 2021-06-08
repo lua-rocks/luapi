@@ -205,11 +205,11 @@ local function parseComments(content, api, path)
         parseUniversal(block, path, api.tables, name, order)
         for n, t in pairs(api.tables) do
           -- tables can have only one return
-          for rn, r in pairs(t.returns or {}) do -- luacheck: ignore
-            t.returns = r
+          local rn = next(t.returns)
+          if rn ~= nil then
+            t.returns = t.returns[rn]
             t.returns.name = rn
-            r.order = nil
-            break
+            t.returns.order = nil
           end
           -- module is a special table
           if t.order == 1 then
