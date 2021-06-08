@@ -138,9 +138,13 @@ local function parseUniversal(block, path, api, name, order)
     line_number = line_number + 1
   end
 
-  -- clean up
-  if #api[name].params == 0 then api[name].params = nil end
-  if #api[name].returns == 0 then api[name].returns = nil end
+  -- remove empty tables
+  for _, _ in pairs(api[name].params) do goto params end
+  api[name].params = nil
+  ::params::
+  for _, _ in pairs(api[name].returns) do goto returns end
+  api[name].returns = nil
+  ::returns::
 end
 
 

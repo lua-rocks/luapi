@@ -12,7 +12,7 @@ local writer = require 'luapi.writer'
 function projWriter.write(outPath, module)
   local file = writer.open(outPath.."/README.md")
   if not file then return end
-  file:write("# Project Code Documentation\n\n## Index\n\n")
+  file:write("# Project Code Documentation\n\n## Files\n\n")
   local sortedPaths = {}
   for path in pairs(module.files) do
     table.insert(sortedPaths, path)
