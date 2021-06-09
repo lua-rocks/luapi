@@ -32,6 +32,7 @@ function module.start(rootPath, pathFilters, outPath)
   pathFilters = pathFilters or config.pathFilters
   outPath = outPath or config.outPath
   module.files = {}
+  module.classes = {}
   module.paths = {
     root = rootPath,
     out = outPath
@@ -44,6 +45,13 @@ function module.start(rootPath, pathFilters, outPath)
     module.files[path].reqpath = requires[index]
     module.files[path].mdpath = rootPath .. '/' .. outPath .. '/' ..
       requires[index] .. '.md'
+    -- register class
+    if module.files[path].module and module.files[path].module.returns then
+      local classname = module.files[path].module.returns.name
+      if classname then
+        module.classes[classname] = path
+      end
+    end
   end
 
   -- Generate markdown --

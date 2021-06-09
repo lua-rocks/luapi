@@ -52,10 +52,10 @@ local luapi = require 'luapi'
 
 
 -- generate full project documetation (excluding libraries)
-luapi.start('/home/luarocks/repo/luapi', {'src/luapi'})
+-- luapi.start('/home/luarocks/repo/luapi', {'src/luapi'})
 
 -- generate minimal doc just for quick test
--- luapi.start('/home/luarocks/repo/luapi', {'test'})
+luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
 if ({...})[1] == 'dump' then dump(luapi, {depth = 7}) end
