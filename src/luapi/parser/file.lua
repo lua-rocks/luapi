@@ -220,6 +220,7 @@ end
 > path (string) path to the file
 ]]
 local function parseComments(content, api, path)
+  api.tables = api.tables or {}
   local order = 1
   for block, last in content:gmatch('(%-%-%[%[.-%]%].-\n)(.-)\n') do
     local name = last:match('function%s(.-)%s?%(')
@@ -231,14 +232,13 @@ local function parseComments(content, api, path)
       name = last:match('.-(.+)%s?=%s?{')
       if name then
         name = trim((name:gsub('local ', '')))
-        api.tables = api.tables or {}
         parseUniversal(block, path, api.tables, name, order)
-        correctTables(api)
-        extractModuleTable(api)
       end
     end
     order = order + 1
   end
+  correctTables(api)
+  extractModuleTable(api)
 end
 
 
