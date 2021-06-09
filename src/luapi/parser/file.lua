@@ -147,13 +147,10 @@ end
 --[[ Parse function
 > api (table) save api here
 > name (string) name of the function
-> block (string) block of comments
 > last (string) one line of code after comments
-> order (integer) number of this commented block
 > path (string) path to parsed file
 ]]
-local function parseFunction(api, name, block, last, order, path)
-  parseUniversal(block, path, api, name, order)
+local function parseFunction(api, name, last, path)
   local params = api[name].params
 
   -- extract args from real function definitions
@@ -185,6 +182,11 @@ local function parseFunction(api, name, block, last, order, path)
 end
 
 
+--[[ Parse table
+
+]]
+
+
 --[[ Parse comments block and extract api
 > content (string) file content
 > api (table) save api here
@@ -196,7 +198,8 @@ local function parseComments(content, api, path)
     local name = last:match('function%s(.-)%s?%(')
     if name then
       api.functions = api.functions or {}
-      parseFunction(api.functions, name, block, last, order, path)
+      parseUniversal(block, path, api.functions, name, order)
+      parseFunction(api.functions, name, last, path)
     else
       name = last:match('.-(.+)%s?=%s?{')
       if name then
