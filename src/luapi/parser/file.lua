@@ -204,7 +204,7 @@ end
 local function correctTables(api)
   for _, t in pairs(api.tables or {}) do
     -- tables can have only one return
-    local rn = next(t.returns)
+    local rn = next(t.returns or {})
     if rn ~= nil then
       t.returns = t.returns[rn]
       t.returns.name = rn

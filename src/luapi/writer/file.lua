@@ -119,8 +119,8 @@ local function prepareMethods(o, m, mod)
       end
       o.body:write(' _[' .. any.default .. ']_')
     end
-    if any.description then
-      o.body:write('\n`' .. any.description .. '`')
+    if any.title then
+      o.body:write('\n`' .. any.title .. '`')
     end
   end
   for name, arg in pairs(m.params or {}) do
