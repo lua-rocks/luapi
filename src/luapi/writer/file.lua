@@ -53,9 +53,9 @@ local function prepareField(o, f, m)
       o.body:write(' _[' .. f.default .. ']_')
     end
   end
-  if f.description then
-    o.header:write('**\n    - `' .. f.description .. '`')
-    o.body:write('\n`' .. f.description .. '`')
+  if f.title then
+    o.header:write('**\n    - `' .. f.title .. '`')
+    o.body:write('\n`' .. f.title .. '`')
   else
     o.header:write('**')
   end

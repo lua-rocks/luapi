@@ -28,7 +28,8 @@ end
 
 
 --[[ Test table field
-TODO: add such fields in output documentation.
+ololo
+ululu
 > a (number)
 > b (number)
 < Test (table) example class Test, extended from table, inserted into module

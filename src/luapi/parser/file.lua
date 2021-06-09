@@ -113,7 +113,7 @@ local function parseUniversal(block, path, api, name, order)
     tagged_table[tagged_name] = {
       typing = tagged_line:match('%((.-)%)'),
       default = tagged_line:match('%s%[(.-)%]'),
-      description = trim((tagged_line:sub(descStartAt, -1))),
+      title = trim((tagged_line:sub(descStartAt, -1))),
       order = line_number
     }
 
