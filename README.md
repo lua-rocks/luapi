@@ -59,7 +59,6 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 
 ## Todo
 
-- Module fields.
 - Parse and keep list of all classes in project.
   - Requires named list (`{reqpath = classname,...}`).
 - Escape whatever you want with `\` (partitially done).

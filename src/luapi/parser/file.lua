@@ -214,6 +214,19 @@ local function correctTables(api)
 end
 
 
+--[[ Add tables to the module that not described as fields but they are
+> api (table)
+]]
+local function addExtraModuleFields(api)
+  for n, t in pairs(api.tables or {}) do
+    n = n:match(api.module.name .. '%.' .. '(.+)')
+    if n then
+      api.module.params[n] = t
+    end
+  end
+end
+
+
 --[[ Parse comments block and extract api
 > content (string) file content
 > api (table) save api here
@@ -239,6 +252,7 @@ local function parseComments(content, api, path)
   end
   correctTables(api)
   extractModuleTable(api)
+  addExtraModuleFields(api)
 end
 
 
