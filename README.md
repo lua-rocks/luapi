@@ -60,6 +60,7 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 ## Todo
 
 - Swap full paths with req paths.
+- File can have one external class and many internals (tables as classes).
 - Escape whatever you want with `\` (partitially done).
 - Update comments in sources.
 - Document `do ... end` blocks as sections.
