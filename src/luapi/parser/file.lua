@@ -182,9 +182,35 @@ local function parseFunction(api, name, last, path)
 end
 
 
---[[ Parse table
-
+--[[ Extract module table from all tables
+> api (table)
 ]]
+local function extractModuleTable(api)
+  for n, t in pairs(api.tables) do
+    if t.order == 1 then
+      api.module = t
+      api.module.name = n
+      api.module.order = nil
+      api.tables[n] = nil
+    end
+  end
+end
+
+
+--[[ Make some corrections for all tables
+> api (table)
+]]
+local function correctTables(api)
+  for _, t in pairs(api.tables) do
+    -- tables can have only one return
+    local rn = next(t.returns)
+    if rn ~= nil then
+      t.returns = t.returns[rn]
+      t.returns.name = rn
+      t.returns.order = nil
+    end
+  end
+end
 
 
 --[[ Parse comments block and extract api
@@ -206,23 +232,8 @@ local function parseComments(content, api, path)
         name = trim((name:gsub('local ', '')))
         api.tables = api.tables or {}
         parseUniversal(block, path, api.tables, name, order)
-        for n, t in pairs(api.tables) do
-          -- tables can have only one return
-          local rn = next(t.returns)
-          if rn ~= nil then
-            t.returns = t.returns[rn]
-            t.returns.name = rn
-            t.returns.order = nil
-          end
-          -- module is a special table
-          if t.order == 1 then
-            api.module = t
-            api.module.name = n
-            api.module.order = nil
-            api.tables[n] = nil
-            break
-          end
-        end
+        correctTables(api)
+        extractModuleTable(api)
       end
     end
     order = order + 1
