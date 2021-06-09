@@ -192,6 +192,7 @@ local function extractModuleTable(api)
       api.module.name = n
       api.module.order = nil
       api.tables[n] = nil
+      break
     end
   end
 end
