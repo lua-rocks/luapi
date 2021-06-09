@@ -186,7 +186,7 @@ end
 > api (table)
 ]]
 local function extractModuleTable(api)
-  for n, t in pairs(api.tables) do
+  for n, t in pairs(api.tables or {}) do
     if t.order == 1 then
       api.module = t
       api.module.name = n
@@ -202,7 +202,7 @@ end
 > api (table)
 ]]
 local function correctTables(api)
-  for _, t in pairs(api.tables) do
+  for _, t in pairs(api.tables or {}) do
     -- tables can have only one return
     local rn = next(t.returns)
     if rn ~= nil then
@@ -220,7 +220,6 @@ end
 > path (string) path to the file
 ]]
 local function parseComments(content, api, path)
-  api.tables = api.tables or {}
   local order = 1
   for block, last in content:gmatch('(%-%-%[%[.-%]%].-\n)(.-)\n') do
     local name = last:match('function%s(.-)%s?%(')
@@ -231,6 +230,7 @@ local function parseComments(content, api, path)
     else
       name = last:match('.-(.+)%s?=%s?{')
       if name then
+        api.tables = api.tables or {}
         name = trim((name:gsub('local ', '')))
         parseUniversal(block, path, api.tables, name, order)
       end
