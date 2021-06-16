@@ -33,8 +33,12 @@ function projWriter.write(outPath, module)
       if iFile.module.returns then
         classname = ' (' .. iFile.module.returns.name .. ')'
       end
+      local title = ''
+      if iFile.module.title then
+        title = '\n  `' .. iFile.module.title .. '`'
+      end
       output:write('- [' .. path .. classname ..
-      '](' .. iFile.mdpath .. ')\n')
+      '](' .. iFile.mdpath .. ')' .. title .. '\n')
     end
   end
   file:write(output.text)
