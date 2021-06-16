@@ -58,7 +58,7 @@ local luapi = require 'luapi'
 luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
-if ({...})[1] == 'dump' then dump(luapi, {depth = 7}) end
+if ({...})[1] == 'dump' then dump(luapi, {depth = 2}) end
 
 
 return module

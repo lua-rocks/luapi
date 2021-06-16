@@ -2,8 +2,9 @@
 This document was created with this module. View the lua source file to see
 example input and see the raw markdown file for example output.
 
-> files ({string=table...}) files paths = parsed file tables
-> paths (table) project paths
+> classes ({string=string...}) classname = lua path
+> files ({string=table...}) lua path = parsed file table
+> paths (list) project paths
 < luapi (table)
 ]]
 local module = {}
