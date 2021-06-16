@@ -18,24 +18,24 @@ local output = {
 > module (table)
 ]]
 function projWriter.write(outPath, module)
-  local file = writer.open(outPath.."/README.md")
+  local file = writer.open(outPath .. '/README.md')
   if not file then return end
-  output:write("# Project Code Documentation\n\n## Files\n\n")
+  output:write('# Project Code Documentation\n\n## Files\n\n')
   local sortedPaths = {}
   for path in pairs(module.files) do
     table.insert(sortedPaths, path)
   end
   table.sort(sortedPaths)
   for _, path in pairs(sortedPaths) do
-    if module.files[path].module then
-      output:write("- [" .. module.files[path].reqpath .. "](" ..
-      module.files[path].mdpath .. ")\n")
+    local iFile = module.files[path]
+    if iFile.module then
+      local classname
+      if iFile.module.returns then
+        classname = ' (' .. iFile.module.returns.name .. ')'
+      end
+      output:write('- [' .. iFile.reqpath .. (classname or '') ..
+      '](' .. iFile.mdpath .. ')\n')
     end
-  end
-  output:write("\n\n## Classes\n\n")
-  for class, path in pairs(module.classes) do
-    output:write("- [" .. class .. "](" ..
-    module.files[path].mdpath .. ")\n")
   end
   file:write(output.text)
 end

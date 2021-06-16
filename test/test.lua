@@ -7,7 +7,7 @@ module.start()
     I'm <not> a [code]
 > test (string) [] some module field
 > files ({string=table...}) [{}] [files paths] = <parsed> (file) tables
-< Module (table) `module` is a class `Module` extended from `table`
+< Test (table) `module` is a class `Test` extended from `table`
 ]]
 local module = {}
 
@@ -32,7 +32,7 @@ ololo
 ululu
 > a (number)
 > b (number)
-< Test (table) example class Test, extended from table, inserted into module
+< Demo (table) example class Demo, extended from table, inserted into module
 ]]
 module.testTable = {}
 
@@ -58,7 +58,7 @@ local luapi = require 'luapi'
 luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
-if ({...})[1] == 'dump' then dump(luapi, {depth = 2}) end
+if ({...})[1] == 'dump' then dump(luapi, {depth = 7}) end
 
 
 return module

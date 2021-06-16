@@ -61,7 +61,6 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 
 - Swap full paths with req paths.
 - File can have one external class and many internals (tables as classes).
-  - We no need `module.classes` table and classnames; req path = classname!
   - Add posibility to describe nonexistent variables.
   - Totally ignore internal tables if they are not classes.
 - Escape whatever you want with `\` (partitially done).
