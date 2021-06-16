@@ -33,7 +33,7 @@ function projWriter.write(outPath, module)
       if iFile.module.returns then
         classname = ' (' .. iFile.module.returns.name .. ')'
       end
-      output:write('- [' .. iFile.reqpath .. classname ..
+      output:write('- [' .. path .. classname ..
       '](' .. iFile.mdpath .. ')\n')
     end
   end

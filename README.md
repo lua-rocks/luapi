@@ -59,7 +59,6 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 
 ## Todo
 
-- Swap full paths with req paths.
 - File can have one external class and many internals (tables as classes).
   - Add posibility to describe nonexistent variables.
   - Totally ignore internal tables if they are not classes.

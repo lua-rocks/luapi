@@ -2,7 +2,7 @@
 This document was created with this module. View the lua source file to see
 example input and see the raw markdown file for example output.
 
-> files ({string=table...}) lua path = parsed file table
+> files ({string=table...}) require path = parsed file table
 > paths (list) project paths
 < luapi (table)
 ]]
@@ -39,17 +39,17 @@ function module.start(rootPath, pathFilters, outPath)
 
   -- Parse --
   local files, requires = projParser.getFiles(rootPath, pathFilters)
-  for index, path in ipairs(files) do
-    module.files[path] = fileParser.parse(path)
-    module.files[path].reqpath = requires[index]
-    module.files[path].mdpath = rootPath .. '/' .. outPath .. '/' ..
+  for index, reqpath in ipairs(requires) do
+    module.files[reqpath] = fileParser.parse(files[index])
+    module.files[reqpath].luapath = files[index]
+    module.files[reqpath].mdpath = rootPath .. '/' .. outPath .. '/' ..
       requires[index] .. '.md'
   end
 
   -- Generate markdown --
   projWriter.write(outPath, module)
-  for filePath in pairs(module.files) do
-    fileWriter.write(filePath, module)
+  for reqpath in pairs(module.files) do
+    fileWriter.write(reqpath, module)
   end
 end
 

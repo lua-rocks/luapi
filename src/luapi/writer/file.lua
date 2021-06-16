@@ -137,14 +137,14 @@ end
 
 
 --[[ Write file
-> filePath (string)
+> reqPath (string)
 > module (table)
 ]]
-function fileWriter.write(filePath, module)
-  local data = module.files[filePath]
+function fileWriter.write(reqPath, module)
+  local data = module.files[reqPath]
   if not data.module then return end
 
-  local file = writer.open(module.paths.out .. '/' .. data.reqpath .. '.md')
+  local file = writer.open(module.paths.out .. '/' .. reqPath .. '.md')
   if not file then return end
   local write = function(self, text) self.text = self.text .. text end
   local output = {
