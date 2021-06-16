@@ -29,11 +29,11 @@ function projWriter.write(outPath, module)
   for _, path in pairs(sortedPaths) do
     local iFile = module.files[path]
     if iFile.module then
-      local classname
+      local classname = ''
       if iFile.module.returns then
         classname = ' (' .. iFile.module.returns.name .. ')'
       end
-      output:write('- [' .. iFile.reqpath .. (classname or '') ..
+      output:write('- [' .. iFile.reqpath .. classname ..
       '](' .. iFile.mdpath .. ')\n')
     end
   end
