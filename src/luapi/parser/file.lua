@@ -2,7 +2,7 @@
 local fileParser = {}
 
 
-local colors = require 'ansicolors'
+local colors = require 'luapi.warning.ansicolors'
 
 
 --[[ Remove spaces or other chars from the beginning and the end of string
