@@ -219,9 +219,10 @@ end
 ]]
 local function addExtraModuleFields(api)
   for n, t in pairs(api.tables or {}) do
-    n = n:match(api.module.name .. '%.' .. '(.+)')
-    if n then
-      api.module.params[n] = t
+    local m = n:match(api.module.name .. '%.' .. '(.+)')
+    if m then
+      api.module.params[m] = t
+      api.tables[n] = nil
     end
   end
 end
