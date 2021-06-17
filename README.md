@@ -65,7 +65,7 @@ variable values, plus the ones listed below:
 - **integer** for non float number
 - **list** for tables with integer keys
 - **{string=number}** for table with **one** key=value
-- **{1=string,"b"=list}** similar example for 2 values
+- **{1=string,"size"=32}** similar example for 2 values
 - **{string=string...}** any number of string key/values
 - **{integer=any...}** this example is equivalent to **list**
 
