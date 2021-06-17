@@ -2,7 +2,7 @@
 local fileWriter = {}
 
 
-local writer = require 'luapi.writer'
+local writer = require 'writer'
 
 
 --[[ First prep

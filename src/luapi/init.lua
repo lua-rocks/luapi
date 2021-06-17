@@ -19,10 +19,10 @@ luapi.config = {
 }
 
 
-local projParser = require 'luapi.parser.proj'
-local fileParser = require 'luapi.parser.file'
-local projWriter = require 'luapi.writer.proj'
-local fileWriter = require 'luapi.writer.file'
+local projParser = require 'parser.proj'
+local fileParser = require 'parser.file'
+local projWriter = require 'writer.proj'
+local fileWriter = require 'writer.file'
 
 
 --[[ Start document generation

@@ -2,7 +2,7 @@
 local projWriter = {}
 
 
-local writer = require 'luapi.writer'
+local writer = require 'writer'
 
 
 local output = {

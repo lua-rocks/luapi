@@ -47,8 +47,8 @@ inspect = require 'inspect'
 function dump(...) print(inspect(...)) end
 
 
-package.path = package.path .. ';src/?.lua;src/?/init.lua'
-local luapi = require 'luapi'
+package.path = package.path .. ';src/luapi/?.lua;src/luapi/?/init.lua'
+local luapi = require 'init'
 
 
 luapi.start {
