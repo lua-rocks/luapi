@@ -51,11 +51,12 @@ package.path = package.path .. ';src/?.lua;src/?/init.lua'
 local luapi = require 'luapi'
 
 
--- generate full project documetation (excluding libraries)
-luapi.start('/home/luarocks/repo/luapi', {'src/luapi'})
+luapi.start {
+  rootPath = '/home/luarocks/repo/luapi',
+  -- pathFilters = {'src/luapi'}, -- full project documetation (no libraries)
+  pathFilters = {'test'}, -- minimal doc just for quick test
+}
 
--- generate minimal doc just for quick test
--- luapi.start('/home/luarocks/repo/luapi', {'test'})
 
 -- run "lua test.lua dump" for dump
 if ({...})[1] == 'dump' then dump(luapi, {depth = 7}) end

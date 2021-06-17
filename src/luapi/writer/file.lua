@@ -144,7 +144,7 @@ function fileWriter.write(reqPath, module)
   local data = module.files[reqPath]
   if not data.module then return end
 
-  local file = writer.open(module.paths.out .. '/' .. reqPath .. '.md')
+  local file = writer.open(module.config.outPath .. '/' .. reqPath .. '.md')
   if not file then return end
   local write = function(self, text) self.text = self.text .. text end
   local output = {
@@ -155,7 +155,7 @@ function fileWriter.write(reqPath, module)
   }
 
   output.footer.text = '\n## Footer\n\n[Back to root](' ..
-  module.paths.root .. '/' .. module.paths.out
+  module.config.rootPath .. '/' .. module.config.outPath
   data.module.returns = data.module.returns or {}
   data.module.returns.name = data.module.returns.name or data.module.name
   prepareModule(output, data.module)
