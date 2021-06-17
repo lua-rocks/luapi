@@ -28,7 +28,6 @@ completely, so now there is little in common between `scriptum` and `luapi`.
   - `<`: function return or describing table as class
   - `(parentheses)`: the type or parent class of the variable
   - `[square brackets]`: default value of the variable (makes it _optional_)
-  - _Congratulations! You have learned all the luapi api!_
   - Quick example:
   ```lua
   --[[ Some function title
@@ -56,6 +55,23 @@ completely, so now there is little in common between `scriptum` and `luapi`.
   block but not commented some params, you will get warnings in the terminal.
 - Keep in mind that my project is still very young and poorly tested, so bugs
   are common at this stage.
+
+## Types
+
+When declaring a variable type, you can use all the built-in lua types, plus the
+ones listed below:
+
+- **any** for any type
+- **integer** for non float number
+- **list** for tables with integer keys
+- **{string=number}** for table with **one** string=number key=value
+- **{1=string,"b"=list}** similar example for 2 values
+- **{string=string...}** any number of string key/values
+- **{integer=any...}** this example is equivalent to **list**
+
+Also you can use your defined classnames or module require paths as types.
+
+Don't use spaces as separators in type definitions!
 
 ## Todo
 
