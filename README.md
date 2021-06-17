@@ -77,7 +77,7 @@ Don't use spaces as separators in type definitions.
 
 - File can have one external class and many internals (tables as classes).
   - Add posibility to describe nonexistent variables.
-  - Totally ignore internal tables if they are not classes.
+  - Totally ignore internal tables and functions.
 - Escape whatever you want with `\` (partitially done).
 - Update comments in sources.
 - Document `do ... end` blocks as sections.
