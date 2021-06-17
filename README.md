@@ -59,7 +59,7 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 ## Types
 
 When declaring a variable type, you can use all the built-in lua types or actual
-variable values, plus the ones listed below:
+variable values, plus the types listed below:
 
 - **any** for any type
 - **integer** for non float number
@@ -71,7 +71,7 @@ variable values, plus the ones listed below:
 
 Also you can use your defined classnames or module require paths as types.
 
-Don't use spaces as separators in type definitions!
+Don't use spaces as separators in type definitions.
 
 ## Todo
 
