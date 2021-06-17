@@ -58,8 +58,8 @@ completely, so now there is little in common between `scriptum` and `luapi`.
 
 ## Types
 
-When declaring a variable type, you can use all the built-in lua types, plus the
-ones listed below:
+When declaring a variable type, you can use all the built-in lua types or actual
+variable values, plus the ones listed below:
 
 - **any** for any type
 - **integer** for non float number
