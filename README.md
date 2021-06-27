@@ -12,6 +12,13 @@ required if you want to modify parser).
 This repository was originally forked from `scriptum`, but I rewrote it
 completely, so now there is little in common between `scriptum` and `luapi`.
 
+## Important announcement
+
+The development of this project did not stop!
+I just decided to rewrite everything from scratch again in pure OOP style,
+in a separate local repository. So if you're waiting,
+please wait a little longer 😽
+
 ## Similarities and differences
 
 - Just like `scriptum`, `luapi` generates markdown documentation that you can
